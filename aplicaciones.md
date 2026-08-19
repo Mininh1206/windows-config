@@ -96,9 +96,11 @@ Este documento sirve como inventario maestro y lista de control (checklist) de t
 
 | Estado | Aplicación | Tipo Empaquetado | Disco Alt. | Config. Directa | Modalidad Config. | Detalles de Configuración Directa |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
+| `[x]` | **Windows Sandbox** | `Script` | No | **Sí** | Comandos | Habilitación de `Containers-DisposableClientVM` y paquetes MUM de virtualización. |
 | `[x]` | **VMware Workstation Pro** | `Winget` | Sí | No | N/A | Hipervisor profesional de virtualización. |
 | `[x]` | **WSL (WSL2)** | `Winget` | Sí | **Sí** | Archivos | Plantilla de optimización de memoria y núcleos en `.wslconfig`. |
 | `[x]` | **VirtualBox** | `Winget` | Sí | No | N/A | Entorno de virtualización de código abierto. |
+
 
 ---
 
