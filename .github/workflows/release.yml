@@ -17,6 +17,8 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: write
+    env:
+      PYTHONIOENCODING: utf-8
 
     steps:
       - name: Checkout del Repositorio
@@ -52,12 +54,12 @@ jobs:
           # Copiar archivos esenciales
           Copy-Item -Path "apps" -Destination "$releaseDir\apps" -Recurse
           Copy-Item -Path "src" -Destination "$releaseDir\src" -Recurse
+          Copy-Item -Path "docs" -Destination "$releaseDir\docs" -Recurse
           Copy-Item -Path "configurador.ps1" -Destination "$releaseDir\"
           Copy-Item -Path "constructor.ps1" -Destination "$releaseDir\"
           Copy-Item -Path "bootstrap.ps1" -Destination "$releaseDir\"
+          Copy-Item -Path "build.ps1" -Destination "$releaseDir\"
           Copy-Item -Path "README.md" -Destination "$releaseDir\"
-          Copy-Item -Path "MANUAL.md" -Destination "$releaseDir\"
-          Copy-Item -Path "aplicaciones.md" -Destination "$releaseDir\"
           Copy-Item -Path "dist\configurador.exe" -Destination "$releaseDir\"
           
           # Crear ZIP

@@ -7,15 +7,25 @@ import sys
 import subprocess
 import shutil
 
+# Forzar codificación UTF-8 en salida estándar para compatibilidad con CI/CD (GitHub Actions / Windows)
+if sys.platform == "win32":
+    try:
+        if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        if sys.stderr and hasattr(sys.stderr, "reconfigure"):
+            sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 def build_standalone_exe():
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     main_py = os.path.join(project_root, "src", "main.py")
     dist_dir = os.path.join(project_root, "dist")
     build_dir = os.path.join(project_root, "build")
 
-    print("════════════════════════════════════════════════════════════════════════")
-    print("      COMPILADOR AUTÓNOMO: Generando dist/configurador.exe con PyInstaller")
-    print("════════════════════════════════════════════════════════════════════════")
+    print("========================================================================")
+    print("      COMPILADOR AUTONOMO: Generando dist/configurador.exe con PyInstaller")
+    print("========================================================================")
 
     # Asegurar que pyinstaller esté instalado
     try:
@@ -42,10 +52,10 @@ def build_standalone_exe():
         exe_path = os.path.join(dist_dir, "configurador.exe")
         if os.path.exists(exe_path):
             size_mb = round(os.path.getsize(exe_path) / (1024 * 1024), 2)
-            print(f"\n[BUILD ÉXITO] Binario generado: {exe_path} ({size_mb} MB)")
+            print(f"\n[BUILD EXITO] Binario generado: {exe_path} ({size_mb} MB)")
             return True
     
-    print("\n[BUILD ERROR] Falló la compilación de configurador.exe")
+    print("\n[BUILD ERROR] Fallo la compilacion de configurador.exe")
     return False
 
 if __name__ == "__main__":

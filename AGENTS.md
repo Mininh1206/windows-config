@@ -30,9 +30,10 @@ El **Configurador de Windows 11** es un sistema modular híbrido (PowerShell + P
 
 ### 2.1 Raíz del Repositorio Limpia
 La raíz del proyecto contiene únicamente:
-- Documentación `.md` (`AGENTS.md`, `requisitos.md`, `arquitectura.md`, `aplicaciones.md`, `MANUAL.md`, `README.md`).
-- Wrappers ejecutables mínimos: `configurador.ps1` y `constructor.ps1`.
-- Configuración de dependencias y skills (`skills-lock.json`).
+- Documentación principal (`README.md`, `AGENTS.md`) y carpeta [`docs/`](docs/) (`aplicaciones.md`, `MANUAL.md`, `arquitectura.md`, `requisitos.md`, `PLAN_DESARROLLO.md`, `GUIA_PUBLICACION_WINGET.md`).
+- Wrappers ejecutables mínimos: `configurador.ps1`, `constructor.ps1`, `bootstrap.ps1`, `build.ps1`, `windows_config.wsb`.
+- Configuración de dependencias y skills (`skills-lock.json`, `.gitignore`, `.gitattributes`).
+
 
 ### 2.2 Unicidad de Motores de Ejecución
 - **Motor Principal:** `src/main.py` (diagnóstico HW, interfaz TUI, orquestador de instalación y configuración).
