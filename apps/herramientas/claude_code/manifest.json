@@ -1,0 +1,31 @@
+{
+  "id": "claude_code",
+  "name": "Claude Code CLI",
+  "category": "herramientas",
+  "priority": 2,
+  "depends_on": [
+    "nodejs"
+  ],
+  "install": {
+    "type": "winget",
+    "winget_id": "Anthropic.ClaudeCode",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": null,
+    "check_command": "claude",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 1.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

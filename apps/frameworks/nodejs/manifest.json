@@ -1,0 +1,30 @@
+{
+  "id": "nodejs",
+  "name": "Node.js (LTS)",
+  "category": "frameworks",
+  "priority": 1,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "OpenJS.NodeJS.LTS",
+    "local_installer": null,
+    "silent_args": null,
+    "check_command": "node",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.5,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [
+      "npm config set prefix \"$HOME/.npm-global\"",
+      "[Environment]::SetEnvironmentVariable('PATH', [Environment]::GetEnvironmentVariable('PATH', 'User') + ';' + \"$HOME/.npm-global/bin\", 'User')"
+    ],
+    "environment_vars": {}
+  }
+}

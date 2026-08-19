@@ -1,0 +1,29 @@
+{
+  "id": "xampp",
+  "name": "XAMPP (Apache + MariaDB + PHP)",
+  "category": "herramientas",
+  "priority": 2,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "ApacheFriends.Xampp.8.2",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "--mode unattended",
+    "check_command": "xampp-control",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 2.0,
+    "RequireAdmin": true
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

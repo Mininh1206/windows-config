@@ -1,0 +1,29 @@
+{
+  "id": "fusion360",
+  "name": "Autodesk Fusion 360",
+  "category": "utilidades",
+  "priority": 3,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Autodesk.Fusion360",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "--quiet",
+    "check_command": "Fusion360",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 8.0,
+    "MinDisk_GB": 3.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

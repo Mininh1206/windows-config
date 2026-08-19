@@ -1,0 +1,29 @@
+{
+  "id": "php",
+  "name": "PHP Hypertext Preprocessor",
+  "category": "frameworks",
+  "priority": 1,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "PHP.PHP",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "/quiet",
+    "check_command": "php",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.5,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

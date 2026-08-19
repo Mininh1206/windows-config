@@ -1,0 +1,27 @@
+{
+  "id": "logitechghub",
+  "name": "Logitech G HUB",
+  "category": "utilidades",
+  "priority": 3,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Logitech.GHUB",
+    "local_installer": null,
+    "silent_args": "--silent",
+    "check_command": "lghub",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 0.5,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

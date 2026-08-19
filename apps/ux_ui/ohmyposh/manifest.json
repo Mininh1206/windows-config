@@ -1,0 +1,33 @@
+{
+  "id": "ohmyposh",
+  "name": "Oh My Posh Prompt Engine",
+  "category": "ux_ui",
+  "priority": 0,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "JanDeDobbeleer.OhMyPosh",
+    "local_installer": null,
+    "silent_args": null,
+    "check_command": "oh-my-posh",
+    "target_drive_supported": false,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.2,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [
+      {
+        "source": "darkside.omp.json",
+        "destination": "$HOME/Documents/PowerShell/darkside.omp.json",
+        "create_backup": true
+      }
+    ],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

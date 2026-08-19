@@ -1,0 +1,31 @@
+{
+  "id": "windows_tweaks",
+  "name": "Windows 11 Tweaks & Optimizaciones de Sistema",
+  "category": "utilidades",
+  "priority": 0,
+  "depends_on": [],
+  "install": {
+    "type": "script",
+    "winget_id": null,
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": null,
+    "check_command": null,
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.1,
+    "RequireAdmin": true
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [
+      "powershell.exe -ExecutionPolicy Bypass -File \"$PSScriptRoot/configure.ps1\""
+    ],
+    "environment_vars": {}
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "antigravity",
+  "name": "Google Antigravity & Agent Environment",
+  "category": "ides",
+  "priority": 2,
+  "depends_on": ["python", "nodejs", "git"],
+  "install": {
+    "type": "script",
+    "winget_id": null,
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": null,
+    "check_command": "agy",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 8.0,
+    "MinDisk_GB": 2.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [
+      "powershell.exe -ExecutionPolicy Bypass -File \"$PSScriptRoot/configure.ps1\""
+    ],
+    "environment_vars": {}
+  }
+}

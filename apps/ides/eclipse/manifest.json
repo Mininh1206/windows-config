@@ -1,0 +1,29 @@
+{
+  "id": "eclipse",
+  "name": "Eclipse IDE for Java Developers",
+  "category": "ides",
+  "priority": 2,
+  "depends_on": ["java"],
+  "install": {
+    "type": "winget",
+    "winget_id": "EclipseFoundation.EclipseIDEForJavaDevelopers",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "-nosplash",
+    "check_command": "eclipse",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 1.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

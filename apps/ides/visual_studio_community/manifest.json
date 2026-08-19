@@ -1,0 +1,29 @@
+{
+  "id": "visual_studio_community",
+  "name": "Visual Studio 2022 Community",
+  "category": "ides",
+  "priority": 2,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Microsoft.VisualStudio.2022.Community",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "--add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.VisualStudio.Workload.ManagedGame --add Microsoft.VisualStudio.Workload.NetCrossPlat --includeRecommended --passive --norestart",
+    "check_command": "devenv",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 8.0,
+    "MinDisk_GB": 15.0,
+    "RequireAdmin": true
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

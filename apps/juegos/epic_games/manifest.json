@@ -1,0 +1,27 @@
+{
+  "id": "epic_games",
+  "name": "Epic Games Launcher",
+  "category": "juegos",
+  "priority": 3,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "EpicGames.EpicGamesLauncher",
+    "local_installer": null,
+    "silent_args": "/quiet",
+    "check_command": "EpicGamesLauncher",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 1.5,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

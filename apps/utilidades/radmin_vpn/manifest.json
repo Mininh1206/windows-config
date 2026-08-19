@@ -1,0 +1,29 @@
+{
+  "id": "radmin_vpn",
+  "name": "Radmin VPN",
+  "category": "utilidades",
+  "priority": 3,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Famatech.RadminVPN",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "/SILENT /NORESTART",
+    "check_command": "RadminVPN",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.2,
+    "RequireAdmin": true
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

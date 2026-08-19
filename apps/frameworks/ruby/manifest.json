@@ -1,0 +1,29 @@
+{
+  "id": "ruby",
+  "name": "Ruby with DevKit",
+  "category": "frameworks",
+  "priority": 1,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "RubyInstallerTeam.RubyWithDevKit.3.3",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "/verysilent /tasks=\"assocfiles,modpath\"",
+    "check_command": "ruby",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 1.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

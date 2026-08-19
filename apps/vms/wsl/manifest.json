@@ -1,0 +1,33 @@
+{
+  "id": "wsl",
+  "name": "Windows Subsystem for Linux (WSL2)",
+  "category": "vms",
+  "priority": 2,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Microsoft.WSL",
+    "local_installer": null,
+    "silent_args": "--web-download --no-launch",
+    "check_command": "wsl",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 8.0,
+    "MinDisk_GB": 10.0,
+    "RequireAdmin": true
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [
+      {
+        "source": ".wslconfig",
+        "destination": "$HOME/.wslconfig",
+        "create_backup": true
+      }
+    ],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

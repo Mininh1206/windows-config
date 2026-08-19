@@ -1,0 +1,29 @@
+{
+  "id": "ollama",
+  "name": "Ollama (Local LLMs)",
+  "category": "herramientas",
+  "priority": 2,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Ollama.Ollama",
+    "local_installer": null,
+    "silent_args": "/VERYSILENT",
+    "check_command": "ollama",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 8.0,
+    "MinDisk_GB": 4.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [],
+    "environment_vars": {
+      "OLLAMA_HOST": "127.0.0.1:11434"
+    }
+  }
+}

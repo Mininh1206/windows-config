@@ -1,0 +1,29 @@
+{
+  "id": "everything",
+  "name": "Everything (Voidtools Fast Search)",
+  "category": "utilidades",
+  "priority": 0,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "voidtools.Everything",
+    "local_installer": null,
+    "silent_args": "/S",
+    "check_command": "Everything",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.1,
+    "RequireAdmin": true
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [
+      "if (Test-Path '$env:ProgramFiles/Everything/Everything.exe') { Start-Process -FilePath '$env:ProgramFiles/Everything/Everything.exe' -ArgumentList '-install-service' -Verb RunAs -Wait -ErrorAction SilentlyContinue }"
+    ],
+    "environment_vars": {}
+  }
+}

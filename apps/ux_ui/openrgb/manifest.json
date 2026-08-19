@@ -1,0 +1,52 @@
+{
+  "id": "openrgb",
+  "name": "OpenRGB RGB Lighting Control",
+  "category": "ux_ui",
+  "priority": 3,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "CalcProgrammer1.OpenRGB",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "/VERYSILENT",
+    "check_command": "openrgb",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.2,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [
+      {
+        "source": "Azul.orp",
+        "destination": "$env:APPDATA/OpenRGB/Azul.orp",
+        "create_backup": true
+      },
+      {
+        "source": "Negro.orp",
+        "destination": "$env:APPDATA/OpenRGB/Negro.orp",
+        "create_backup": true
+      },
+      {
+        "source": "OpenRGB.json",
+        "destination": "$env:APPDATA/OpenRGB/OpenRGB.json",
+        "create_backup": true
+      },
+      {
+        "source": "sizes.ors",
+        "destination": "$env:APPDATA/OpenRGB/sizes.ors",
+        "create_backup": true
+      }
+    ],
+    "commands": [
+      "powershell.exe -ExecutionPolicy Bypass -File \"$PSScriptRoot/configure.ps1\""
+    ],
+    "environment_vars": {}
+  }
+}

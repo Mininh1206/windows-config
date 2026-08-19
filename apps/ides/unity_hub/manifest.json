@@ -1,0 +1,29 @@
+{
+  "id": "unity_hub",
+  "name": "Unity Hub",
+  "category": "ides",
+  "priority": 2,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "UnityTechnologies.UnityHub",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "/S",
+    "check_command": "Unity Hub",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 8.0,
+    "MinDisk_GB": 2.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

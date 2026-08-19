@@ -1,0 +1,33 @@
+{
+  "id": "git",
+  "name": "Git for Windows",
+  "category": "herramientas",
+  "priority": 0,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Git.Git",
+    "local_installer": null,
+    "silent_args": "/VERYSILENT /NORESTART /NOCANCEL /SP- /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS",
+    "check_command": "git",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.5,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [
+      {
+        "source": ".gitconfig",
+        "destination": "$HOME/.gitconfig",
+        "create_backup": true
+      }
+    ],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

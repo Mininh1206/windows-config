@@ -1,0 +1,27 @@
+{
+  "id": "docker_desktop",
+  "name": "Docker Desktop",
+  "category": "herramientas",
+  "priority": 2,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Docker.DockerDesktop",
+    "local_installer": null,
+    "silent_args": "install --quiet --accept-license --backend=wsl-2",
+    "check_command": "docker",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 8.0,
+    "MinDisk_GB": 5.0,
+    "RequireAdmin": true
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "id": "rk_keyboard",
+  "name": "Royal Kludge RK-S98 Keyboard Software",
+  "category": "utilidades",
+  "priority": 3,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "RoyalKludge.RKKeyboard",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "/S",
+    "check_command": "RK_Keyboard",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.5,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

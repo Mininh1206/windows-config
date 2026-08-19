@@ -1,0 +1,27 @@
+{
+  "id": "chrome",
+  "name": "Google Chrome",
+  "category": "navegadores",
+  "priority": 3,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Google.Chrome",
+    "local_installer": null,
+    "silent_args": "/silent /install",
+    "check_command": "chrome",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 1.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

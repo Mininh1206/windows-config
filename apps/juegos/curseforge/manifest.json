@@ -1,0 +1,27 @@
+{
+  "id": "curseforge",
+  "name": "CurseForge (Mod Manager)",
+  "category": "juegos",
+  "priority": 3,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Overwolf.CurseForge",
+    "local_installer": null,
+    "silent_args": "-s",
+    "check_command": "curseforge",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 0.5,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

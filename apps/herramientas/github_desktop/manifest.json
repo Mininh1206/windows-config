@@ -1,0 +1,29 @@
+{
+  "id": "github_desktop",
+  "name": "GitHub Desktop",
+  "category": "herramientas",
+  "priority": 2,
+  "depends_on": [
+    "git"
+  ],
+  "install": {
+    "type": "winget",
+    "winget_id": "GitHub.GitHubDesktop",
+    "local_installer": null,
+    "silent_args": "/s",
+    "check_command": "github",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 1.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

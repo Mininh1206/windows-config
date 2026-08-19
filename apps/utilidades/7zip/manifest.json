@@ -1,0 +1,27 @@
+{
+  "id": "7zip",
+  "name": "7-Zip Archiver",
+  "category": "utilidades",
+  "priority": 3,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "7zip.7zip",
+    "local_installer": null,
+    "silent_args": "/S",
+    "check_command": "7z",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 1.0,
+    "MinDisk_GB": 0.1,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

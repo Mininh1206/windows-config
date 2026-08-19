@@ -1,0 +1,27 @@
+{
+  "id": "winrar",
+  "name": "WinRAR",
+  "category": "utilidades",
+  "priority": 3,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "RARLab.WinRAR",
+    "local_installer": null,
+    "silent_args": "/s",
+    "check_command": "winrar",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 1.0,
+    "MinDisk_GB": 0.1,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

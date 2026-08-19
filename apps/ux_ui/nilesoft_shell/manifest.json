@@ -1,0 +1,37 @@
+{
+  "id": "nilesoft_shell",
+  "name": "Nilesoft Shell Context Menu",
+  "category": "ux_ui",
+  "priority": 2,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Nilesoft.Shell",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "/VERYSILENT",
+    "check_command": "shell",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.2,
+    "RequireAdmin": true
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [
+      {
+        "source": "shell.nss",
+        "destination": "$env:ProgramFiles/Nilesoft Shell/shell.nss",
+        "create_backup": true
+      }
+    ],
+    "commands": [
+      "powershell.exe -ExecutionPolicy Bypass -File \"$PSScriptRoot/configure.ps1\""
+    ],
+    "environment_vars": {}
+  }
+}

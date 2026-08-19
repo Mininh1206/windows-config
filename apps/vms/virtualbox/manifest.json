@@ -1,0 +1,29 @@
+{
+  "id": "virtualbox",
+  "name": "Oracle VM VirtualBox",
+  "category": "vms",
+  "priority": 2,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Oracle.VirtualBox",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "--silent",
+    "check_command": "VirtualBox",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 8.0,
+    "MinDisk_GB": 1.0,
+    "RequireAdmin": true
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

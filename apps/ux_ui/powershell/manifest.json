@@ -1,0 +1,43 @@
+{
+  "id": "powershell",
+  "name": "PowerShell 7 & Terminal Environment",
+  "category": "ux_ui",
+  "priority": 0,
+  "depends_on": [
+    "ohmyposh",
+    "everything"
+  ],
+  "install": {
+    "type": "winget",
+    "winget_id": "Microsoft.PowerShell",
+    "local_installer": null,
+    "silent_args": null,
+    "check_command": "pwsh",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 0.5,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [
+      {
+        "source": "Microsoft.PowerShell_profile.ps1",
+        "destination": "$HOME/Documents/PowerShell/Microsoft.PowerShell_profile.ps1",
+        "create_backup": true
+      },
+      {
+        "source": "powershell.config.json",
+        "destination": "$HOME/Documents/PowerShell/powershell.config.json",
+        "create_backup": true
+      }
+    ],
+    "commands": [
+      "pwsh -NoProfile -Command \"if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) { Install-Module -Name Terminal-Icons -Scope CurrentUser -Force -SkipPublisherCheck }\""
+    ],
+    "environment_vars": {}
+  }
+}

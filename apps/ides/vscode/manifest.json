@@ -1,0 +1,44 @@
+{
+  "id": "vscode",
+  "name": "Visual Studio Code",
+  "category": "ides",
+  "priority": 2,
+  "depends_on": [
+    "git"
+  ],
+  "install": {
+    "type": "winget",
+    "winget_id": "Microsoft.VisualStudioCode",
+    "local_installer": null,
+    "silent_args": "/verysilent /mergetasks=\"!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath\"",
+    "check_command": "code",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 1.5,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [
+      {
+        "source": "settings.json",
+        "destination": "$env:APPDATA/Code/User/settings.json",
+        "create_backup": true
+      }
+    ],
+    "commands": [
+      "code --install-extension ms-python.python --force",
+      "code --install-extension ms-python.vscode-pylance --force",
+      "code --install-extension charliermarsh.ruff --force",
+      "code --install-extension eamodio.gitlens --force",
+      "code --install-extension pkief.material-icon-theme --force",
+      "code --install-extension dracula-theme.theme-dracula --force"
+    ],
+    "environment_vars": {
+      "EDITOR": "code --wait"
+    }
+  }
+}

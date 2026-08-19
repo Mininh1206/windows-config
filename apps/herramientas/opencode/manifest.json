@@ -1,0 +1,29 @@
+{
+  "id": "opencode",
+  "name": "OpenCode AI Terminal Agent",
+  "category": "herramientas",
+  "priority": 2,
+  "depends_on": ["nodejs"],
+  "install": {
+    "type": "winget",
+    "winget_id": "Anomaly.OpenCode",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "/S",
+    "check_command": "opencode",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 1.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "id": "adobe_reader",
+  "name": "Adobe Acrobat Reader (64-bit)",
+  "category": "utilidades",
+  "priority": 3,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Adobe.Acrobat.Reader.64-bit",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "/sAll /msi /norestart ALLUSERS=1 EULA_ACCEPT=YES",
+    "check_command": "AcroRd32",
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 1.0,
+    "RequireAdmin": true
+  },
+  "config": {
+    "has_direct_config": false,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "python",
+  "name": "Python 3.13",
+  "category": "frameworks",
+  "priority": 1,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Python.Python.3.13",
+    "local_installer": null,
+    "silent_args": null,
+    "check_command": "python",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.5,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [
+      "python -m pip install --upgrade pip",
+      "python -m pip install virtualenv ruff pytest"
+    ],
+    "environment_vars": {
+      "PYTHONUTF8": "1"
+    }
+  }
+}

@@ -1,0 +1,259 @@
+[2026-07-22 21:35:02] [INFO] Inicializando proceso de configuracion de Windows 11...
+[2026-07-22 21:35:02] [WARNING] [MODO SIMULACION ACTIVADO] No se realizaran cambios reales en el sistema.
+[2026-07-22 21:35:02] [INFO] Unidad de destino configurada: C:
+[2026-07-22 21:35:02] [INFO] Ejecutando diagnostico del sistema...
+[2026-07-22 21:35:02] [INFO] Se detectaron 75 aplicaciones modulares en 'apps/'.
+[2026-07-22 21:35:02] [INFO] [MODO PRUEBA DESATENDIDO] Seleccionando todas las aplicaciones disponibles...
+[2026-07-22 21:35:02] [INFO] --- Procesando: 7-Zip ---
+[2026-07-22 21:35:02] [INFO] La aplicacion '7-Zip' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para '7-Zip'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de '7-Zip' (A:\Proyectos\windows-config\apps\utilidades\7zip).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Adobe Acrobat Reader ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Adobe Acrobat Reader' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Android Studio ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Android Studio' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Android Studio'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Android Studio' (A:\Proyectos\windows-config\apps\ides\androidstudio).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Antigravity IDE ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Antigravity IDE' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Antigravity IDE'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Antigravity IDE' (A:\Proyectos\windows-config\apps\ides\antigravity).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Apache NetBeans ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Apache NetBeans' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Arduino IDE 2.0 ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Arduino IDE 2.0' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Arduino IDE 2.0'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Arduino IDE 2.0' (A:\Proyectos\windows-config\apps\ides\arduinoide).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Autodesk Fusion 360 ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Autodesk Fusion 360' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: AutoHotkey v2 ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'AutoHotkey v2' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'AutoHotkey v2'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'AutoHotkey v2' (A:\Proyectos\windows-config\apps\ux_ui\autohotkey).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Blender 3D ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Blender 3D' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Blender 3D'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Blender 3D' (A:\Proyectos\windows-config\apps\utilidades\blender).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Brave Browser ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Brave Browser' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Brave Browser'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Brave Browser' (A:\Proyectos\windows-config\apps\navegadores\brave).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Claude Code CLI ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Claude Code CLI' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Claude Code CLI'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Claude Code CLI' (A:\Proyectos\windows-config\apps\herramientas\claudecode).
+[2026-07-22 21:35:02] [INFO] --- Procesando: ClickUp Desktop ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'ClickUp Desktop' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Creality Print 3D ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Creality Print 3D' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: CurseForge Mod Manager ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'CurseForge Mod Manager' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: DBeaver Community ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'DBeaver Community' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'DBeaver Community'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'DBeaver Community' (A:\Proyectos\windows-config\apps\ides\dbeaver).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Discord ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Discord' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Docker Desktop ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Docker Desktop' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Docker Desktop'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Docker Desktop' (A:\Proyectos\windows-config\apps\herramientas\docker).
+[2026-07-22 21:35:02] [INFO] --- Procesando: EA App ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'EA App' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'EA App'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'EA App' (A:\Proyectos\windows-config\apps\juegos\ea).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Eclipse IDE ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Eclipse IDE' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Eclipse Temurin JDK 21 ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Eclipse Temurin JDK 21' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Eclipse Temurin JDK 21'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Eclipse Temurin JDK 21' (A:\Proyectos\windows-config\apps\frameworks\java).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Epic Games Launcher ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Epic Games Launcher' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Epic Games Launcher'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Epic Games Launcher' (A:\Proyectos\windows-config\apps\juegos\epicgames).
+[2026-07-22 21:35:02] [INFO] --- Procesando: FFmpeg Multimedia Tools ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'FFmpeg Multimedia Tools' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'FFmpeg Multimedia Tools'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'FFmpeg Multimedia Tools' (A:\Proyectos\windows-config\apps\herramientas\ffmpeg).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Flutter SDK ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Flutter SDK' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Flutter SDK'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Flutter SDK' (A:\Proyectos\windows-config\apps\frameworks\flutter).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Git for Windows ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Git for Windows' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Git for Windows'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Git for Windows' (A:\Proyectos\windows-config\apps\herramientas\git).
+[2026-07-22 21:35:02] [INFO] --- Procesando: GitHub Desktop ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'GitHub Desktop' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Go Compiler ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Go Compiler' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Go Compiler'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Go Compiler' (A:\Proyectos\windows-config\apps\frameworks\go).
+[2026-07-22 21:35:02] [INFO] --- Procesando: GOG Galaxy ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'GOG Galaxy' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'GOG Galaxy'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'GOG Galaxy' (A:\Proyectos\windows-config\apps\juegos\goggalaxy).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Google Chrome ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Google Chrome' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Google Quick Share ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Google Quick Share' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Hermes Agent ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Hermes Agent' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Hermes Agent'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Hermes Agent' (A:\Proyectos\windows-config\apps\herramientas\hermesagent).
+[2026-07-22 21:35:02] [INFO] --- Procesando: JetBrains Toolbox ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'JetBrains Toolbox' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'JetBrains Toolbox'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'JetBrains Toolbox' (A:\Proyectos\windows-config\apps\ides\jetbrains).
+[2026-07-22 21:35:02] [INFO] --- Procesando: KeePassXC Password Manager ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'KeePassXC Password Manager' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'KeePassXC Password Manager'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'KeePassXC Password Manager' (A:\Proyectos\windows-config\apps\utilidades\keepassxc).
+[2026-07-22 21:35:02] [INFO] --- Procesando: LM Studio ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'LM Studio' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'LM Studio'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'LM Studio' (A:\Proyectos\windows-config\apps\herramientas\lmstudio).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Logitech G HUB ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Logitech G HUB' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Microsoft Enlace Móvil ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Microsoft Enlace Móvil' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Microsoft Teams ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Microsoft Teams' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Mozilla Thunderbird ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Mozilla Thunderbird' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Nilesoft Shell ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Nilesoft Shell' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Nilesoft Shell'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Nilesoft Shell' (A:\Proyectos\windows-config\apps\ux_ui\nilesoftshell).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Node.js LTS ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Node.js LTS' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Node.js LTS'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Node.js LTS' (A:\Proyectos\windows-config\apps\frameworks\nodejs).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Notepad++ ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Notepad++' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Notepad++'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Notepad++' (A:\Proyectos\windows-config\apps\utilidades\notepadplusplus).
+[2026-07-22 21:35:02] [INFO] --- Procesando: NVIDIA App ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'NVIDIA App' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: Obsidian Notes ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Obsidian Notes' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Obsidian Notes'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Obsidian Notes' (A:\Proyectos\windows-config\apps\agil\obsidian).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Oh My Posh ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Oh My Posh' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Oh My Posh'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Oh My Posh' (A:\Proyectos\windows-config\apps\ux_ui\ohmyposh).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Ollama LLM Engine ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Ollama LLM Engine' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Ollama LLM Engine'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Ollama LLM Engine' (A:\Proyectos\windows-config\apps\herramientas\ollama).
+[2026-07-22 21:35:02] [INFO] --- Procesando: OpenCode Agent ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'OpenCode Agent' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] --- Procesando: OpenRGB ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'OpenRGB' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'OpenRGB'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'OpenRGB' (A:\Proyectos\windows-config\apps\ux_ui\openrgb).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Oracle VirtualBox ---
+[2026-07-22 21:35:02] [INFO] La aplicacion 'Oracle VirtualBox' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:02] [INFO] Aplicando configuracion directa para 'Oracle VirtualBox'...
+[2026-07-22 21:35:02] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Oracle VirtualBox' (A:\Proyectos\windows-config\apps\vms\virtualbox).
+[2026-07-22 21:35:02] [INFO] --- Procesando: Orca Slicer 3D ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Orca Slicer 3D' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'Orca Slicer 3D'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Orca Slicer 3D' (A:\Proyectos\windows-config\apps\utilidades\orcaslicer).
+[2026-07-22 21:35:03] [INFO] --- Procesando: PHP 8.3 ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'PHP 8.3' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'PHP 8.3'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'PHP 8.3' (A:\Proyectos\windows-config\apps\frameworks\php).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Playnite Game Launcher ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Playnite Game Launcher' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'Playnite Game Launcher'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Playnite Game Launcher' (A:\Proyectos\windows-config\apps\juegos\playnite).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Postman API Platform ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Postman API Platform' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] --- Procesando: PowerShell 7 & Terminal ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'PowerShell 7 & Terminal' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'PowerShell 7 & Terminal'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'PowerShell 7 & Terminal' (A:\Proyectos\windows-config\apps\ux_ui\powershell).
+[2026-07-22 21:35:03] [INFO] --- Procesando: PowerToys ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'PowerToys' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'PowerToys'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'PowerToys' (A:\Proyectos\windows-config\apps\utilidades\powertoys).
+[2026-07-22 21:35:03] [INFO] --- Procesando: PPSSPP PSP Emulator ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'PPSSPP PSP Emulator' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'PPSSPP PSP Emulator'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'PPSSPP PSP Emulator' (A:\Proyectos\windows-config\apps\juegos\ppsspp).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Python 3.12 ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Python 3.12' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'Python 3.12'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Python 3.12' (A:\Proyectos\windows-config\apps\frameworks\python).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Radmin VPN ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Radmin VPN' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] --- Procesando: Rainmeter ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Rainmeter' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'Rainmeter'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Rainmeter' (A:\Proyectos\windows-config\apps\ux_ui\rainmeter).
+[2026-07-22 21:35:03] [INFO] --- Procesando: RK Keyboard Software ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'RK Keyboard Software' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] --- Procesando: Ruby with DevKit ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Ruby with DevKit' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] --- Procesando: Rustup Rust Compiler ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Rustup Rust Compiler' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'Rustup Rust Compiler'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Rustup Rust Compiler' (A:\Proyectos\windows-config\apps\frameworks\rust).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Steam Client ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Steam Client' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'Steam Client'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Steam Client' (A:\Proyectos\windows-config\apps\juegos\steam).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Ubisoft Connect ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Ubisoft Connect' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'Ubisoft Connect'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Ubisoft Connect' (A:\Proyectos\windows-config\apps\juegos\ubisoft).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Ultimaker Cura 3D ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Ultimaker Cura 3D' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] --- Procesando: Unity Hub ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Unity Hub' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'Unity Hub'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Unity Hub' (A:\Proyectos\windows-config\apps\ides\unityhub).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Visual Studio Code ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Visual Studio Code' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'Visual Studio Code'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Visual Studio Code' (A:\Proyectos\windows-config\apps\ides\vscode).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Visual Studio Community 2022 ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Visual Studio Community 2022' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'Visual Studio Community 2022'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Visual Studio Community 2022' (A:\Proyectos\windows-config\apps\ides\vscommunity).
+[2026-07-22 21:35:03] [INFO] --- Procesando: VMware Workstation Pro ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'VMware Workstation Pro' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'VMware Workstation Pro'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'VMware Workstation Pro' (A:\Proyectos\windows-config\apps\vms\vmware).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Voidtools Everything ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Voidtools Everything' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'Voidtools Everything'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Voidtools Everything' (A:\Proyectos\windows-config\apps\utilidades\everything).
+[2026-07-22 21:35:03] [INFO] --- Procesando: w64devkit C/C++ GCC ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'w64devkit C/C++ GCC' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'w64devkit C/C++ GCC'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'w64devkit C/C++ GCC' (A:\Proyectos\windows-config\apps\frameworks\cpp).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Windhawk ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Windhawk' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] --- Procesando: WinRAR ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'WinRAR' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'WinRAR'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'WinRAR' (A:\Proyectos\windows-config\apps\utilidades\winrar).
+[2026-07-22 21:35:03] [INFO] --- Procesando: WSL Ubuntu Linux ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'WSL Ubuntu Linux' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'WSL Ubuntu Linux'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'WSL Ubuntu Linux' (A:\Proyectos\windows-config\apps\vms\wsl).
+[2026-07-22 21:35:03] [INFO] --- Procesando: XAMPP Server Stack ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'XAMPP Server Stack' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'XAMPP Server Stack'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'XAMPP Server Stack' (A:\Proyectos\windows-config\apps\herramientas\xampp).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Xbox App ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Xbox App' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [INFO] Aplicando configuracion directa para 'Xbox App'...
+[2026-07-22 21:35:03] [INFO] [SIMULACION] Se aplicaria la configuracion directa de 'Xbox App' (A:\Proyectos\windows-config\apps\juegos\xbox).
+[2026-07-22 21:35:03] [INFO] --- Procesando: Zoom Workplace ---
+[2026-07-22 21:35:03] [INFO] La aplicacion 'Zoom Workplace' ya se encuentra instalada en el sistema.
+[2026-07-22 21:35:03] [SUCCESS] Proceso finalizado con exito. Registro exclusivo guardado en: A:\Proyectos\windows-config\logs\configurador_20260722_213502.log

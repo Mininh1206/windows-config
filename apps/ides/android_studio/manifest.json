@@ -1,0 +1,31 @@
+{
+  "id": "android_studio",
+  "name": "Android Studio",
+  "category": "ides",
+  "priority": 2,
+  "depends_on": ["java"],
+  "install": {
+    "type": "winget",
+    "winget_id": "Google.AndroidStudio",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": "/S",
+    "check_command": "studio64",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 8.0,
+    "MinDisk_GB": 4.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [],
+    "environment_vars": {
+      "ANDROID_HOME": "$env:LOCALAPPDATA/Android/Sdk"
+    }
+  }
+}

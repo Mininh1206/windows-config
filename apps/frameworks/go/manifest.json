@@ -1,0 +1,29 @@
+{
+  "id": "go",
+  "name": "Go Programming Language",
+  "category": "frameworks",
+  "priority": 1,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "GoLang.Go",
+    "local_installer": null,
+    "silent_args": null,
+    "check_command": "go",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 1.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [
+      "[Environment]::SetEnvironmentVariable('GOPATH', \"$HOME/go\", 'User')"
+    ],
+    "environment_vars": {}
+  }
+}

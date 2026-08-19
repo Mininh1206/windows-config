@@ -1,0 +1,29 @@
+{
+  "id": "java",
+  "name": "Eclipse Temurin JDK 21",
+  "category": "frameworks",
+  "priority": 1,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "EclipseAdoptium.Temurin.21.JDK",
+    "local_installer": null,
+    "silent_args": null,
+    "check_command": "java",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 4.0,
+    "MinDisk_GB": 1.0,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [
+      "$jdkDir = (Get-ChildItem -Path 'C:\\Program Files\\Eclipse Adoptium' -Filter 'jdk-21*' -Directory -ErrorAction SilentlyContinue | Select-Object -First 1).FullName; if ($jdkDir) { [Environment]::SetEnvironmentVariable('JAVA_HOME', $jdkDir, 'User') }"
+    ],
+    "environment_vars": {}
+  }
+}
