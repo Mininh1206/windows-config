@@ -1,0 +1,31 @@
+{
+  "id": "chocolatey",
+  "name": "Chocolatey Package Manager",
+  "category": "herramientas",
+  "priority": 0,
+  "depends_on": [],
+  "install": {
+    "type": "winget",
+    "winget_id": "Chocolatey.Chocolatey",
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": null,
+    "check_command": "choco",
+    "target_drive_supported": false,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.5,
+    "RequireAdmin": true
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [
+      "powershell.exe -ExecutionPolicy Bypass -File \"$PSScriptRoot/configure.ps1\""
+    ],
+    "environment_vars": {}
+  }
+}

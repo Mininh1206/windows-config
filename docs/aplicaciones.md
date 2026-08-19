@@ -79,6 +79,8 @@ Este documento sirve como inventario maestro y lista de control (checklist) de t
 
 | Estado | Aplicación | Tipo Empaquetado | Disco Alt. | Config. Directa | Modalidad Config. | Detalles de Configuración Directa |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
+| `[x]` | **Chocolatey** | `Winget` | No | **Sí** | Comandos | Habilitación de `allowGlobalConfirmation` para instalación desatendida. |
+| `[x]` | **Scoop** | `Script` | **Sí** | **Sí** | Comandos | Instalación en unidad personalizada (`<TargetDrive>\Scoop`), buckets `main` y `extras` (DAG: depende de Git). |
 | `[x]` | **Git for Windows** | `Winget` | Sí | **Sí** | Archivos | Copia de `.gitconfig` global (alias, editor por defecto, autocrlf, rama principal `main`). |
 | `[x]` | **GitHub Desktop** | `Winget` | Sí | No | N/A | Cliente oficial GUI de GitHub (DAG: depende de Git). |
 | `[x]` | **Docker Desktop** | `Winget` | Sí | **Sí** | Comandos | Habilitación de backend WSL2. |
@@ -89,6 +91,7 @@ Este documento sirve como inventario maestro y lista de control (checklist) de t
 | `[x]` | **Ollama** | `Winget` | Sí | **Sí** | Variables | Definición de variable `OLLAMA_HOST` para servicio local de LLMs. |
 | `[x]` | **XAMPP** | `Winget` | Sí | No | N/A | Entorno de desarrollo local Apache + MariaDB + PHP. |
 | `[x]` | **Postman** | `Winget` | Sí | No | N/A | Plataforma de diseño y testing de APIs. |
+
 
 ---
 

@@ -1,0 +1,33 @@
+{
+  "id": "scoop",
+  "name": "Scoop Command-Line Installer",
+  "category": "herramientas",
+  "priority": 0,
+  "depends_on": [
+    "git"
+  ],
+  "install": {
+    "type": "script",
+    "winget_id": null,
+    "choco_id": null,
+    "scoop_id": null,
+    "local_installer": null,
+    "silent_args": null,
+    "check_command": "scoop",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.5,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [
+      "powershell.exe -ExecutionPolicy Bypass -File \"$PSScriptRoot/configure.ps1\""
+    ],
+    "environment_vars": {}
+  }
+}
