@@ -1,0 +1,77 @@
+name: Release Builder & Publisher
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - 'v.*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag de versión manual (ej: v1.0.0)'
+        required: false
+        default: 'v1.0.0'
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout del Repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Instalar Herramientas de Compilación
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyinstaller
+
+      - name: Ejecutar Pruebas y Validación de Catálogo
+        run: |
+          python -m unittest discover -s tests
+          python src/core/catalog_validator.py
+
+      - name: Compilar Ejecutable Autónomo (configurador.exe)
+        run: |
+          python src/build_exe.py
+
+      - name: Empaquetar Distribución Portable en ZIP
+        shell: pwsh
+        run: |
+          $releaseDir = "release_pkg"
+          New-Item -ItemType Directory -Path $releaseDir -Force | Out-Null
+          
+          # Copiar archivos esenciales
+          Copy-Item -Path "apps" -Destination "$releaseDir\apps" -Recurse
+          Copy-Item -Path "src" -Destination "$releaseDir\src" -Recurse
+          Copy-Item -Path "configurador.ps1" -Destination "$releaseDir\"
+          Copy-Item -Path "constructor.ps1" -Destination "$releaseDir\"
+          Copy-Item -Path "bootstrap.ps1" -Destination "$releaseDir\"
+          Copy-Item -Path "README.md" -Destination "$releaseDir\"
+          Copy-Item -Path "MANUAL.md" -Destination "$releaseDir\"
+          Copy-Item -Path "aplicaciones.md" -Destination "$releaseDir\"
+          Copy-Item -Path "dist\configurador.exe" -Destination "$releaseDir\"
+          
+          # Crear ZIP
+          Compress-Archive -Path "$releaseDir\*" -DestinationPath "windows-config-portable.zip" -Force
+          Write-Host "Paquete ZIP portable generado: windows-config-portable.zip"
+
+      - name: Publicar GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/configurador.exe
+            windows-config-portable.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

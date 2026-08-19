@@ -1,0 +1,14 @@
+<Configuration>
+  <VGpu>Enable</VGpu>
+  <Networking>Enable</Networking>
+  <MappedFolders>
+    <MappedFolder>
+      <HostFolder>A:\Proyectos\windows-config</HostFolder>
+      <SandboxFolder>C:\Users\WDAGUtilityAccount\Desktop\windows-config</SandboxFolder>
+      <ReadOnly>false</ReadOnly>
+    </MappedFolder>
+  </MappedFolders>
+  <LogonCommand>
+    <Command>powershell.exe -ExecutionPolicy Bypass -NoExit -Command "Set-Location 'C:\Users\WDAGUtilityAccount\Desktop\windows-config'; Write-Host '═══════════════════════════════════════════════════════════════' -ForegroundColor Cyan; Write-Host ' Probando Windows 11 Configurator en Sandbox Limpio...' -ForegroundColor Yellow; Write-Host '═══════════════════════════════════════════════════════════════' -ForegroundColor Cyan; .\configurador.ps1 -DryRun"</Command>
+  </LogonCommand>
+</Configuration>
