@@ -143,6 +143,8 @@ El proyecto tiene configuradas las siguientes skills en `.agents/skills/`:
 - **`create-agentsmd`**: Directrices y generación del estándar `AGENTS.md`.
 - **`skill-creator`**: Creación, refinamiento y benchmarking de skills para agentes.
 - **`find-skills`**: Localización e instalación de nuevas extensiones en el ecosistema abierto de skills.
+- **`winget-publish`**: Empaquetado, validación de manifiestos v1.12.0, pruebas en Windows Sandbox (`SandboxTest.ps1`) y publicación oficial en `microsoft/winget-pkgs`.
+- **`gh-cli`**: Flujos autenticados con GitHub CLI (`gh`) para operaciones con repositorios, PRs, issues y releases.
 
 ---
 

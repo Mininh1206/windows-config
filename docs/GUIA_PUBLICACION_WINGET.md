@@ -53,45 +53,71 @@ cd windows-config
 
 ---
 
-## 🌐 3. Publicar Gratis en el Catálogo Oficial de Winget
+## 🌐 3. Publicar en el Catálogo Oficial de Winget (`microsoft/winget-pkgs`)
 
-Una vez que tengas tu primera Release en GitHub con el archivo `.zip` o `.exe`, puedes registrarlo en Winget para que cualquier usuario del mundo pueda instalarlo con:
+El repositorio ya contiene los manifiestos oficiales validados en `manifests/m/mininh/ConfiguradorWindows11/1.0.0/`.
+
+Una vez aprobado en Winget, cualquier usuario podrá instalarlo con:
 ```powershell
-winget install Mininh1206.WindowsConfig
+winget install mininh.ConfiguradorWindows11
 ```
 
-### Paso 3.1: Instalar la herramienta oficial de Microsoft WingetCreate:
+### Paso 3.1: Validar los manifiestos localmente
 ```powershell
-winget install Microsoft.WingetCreate
+python .agents/skills/winget-publish/scripts/validate_manifest.py manifests/m/mininh/ConfiguradorWindows11/1.0.0
+# O con la herramienta oficial de Winget:
+winget validate --manifest manifests/m/mininh/ConfiguradorWindows11/1.0.0
 ```
 
-### Paso 3.2: Generar y enviar el manifiesto oficial:
-Ejecuta el siguiente comando sustituyendo la URL por la de tu release:
+### Paso 3.2: Enviar el Pull Request a Microsoft
+
+#### Opción A: Envío automático con `wingetcreate`
 ```powershell
-wingetcreate new https://github.com/Mininh1206/windows-config/releases/download/v1.0.0/windows-config-portable.zip
+wingetcreate submit manifests/m/mininh/ConfiguradorWindows11/1.0.0
 ```
 
-### Paso 3.3: Responder el asistente interactivo en consola:
-- **PackageIdentifier:** `Mininh1206.WindowsConfig`
-- **PackageName:** `Windows 11 Configurator`
-- **Publisher:** `Daniel (Mininh1206)`
-- **ShortDescription:** `Configurador interactivo modular post-formateo para Windows 11 con 75+ aplicaciones y tweaks de sistema.`
-- **License:** `MIT`
-
-Al finalizar, `wingetcreate` te pedirá autenticarte en GitHub mediante un token personal (PAT) y enviará una *Pull Request* automática al repositorio oficial de Microsoft ([`microsoft/winget-pkgs`](https://github.com/microsoft/winget-pkgs)).
-
-En unas horas, los bots de validación de Microsoft aprobarán el paquete y estará disponible globalmente con `winget install`.
+#### Opción B: Envío manual con GitHub CLI (`gh`) o Fork
+1. Haz un fork de `https://github.com/microsoft/winget-pkgs` en tu cuenta de GitHub.
+2. Clona tu fork y crea una rama limpia:
+   ```powershell
+   git clone https://github.com/Mininh1206/winget-pkgs.git
+   cd winget-pkgs
+   git checkout -b add-mininh-ConfiguradorWindows11-1.0.0
+   ```
+3. Copia la carpeta de manifiestos:
+   ```powershell
+   Copy-Item -Path "a:\Proyectos\windows-config\manifests\m\mininh" -Destination "manifests\m\" -Recurse -Force
+   ```
+4. Haz commit y envía la PR:
+   ```powershell
+   git add manifests/
+   git commit -m "New package: mininh.ConfiguradorWindows11 version 1.0.0"
+   git push -u origin add-mininh-ConfiguradorWindows11-1.0.0
+   gh pr create --repo microsoft/winget-pkgs --title "New package: mininh.ConfiguradorWindows11 version 1.0.0" --body "Submission for Windows 11 Configurator (mininh.ConfiguradorWindows11)."
+   ```
 
 ---
 
-## 🧪 4. Probar en un Entorno Limpio (Windows Sandbox / VM)
+## 🧪 4. Pruebas Aisladas en Windows Sandbox (`SandboxTest.ps1`)
 
-### En Windows Sandbox (1 Doble Clic):
-Haz doble clic sobre el archivo [`windows_config.wsb`](file:///a:/Proyectos/windows-config/windows_config.wsb) en la raíz del proyecto. Se abrirá una máquina virtual limpia efímera de Windows 11 y ejecutará una prueba de simulación (`-DryRun`) de forma inmediata.
+Para probar la instalación completa en una máquina limpia efímera antes de enviar la PR:
 
-### En una Máquina Virtual (VMware / VirtualBox):
-1. Inicia tu VM con Windows 11.
-2. Abre PowerShell como Administrador y pega el comando de 1 línea:
+1. Navega a la carpeta `Tools` de tu clon de `winget-pkgs`:
    ```powershell
-   irm https://raw.githubusercontent.com/Mininh1206/windows-config/main/bootstrap.ps1 | iex
+   cd winget-pkgs\Tools
    ```
+2. Ejecuta el script oficial de prueba de sandbox:
+   ```powershell
+   .\SandboxTest.ps1 a:\Proyectos\windows-config\manifests\m\mininh\ConfiguradorWindows11\1.0.0
+   ```
+   *El script arrancará Windows Sandbox, descargará el ejecutable desde tu release, verificará el hash SHA256, instalará el paquete y comprobará que el comando `configurador` responda correctamente.*
+
+---
+
+## 🔍 5. Monitoreo del Pipeline de Validación de Microsoft
+
+Cuando el PR esté abierto en `microsoft/winget-pkgs`:
+- **Firmar el CLA:** El bot `microsoft-github-policy-service` pedirá firmar el Contributor License Agreement con un clic.
+- **Azure Pipeline:** Ejecutará el análisis estático y pruebas de instalación (`Azure-Pipeline-Passed`).
+- **Aprobación:** Una vez pase todos los checks (`Validation-Completed`), el paquete se publicará automáticamente en el índice global de Winget.
+
