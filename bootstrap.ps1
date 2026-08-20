@@ -22,10 +22,16 @@ if (-not $isElevated -and -not $DryRun) {
     Write-Host " Solicitando permisos elevados..." -ForegroundColor Cyan
     Write-Host "========================================================================" -ForegroundColor Yellow
 
-    $cmd = "irm https://raw.githubusercontent.com/Mininh1206/windows-config/main/bootstrap.ps1 | iex"
-    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"$cmd`"" -Verb RunAs
-    exit 0
+    try {
+        $cmd = "irm https://raw.githubusercontent.com/Mininh1206/windows-config/main/bootstrap.ps1 | iex"
+        Start-Process powershell.exe -WorkingDirectory "$env:TEMP" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"$cmd`"" -Verb RunAs
+        exit 0
+    } catch {
+        Write-Warning "No se pudo solicitar la elevacion automatica ($($_.Exception.Message)). Continuando en la sesion actual..."
+    }
 }
+
+$tempDir = Join-Path $env:TEMP "windows-config"
 if (Test-Path $tempDir) {
     Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
 }

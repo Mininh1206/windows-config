@@ -27,7 +27,9 @@
         "create_backup": true
       }
     ],
-    "commands": [],
+    "commands": [
+      "oh-my-posh font install Meslo --user"
+    ],
     "environment_vars": {}
   }
 }

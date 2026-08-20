@@ -21,13 +21,17 @@ if (-not $isElevated -and -not $DryRun) {
     Write-Host " Solicitando permisos elevados..." -ForegroundColor Cyan
     Write-Host "========================================================================" -ForegroundColor Yellow
 
-    $argsList = "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
-    if ($TargetDrive) { $argsList += " -TargetDrive `"$TargetDrive`"" }
-    if ($TestMode) { $argsList += " -TestMode" }
-    if ($App) { $argsList += " -App `"$App`"" }
+    try {
+        $argsList = "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+        if ($TargetDrive) { $argsList += " -TargetDrive `"$TargetDrive`"" }
+        if ($TestMode) { $argsList += " -TestMode" }
+        if ($App) { $argsList += " -App `"$App`"" }
 
-    Start-Process powershell.exe -ArgumentList $argsList -Verb RunAs
-    exit 0
+        Start-Process powershell.exe -WorkingDirectory "$env:TEMP" -ArgumentList $argsList -Verb RunAs
+        exit 0
+    } catch {
+        Write-Warning "No se pudo solicitar elevacion automatica ($($_.Exception.Message)). Continuando en modo estandar..."
+    }
 }
 
 # Función para verificar si un ejecutable es realmente Python 3 funcional (y no el alias vacío de MS Store)
