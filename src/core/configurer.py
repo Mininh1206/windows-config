@@ -4,6 +4,7 @@ import re
 import shutil
 import subprocess
 import datetime
+from typing import Callable, Optional
 from src.core.logger import get_logger
 
 logger = get_logger()
@@ -31,7 +32,12 @@ def resolve_path_vars(path_str: str) -> str:
     path_str = os.path.expandvars(path_str)
     return os.path.normpath(path_str)
 
-def apply_direct_configuration(app_folder_path: str, target_paths: dict, dry_run: bool = False) -> bool:
+def apply_direct_configuration(
+    app_folder_path: str,
+    target_paths: dict,
+    dry_run: bool = False,
+    progress_callback: Optional[Callable[[str], None]] = None
+) -> bool:
     manifest_path = os.path.join(app_folder_path, "manifest.json")
     if not os.path.exists(manifest_path):
         return False
@@ -52,10 +58,16 @@ def apply_direct_configuration(app_folder_path: str, target_paths: dict, dry_run
         logger.log(f"La aplicacion '{app_name}' no requiere configuracion directa.", "INFO")
         return True
 
+    def _notify(msg: str):
+        if progress_callback:
+            progress_callback(msg)
+
     logger.log(f"Aplicando configuracion directa para '{app_name}'...", "INFO")
+    _notify("Aplicando configuración directa...")
 
     if dry_run:
         logger.log(f"[SIMULACION] Se aplicaria la configuracion directa de '{app_name}' ({app_folder_path}).", "INFO")
+        _notify("Simulación de configuración...")
         return True
 
     overall_success = True
@@ -76,6 +88,7 @@ def apply_direct_configuration(app_folder_path: str, target_paths: dict, dry_run
 
             if os.path.exists(src_path):
                 try:
+                    _notify(f"Desplegando {src_name}...")
                     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
                     if os.path.exists(dest_path) and create_backup:
                         bak_suffix = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -95,6 +108,7 @@ def apply_direct_configuration(app_folder_path: str, target_paths: dict, dry_run
     ps1_executed = False
     if os.path.exists(script_ps1):
         logger.log(f"Ejecutando hook configure.ps1 ({script_ps1})...", "INFO")
+        _notify("Ejecutando script de configuración...")
         try:
             cmd = ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", script_ps1]
             res = subprocess.run(cmd, cwd=app_folder_path, capture_output=True, text=True, errors="ignore")
@@ -109,6 +123,7 @@ def apply_direct_configuration(app_folder_path: str, target_paths: dict, dry_run
 
     elif os.path.exists(script_py):
         logger.log(f"Ejecutando hook configure.py ({script_py})...", "INFO")
+        _notify("Ejecutando script de configuración...")
         try:
             cmd = [sys.executable, script_py]
             res = subprocess.run(cmd, cwd=app_folder_path, capture_output=True, text=True, errors="ignore")
@@ -131,6 +146,7 @@ def apply_direct_configuration(app_folder_path: str, target_paths: dict, dry_run
             continue
 
         logger.log(f"Ejecutando comando de post-instalacion: '{cmd_strip}'...", "INFO")
+        _notify("Ejecutando comandos post-instalación...")
         try:
             # Ejecutar mediante PowerShell para soporte universal de cmdlets y herramientas nativas
             ps_cmd = ["powershell", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", cmd_strip]
@@ -155,7 +171,9 @@ def apply_direct_configuration(app_folder_path: str, target_paths: dict, dry_run
 
     if overall_success:
         logger.log(f"Configuracion directa de '{app_name}' finalizada con exito.", "SUCCESS")
+        _notify("Configuración completada con éxito.")
     else:
         logger.log(f"Configuracion directa de '{app_name}' finalizada con advertencias o errores.", "WARNING")
+        _notify("Configuración finalizada con advertencias.")
 
     return overall_success

@@ -1,18 +1,27 @@
 """
-tui.py — Motor de Interfaz TUI Interactiva, Elegante y Moderna.
-Proporciona controles por teclado (flechas, espacio, enter), menús navegables,
-selectores de casillas múltiples, formularios estilizados y selectores de árbol.
+tui.py — Motor de Interfaz TUI Interactiva con Viewport Dinámico y Scroll Inteligente.
+Proporciona controles por teclado (flechas, espacio, enter, RePág, AvPág, Inicio, Fin),
+menús navegables con ventana deslizante según el tamaño de la consola, selectores de
+casillas múltiples, formularios estilizados y selectores de árbol.
 """
 
 import sys
 import os
-from typing import List, Dict, Any, Optional
+import shutil
+from typing import List, Dict, Any, Optional, Tuple
 
 # Ensure UTF-8 encoding for Windows console
 if sys.platform == "win32":
     try:
         sys.stdout.reconfigure(encoding='utf-8')
         sys.stderr.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
+    try:
+        import ctypes
+        kernel32 = ctypes.windll.kernel32
+        kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
     except Exception:
         pass
 
@@ -46,6 +55,36 @@ def clear_screen():
     sys.stdout.write("\033[H\033[2J")
     sys.stdout.flush()
 
+def get_terminal_dimensions() -> Tuple[int, int]:
+    """Retorna (ancho, alto) de la consola actual con fallback seguro."""
+    try:
+        sz = shutil.get_terminal_size(fallback=(86, 24))
+        return sz.columns, sz.lines
+    except Exception:
+        return 86, 24
+
+def calculate_viewport(current_idx: int, total_items: int, visible_height: int, previous_start: int = 0) -> Tuple[int, int]:
+    """
+    Calcula el rango [start_idx, end_idx) de elementos visibles para una lista con scroll,
+    asegurando que current_idx siempre esté visible y el movimiento sea suave.
+    """
+    if total_items <= visible_height:
+        return 0, total_items
+
+    start = previous_start
+
+    # Si el cursor sube por encima de la ventana visible
+    if current_idx < start:
+        start = current_idx
+    # Si el cursor baja por debajo de la ventana visible
+    elif current_idx >= start + visible_height:
+        start = current_idx - visible_height + 1
+
+    # Asegurar límites válidos
+    start = max(0, min(start, total_items - visible_height))
+    end = min(total_items, start + visible_height)
+    return start, end
+
 def read_key() -> str:
     """Lee una pulsación de tecla en Windows de forma no bloqueante/interactiva."""
     try:
@@ -57,6 +96,10 @@ def read_key() -> str:
             elif ch2 == b'P': return "DOWN"
             elif ch2 == b'K': return "LEFT"
             elif ch2 == b'M': return "RIGHT"
+            elif ch2 == b'I': return "PAGE_UP"
+            elif ch2 == b'Q': return "PAGE_DOWN"
+            elif ch2 == b'G': return "HOME"
+            elif ch2 == b'O': return "END"
             return "SPECIAL"
         elif ch in (b'\r', b'\n'):
             return "ENTER"
@@ -83,7 +126,8 @@ def read_key() -> str:
         return "OTHER"
 
 def tui_header(title: str, subtitle: str = ""):
-    w = 86
+    cols, _ = get_terminal_dimensions()
+    w = max(70, min(cols - 2, 88))
     print(f"{C_CYAN}{C_BOLD}╔{'═' * (w - 2)}╗{C_RESET}")
     print(f"{C_CYAN}{C_BOLD}║ {C_YELLOW}{title.center(w - 4)}{C_CYAN} ║{C_RESET}")
     if subtitle:
@@ -98,8 +142,7 @@ def tui_select_menu(
     custom_label: str = "[ M ] Instalador Manual / Archivo Local"
 ) -> Optional[Dict[str, Any]]:
     """
-    Menú interactivo de selección única con flechas ↑ / ↓ y Enter.
-    Cada opción puede ser: {"label": "...", "badge": "...", "detail": "...", "value": ...}
+    Menú interactivo de selección única con ventana de scroll dinámico.
     """
     if not options and not allow_custom:
         return None
@@ -115,12 +158,24 @@ def tui_select_menu(
 
     current_idx = 0
     total = len(items)
+    scroll_start = 0
 
     while True:
         clear_screen()
         tui_header(title, subtitle)
 
-        for idx, item in enumerate(items):
+        _, term_lines = get_terminal_dimensions()
+        visible_height = max(5, term_lines - 10)
+        start_idx, end_idx = calculate_viewport(current_idx, total, visible_height, scroll_start)
+        scroll_start = start_idx
+
+        if start_idx > 0:
+            print(f"   {C_GRAY}▲ (... {start_idx} opciones más arriba ...){C_RESET}")
+        else:
+            print("")
+
+        for idx in range(start_idx, end_idx):
+            item = items[idx]
             is_active = (idx == current_idx)
             cursor = f"{C_YELLOW}{C_BOLD} ▶ {C_RESET}" if is_active else "   "
 
@@ -140,9 +195,14 @@ def tui_select_menu(
             detail = f"{C_GRAY}{item.get('detail', '')}{C_RESET}" if "detail" in item else ""
 
             if is_active:
-                print(f"{cursor}{badge_str}{C_BOLD}{C_INV} {label:<36} {C_RESET} {detail}")
+                print(f"{cursor}{badge_str}{C_BOLD}{C_INV} {label:<34} {C_RESET} {detail}")
             else:
-                print(f"{cursor}{badge_str}{C_WHITE}{label:<38}{C_RESET} {detail}")
+                print(f"{cursor}{badge_str}{C_WHITE}{label:<36}{C_RESET} {detail}")
+
+        if end_idx < total:
+            print(f"   {C_GRAY}▼ (... {total - end_idx} opciones más abajo ...){C_RESET}")
+        else:
+            print("")
 
         print(f"\n{C_GRAY}{'─' * 86}{C_RESET}")
         print(f"  {C_YELLOW}Controles:{C_RESET} {C_BOLD}↑/↓{C_RESET} Navegar  |  {C_BOLD}ENTER{C_RESET} Seleccionar  |  {C_BOLD}ESC / Q{C_RESET} Cancelar")
@@ -152,6 +212,14 @@ def tui_select_menu(
             current_idx = (current_idx - 1) % total
         elif key == "DOWN":
             current_idx = (current_idx + 1) % total
+        elif key == "PAGE_UP":
+            current_idx = max(0, current_idx - visible_height)
+        elif key == "PAGE_DOWN":
+            current_idx = min(total - 1, current_idx + visible_height)
+        elif key == "HOME":
+            current_idx = 0
+        elif key == "END":
+            current_idx = total - 1
         elif key == "ENTER":
             clear_screen()
             return items[current_idx]
@@ -166,7 +234,7 @@ def tui_radio_select(
     subtitle: str = "Usa ↑ / ↓ para cambiar de opción (●) y ENTER para confirmar"
 ) -> Optional[Dict[str, Any]]:
     """
-    Selector interactivo de Radio Button único (●) / (○) con preselección por defecto.
+    Selector interactivo de Radio Button único con viewport dinámico.
     """
     if not options:
         return None
@@ -174,7 +242,6 @@ def tui_radio_select(
     items = list(options)
     current_idx = 0
 
-    # Buscar índice del valor por defecto si se especifica
     if default_value is not None:
         for i, opt in enumerate(items):
             if opt.get("value") == default_value:
@@ -182,12 +249,24 @@ def tui_radio_select(
                 break
 
     total = len(items)
+    scroll_start = 0
 
     while True:
         clear_screen()
         tui_header(title, subtitle)
 
-        for idx, item in enumerate(items):
+        _, term_lines = get_terminal_dimensions()
+        visible_height = max(5, term_lines - 10)
+        start_idx, end_idx = calculate_viewport(current_idx, total, visible_height, scroll_start)
+        scroll_start = start_idx
+
+        if start_idx > 0:
+            print(f"   {C_GRAY}▲ (... {start_idx} opciones más arriba ...){C_RESET}")
+        else:
+            print("")
+
+        for idx in range(start_idx, end_idx):
+            item = items[idx]
             is_active = (idx == current_idx)
             cursor = f"{C_YELLOW}{C_BOLD}▶{C_RESET}" if is_active else " "
             radio_icon = f"{C_GREEN}{C_BOLD}(●){C_RESET}" if is_active else f"{C_GRAY}(○){C_RESET}"
@@ -201,18 +280,31 @@ def tui_radio_select(
             detail = f"{C_GRAY}{item.get('detail', '')}{C_RESET}" if "detail" in item else ""
 
             if is_active:
-                print(f" {cursor} {radio_icon} {badge_str}{C_BOLD}{C_INV} {label:<36} {C_RESET} {detail}")
+                print(f" {cursor} {radio_icon} {badge_str}{C_BOLD}{C_INV} {label:<34} {C_RESET} {detail}")
             else:
-                print(f" {cursor} {radio_icon} {badge_str}{C_WHITE}{label:<38}{C_RESET} {detail}")
+                print(f" {cursor} {radio_icon} {badge_str}{C_WHITE}{label:<36}{C_RESET} {detail}")
+
+        if end_idx < total:
+            print(f"   {C_GRAY}▼ (... {total - end_idx} opciones más abajo ...){C_RESET}")
+        else:
+            print("")
 
         print(f"\n{C_GRAY}{'─' * 86}{C_RESET}")
-        print(f"  {C_YELLOW}Controles:{C_RESET} {C_BOLD}↑/↓{C_RESET} Mover selección  |  {C_BOLD}ENTER{C_RESET} Confirmar opción marcada  |  {C_BOLD}ESC / Q{C_RESET} Volver")
+        print(f"  {C_YELLOW}Controles:{C_RESET} {C_BOLD}↑/↓{C_RESET} Mover selección  |  {C_BOLD}ENTER{C_RESET} Confirmar  |  {C_BOLD}ESC / Q{C_RESET} Volver")
 
         key = read_key()
         if key == "UP":
             current_idx = (current_idx - 1) % total
         elif key == "DOWN":
             current_idx = (current_idx + 1) % total
+        elif key == "PAGE_UP":
+            current_idx = max(0, current_idx - visible_height)
+        elif key == "PAGE_DOWN":
+            current_idx = min(total - 1, current_idx + visible_height)
+        elif key == "HOME":
+            current_idx = 0
+        elif key == "END":
+            current_idx = total - 1
         elif key == "ENTER":
             clear_screen()
             return items[current_idx]
@@ -226,12 +318,11 @@ def tui_multi_checkbox(
     subtitle: str = "Usa ↑ / ↓ para navegar, ESPACIO para marcar/desmarcar, ENTER para confirmar"
 ) -> List[Dict[str, Any]]:
     """
-    Selector interactivo de casillas múltiples [ ] / [x] con flechas, Espacio y Enter.
+    Selector interactivo de casillas múltiples [ ] / [x] con viewport dinámico.
     """
     if not items:
         return []
 
-    # State tracking
     state_items = []
     for it in items:
         raw_obj = it.get("raw", it)
@@ -244,6 +335,7 @@ def tui_multi_checkbox(
 
     current_idx = 0
     total = len(state_items)
+    scroll_start = 0
 
     while True:
         clear_screen()
@@ -252,18 +344,34 @@ def tui_multi_checkbox(
         sel_count = sum(1 for x in state_items if x["selected"])
         print(f"  {C_CYAN}Elementos marcados:{C_RESET} {C_BOLD}{sel_count}/{total}{C_RESET}\n")
 
-        for idx, item in enumerate(state_items):
+        _, term_lines = get_terminal_dimensions()
+        visible_height = max(5, term_lines - 12)
+        start_idx, end_idx = calculate_viewport(current_idx, total, visible_height, scroll_start)
+        scroll_start = start_idx
+
+        if start_idx > 0:
+            print(f"   {C_GRAY}▲ (... {start_idx} elementos más arriba ...){C_RESET}")
+        else:
+            print("")
+
+        for idx in range(start_idx, end_idx):
+            item = state_items[idx]
             is_active = (idx == current_idx)
             cursor = f"{C_YELLOW}{C_BOLD}▶{C_RESET}" if is_active else " "
             chk = f"{C_GREEN}{C_BOLD}[x]{C_RESET}" if item["selected"] else f"{C_GRAY}[ ]{C_RESET}"
-            
+
             label = item["label"]
             detail = f"{C_GRAY}({item['detail']}){C_RESET}" if item["detail"] else ""
 
             if is_active:
-                print(f" {cursor} {chk} {C_BOLD}{C_INV} {label:<36} {C_RESET} {detail}")
+                print(f" {cursor} {chk} {C_BOLD}{C_INV} {label:<34} {C_RESET} {detail}")
             else:
-                print(f" {cursor} {chk} {C_WHITE}{label:<38}{C_RESET} {detail}")
+                print(f" {cursor} {chk} {C_WHITE}{label:<36}{C_RESET} {detail}")
+
+        if end_idx < total:
+            print(f"   {C_GRAY}▼ (... {total - end_idx} elementos más abajo ...){C_RESET}")
+        else:
+            print("")
 
         print(f"\n{C_GRAY}{'─' * 86}{C_RESET}")
         print(f"  {C_YELLOW}Controles:{C_RESET} {C_BOLD}ESPACIO{C_RESET}=Marcar/Desmarcar | {C_BOLD}A{C_RESET}=Todas | {C_BOLD}N{C_RESET}=Ninguna | {C_BOLD}ENTER{C_RESET}=Confirmar")
@@ -273,6 +381,14 @@ def tui_multi_checkbox(
             current_idx = (current_idx - 1) % total
         elif key == "DOWN":
             current_idx = (current_idx + 1) % total
+        elif key == "PAGE_UP":
+            current_idx = max(0, current_idx - visible_height)
+        elif key == "PAGE_DOWN":
+            current_idx = min(total - 1, current_idx + visible_height)
+        elif key == "HOME":
+            current_idx = 0
+        elif key == "END":
+            current_idx = total - 1
         elif key == "SPACE":
             state_items[current_idx]["selected"] = not state_items[current_idx]["selected"]
         elif key == "A":
@@ -292,9 +408,6 @@ def tui_input_box(
     default_val: str = "",
     subtitle: str = "Escribe el texto y pulsa ENTER para confirmar"
 ) -> str:
-    """
-    Muestra un cuadro TUI elegante para la entrada de texto interactiva.
-    """
     clear_screen()
     tui_header(title, subtitle)
 
@@ -311,9 +424,6 @@ def tui_input_box(
     return val if val else default_val
 
 def tui_confirm(title: str, question: str, default_yes: bool = True) -> bool:
-    """
-    Cuadro de confirmación interactivo [ Sí ] / [ No ] navegable con flechas o Y/N.
-    """
     selected_yes = default_yes
 
     while True:
@@ -347,8 +457,8 @@ def tui_confirm(title: str, question: str, default_yes: bool = True) -> bool:
 
 def run_tui_app_selector(discovered_apps: list) -> list:
     """
-    Renderiza el árbol TUI interactivo del Configurador con soporte de navegación
-    completa por teclado, selección por categorías en bloque y métricas en tiempo real.
+    Renderiza el árbol TUI interactivo del Configurador con soporte de viewport dinámico,
+    scroll inteligente según la dimensión de la consola y navegación extendida.
     """
     categories_map = {}
     for item in discovered_apps:
@@ -380,6 +490,7 @@ def run_tui_app_selector(discovered_apps: list) -> list:
 
     current_idx = 0
     total_nodes = len(flat_items)
+    scroll_start = 0
 
     while True:
         clear_screen()
@@ -391,7 +502,20 @@ def run_tui_app_selector(discovered_apps: list) -> list:
             f"Seleccionadas: {selected_count}/{total_apps_count} aplicaciones para instalar"
         )
 
-        for idx, node in enumerate(flat_items):
+        _, term_lines = get_terminal_dimensions()
+        # Reservamos espacio para header (7 líneas), footer (5 líneas) y márgenes (2 líneas)
+        visible_height = max(6, term_lines - 12)
+        start_idx, end_idx = calculate_viewport(current_idx, total_nodes, visible_height, scroll_start)
+        scroll_start = start_idx
+
+        # Indicador superior de scroll
+        if start_idx > 0:
+            print(f"  {C_GRAY}▲ [... {start_idx} elementos más arriba — usa RePág o ↑ ...]{C_RESET}")
+        else:
+            print(f"  {C_GRAY}╔═ Inicio del Catálogo ═════════════════════════════════════════════════════╗{C_RESET}")
+
+        for idx in range(start_idx, end_idx):
+            node = flat_items[idx]
             is_cursor = (idx == current_idx)
             cursor_mark = f"{C_YELLOW}{C_BOLD}▶{C_RESET}" if is_cursor else " "
 
@@ -422,16 +546,30 @@ def run_tui_app_selector(discovered_apps: list) -> list:
                 if is_cursor:
                     item_style = f"{C_BOLD}{C_INV}{C_WHITE}"
 
-                print(f" {cursor_mark}    {chk} {prio_badge} {item_style}{app_name:<36}{C_RESET} {has_cfg}")
+                print(f" {cursor_mark}    {chk} {prio_badge} {item_style}{app_name:<34}{C_RESET} {has_cfg}")
+
+        # Indicador inferior de scroll
+        if end_idx < total_nodes:
+            print(f"  {C_GRAY}▼ [... {total_nodes - end_idx} elementos más abajo — usa AvPág o ↓ ...]{C_RESET}")
+        else:
+            print(f"  {C_GRAY}╚═ Fin del Catálogo ════════════════════════════════════════════════════════╝{C_RESET}")
 
         print(f"\n{C_GRAY}{'─' * 86}{C_RESET}")
-        print(f"  {C_YELLOW}Controles:{C_RESET} {C_BOLD}↑/↓{C_RESET}=Navegar | {C_BOLD}ESPACIO{C_RESET}=Marcar/Desmarcar | {C_BOLD}A{C_RESET}=Todas | {C_BOLD}N{C_RESET}=Ninguna | {C_BOLD}ENTER{C_RESET}=Iniciar")
+        print(f"  {C_YELLOW}Controles:{C_RESET} {C_BOLD}↑/↓{C_RESET}=Navegar | {C_BOLD}RePág/AvPág{C_RESET}=Pág | {C_BOLD}ESPACIO{C_RESET}=Marcar | {C_BOLD}A{C_RESET}=Todas | {C_BOLD}N{C_RESET}=Ninguna | {C_BOLD}ENTER{C_RESET}=Iniciar")
 
         key = read_key()
         if key == "UP":
             current_idx = (current_idx - 1) % total_nodes
         elif key == "DOWN":
             current_idx = (current_idx + 1) % total_nodes
+        elif key == "PAGE_UP":
+            current_idx = max(0, current_idx - visible_height)
+        elif key == "PAGE_DOWN":
+            current_idx = min(total_nodes - 1, current_idx + visible_height)
+        elif key == "HOME":
+            current_idx = 0
+        elif key == "END":
+            current_idx = total_nodes - 1
         elif key == "SPACE":
             node = flat_items[current_idx]
             if node["type"] == "HEADER":

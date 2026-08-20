@@ -1,5 +1,7 @@
 """
 Configurador de Windows 11 — Motor Principal Unificado.
+Incorpora Modo Keep-Awake para evitar suspensión, Doble Barra de Progreso en tiempo real
+y despliegue garantizado de dotfiles para apps nuevas y preexistentes.
 """
 
 import os
@@ -12,13 +14,14 @@ import platform
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.core.logger import get_logger
+from src.core.power import keep_awake
 from src.core.installer import install_app
 from src.core.configurer import apply_direct_configuration
-from src.core.tui import run_tui_app_selector
+from src.core.tui import run_tui_app_selector, CATEGORY_NAMES
 from src.core.ui import (
     print_banner, print_header, print_diagnostics_card,
     print_summary_table, prompt_select_target_drive,
-    render_progress_bar, finish_progress_item,
+    render_dual_progress, finish_progress_item,
     C_CYAN, C_YELLOW, C_GREEN, C_WHITE, C_RESET, C_BOLD, C_GRAY
 )
 
@@ -111,7 +114,7 @@ def main():
     if args.dry_run:
         logger.log("[MODO SIMULACION ACTIVADO] No se realizaran cambios reales en el sistema.", "WARNING")
 
-    # 1. Drive Selection Prompt (Interactive unless provided via CLI)
+    # 1. Selección de Unidad de Disco (Interactivo vs CLI)
     target_drive = args.target_drive
     if not target_drive and not args.test_mode and not args.app:
         target_drive = prompt_select_target_drive(default_drive="C:")
@@ -120,7 +123,7 @@ def main():
 
     logger.log(f"Unidad de destino configurada: {target_drive}", "INFO")
 
-    # 2. Diagnostico del sistema
+    # 2. Diagnóstico del sistema
     logger.log("Ejecutando diagnostico del sistema...", "INFO")
     sys_info = get_system_diagnostics(target_drive)
     print_diagnostics_card(sys_info)
@@ -149,7 +152,7 @@ def main():
         selected = discovered
 
     else:
-        # Launch TUI Selector (Nav with arrows, Space bar to toggle checkboxes)
+        # Lanzar Selector TUI con Viewport y navegación por teclado
         selected = run_tui_app_selector(discovered)
         if not selected:
             logger.log("Ejecucion cancelada por el usuario o seleccion vacia.", "INFO")
@@ -163,7 +166,7 @@ def main():
         auto_added = len(ordered_selected) - len(selected)
         logger.log(f"Se incluyeron automaticamente {auto_added} prerrequisitos requeridos por dependencias.", "INFO")
 
-    # 5. Pipeline de ejecución silencioso con barra de progreso
+    # 5. Pipeline de ejecución con Modo Keep-Awake y Doble Barra de Progreso
     print_header("Ejecución del Pipeline de Instalación y Configuración")
 
     summary_results = []
@@ -177,61 +180,101 @@ def main():
         "DocumentsPath": os.path.join(os.environ.get("USERPROFILE", os.path.expanduser("~")), "Documents")
     }
 
-    for idx, item in enumerate(ordered_selected, 1):
-        manifest = item["manifest"]
-        folder = item["folder_path"]
-        app_name = manifest.get("name", "Unknown")
+    # Activamos el modo Keep-Awake para que el sistema y la pantalla no se suspendan durante el proceso
+    with keep_awake():
+        for idx, item in enumerate(ordered_selected, 1):
+            manifest = item["manifest"]
+            folder = item["folder_path"]
+            app_name = manifest.get("name", "Unknown")
+            cat_key = manifest.get("category", "utilidades")
+            phase_name = CATEGORY_NAMES.get(cat_key, cat_key.upper())
 
-        logger.log(f"--- Procesando: {app_name} ---", "INFO")
-        install_success = False
-        already_installed = False
-        config_success = False
-        has_direct_config = manifest.get("config", {}).get("has_direct_config") or manifest.get("has_direct_config")
-
-        try:
-            # Step 1: Install
-            render_progress_bar(idx, total_apps, app_name, "Instalando...")
-            install_success, already_installed = install_app(manifest, installers_dir=installers_dir, target_drive=sys_info['TargetDrive'], dry_run=args.dry_run)
-
-            # Step 2: Direct Config
-            if install_success:
-                if has_direct_config:
-                    render_progress_bar(idx, total_apps, app_name, "Configurando...")
-                    config_success = apply_direct_configuration(folder, target_paths, dry_run=args.dry_run)
-                else:
-                    config_success = True
-        except Exception as err:
-            logger.log(f"Error critico no controlado al procesar '{app_name}': {err}", "ERROR")
+            logger.log(f"--- Procesando: {app_name} ---", "INFO")
             install_success = False
+            already_installed = False
             config_success = False
+            has_direct_config = manifest.get("config", {}).get("has_direct_config") or manifest.get("has_direct_config")
 
-        # Finish UI item render
-        finish_progress_item(app_name, success=(install_success and config_success), already_installed=already_installed)
+            total_local_steps = 3 if has_direct_config else 2
 
-        # Record Status
-        if args.dry_run:
-            status_text = "SIMULACIÓN"
-            installed_text = "Simulada"
-        elif already_installed:
-            status_text = "INSTALADO"
-            installed_text = "Ya estaba"
-        elif install_success and config_success:
-            status_text = "ÉXITO"
-            installed_text = "Sí"
-        else:
-            status_text = "ERROR"
-            installed_text = "No"
+            def progress_cb(step_desc, step_num=1):
+                render_dual_progress(
+                    global_current=idx,
+                    global_total=total_apps,
+                    app_name=app_name,
+                    local_step=step_num,
+                    total_local_steps=total_local_steps,
+                    step_desc=step_desc,
+                    phase_name=phase_name
+                )
 
-        configured_text = "Sí" if config_success else ("N/A" if not has_direct_config else "No")
+            try:
+                # Paso 1: Comprobación e Instalación
+                progress_cb("Iniciando instalación...", 1)
+                install_success, already_installed = install_app(
+                    manifest,
+                    installers_dir=installers_dir,
+                    target_drive=sys_info['TargetDrive'],
+                    dry_run=args.dry_run,
+                    progress_callback=lambda msg: progress_cb(msg, 1)
+                )
 
-        summary_results.append({
-            "Application": app_name,
-            "Installed": installed_text,
-            "Configured": configured_text,
-            "Status": status_text
-        })
+                # Paso 2: Configuración Directa (se aplica siempre, esté recién instalada o ya existiera)
+                if install_success:
+                    if has_direct_config:
+                        progress_cb("Inyectando dotfiles y configuración...", 2)
+                        config_success = apply_direct_configuration(
+                            folder,
+                            target_paths,
+                            dry_run=args.dry_run,
+                            progress_callback=lambda msg: progress_cb(msg, 2)
+                        )
+                    else:
+                        config_success = True
 
-    # Summary table
+                progress_cb("Finalizando componente...", total_local_steps)
+
+            except Exception as err:
+                logger.log(f"Error critico no controlado al procesar '{app_name}': {err}", "ERROR")
+                install_success = False
+                config_success = False
+
+            # Renderizar badge final individual
+            was_configured = has_direct_config and config_success
+            finish_progress_item(
+                app_name,
+                success=(install_success and config_success),
+                already_installed=already_installed,
+                was_configured=was_configured
+            )
+
+            # Registrar Estado para la tabla de resumen
+            if args.dry_run:
+                status_text = "SIMULACIÓN"
+                installed_text = "Simulada"
+            elif already_installed and was_configured:
+                status_text = "CONFIGURADA"
+                installed_text = "Ya estaba"
+            elif already_installed:
+                status_text = "INSTALADO"
+                installed_text = "Ya estaba"
+            elif install_success and config_success:
+                status_text = "ÉXITO"
+                installed_text = "Sí (Nueva)"
+            else:
+                status_text = "ERROR"
+                installed_text = "No"
+
+            configured_text = "Sí" if (config_success and has_direct_config) else ("N/A" if not has_direct_config else "No")
+
+            summary_results.append({
+                "Application": app_name,
+                "Installed": installed_text,
+                "Configured": configured_text,
+                "Status": status_text
+            })
+
+    # 6. Tabla Resumen Final
     print_summary_table(summary_results)
     logger.log(f"Proceso finalizado con exito. Registro exclusivo guardado en: {logger.log_file}", "SUCCESS")
 

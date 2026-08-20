@@ -1,5 +1,7 @@
 """
 ui.py — Componente de Presentación e Interfaz Visual Premium para Windows Configurator.
+Incluye soporte para Doble Barra de Progreso (Global + Local por App), badges de estado
+y tablas de resumen detalladas.
 """
 
 import sys
@@ -21,7 +23,7 @@ if sys.platform == "win32":
     except Exception:
         pass
 
-# Palette
+# Palette ANSI
 C_CYAN    = "\033[96m"
 C_BLUE    = "\033[94m"
 C_GREEN   = "\033[92m"
@@ -34,6 +36,9 @@ C_BOLD    = "\033[1m"
 C_DIM     = "\033[2m"
 C_INV     = "\033[7m"
 C_RESET   = "\033[0m"
+
+# State tracking for dual progress cursor positioning
+_DUAL_BAR_ACTIVE = False
 
 def print_banner():
     w = 86
@@ -110,46 +115,117 @@ def prompt_select_target_drive(default_drive="C:"):
     )
     return sel["value"] if sel else default_drive.upper()
 
-def render_progress_bar(current: int, total: int, app_name: str, status_msg: str):
-    percentage = int((current / total) * 100) if total > 0 else 100
-    bar_width = 30
-    filled = int((percentage / 100) * bar_width)
-    bar = "█" * filled + "░" * (bar_width - filled)
+def render_dual_progress(
+    global_current: int,
+    global_total: int,
+    app_name: str,
+    local_step: int,
+    total_local_steps: int,
+    step_desc: str,
+    phase_name: str = ""
+):
+    """
+    Renderiza dos barras de progreso en consola:
+    1. Progreso Global: Aplicaciones procesadas / Total catálogo.
+    2. Progreso Local: Sub-etapas de la aplicación actual en tiempo real.
+    """
+    global _DUAL_BAR_ACTIVE
 
-    sys.stdout.write(f"\r  {C_CYAN}[{bar}]{C_RESET} {C_BOLD}{percentage:3d}%{C_RESET} │ ({current}/{total}) {C_WHITE}{app_name:<28}{C_RESET} {C_YELLOW}{status_msg:<25}{C_RESET}")
+    # 1. Barra Global
+    global_pct = int((global_current / global_total) * 100) if global_total > 0 else 100
+    bar_width = 24
+    g_filled = int((global_pct / 100) * bar_width)
+    g_bar = "█" * g_filled + "░" * (bar_width - g_filled)
+    phase_tag = f" │ {C_MAGENTA}{phase_name}{C_RESET}" if phase_name else ""
+
+    line1 = f"  {C_CYAN}[Global]{C_RESET} [{C_CYAN}{g_bar}{C_RESET}] {C_BOLD}{global_pct:3d}%{C_RESET} ({global_current}/{global_total} Apps){phase_tag}"
+
+    # 2. Barra Local
+    local_pct = int((local_step / total_local_steps) * 100) if total_local_steps > 0 else 100
+    l_filled = int((local_pct / 100) * bar_width)
+    l_bar = "█" * l_filled + "░" * (bar_width - l_filled)
+
+    clean_app = app_name[:26]
+    clean_step = step_desc[:32]
+    line2 = f"  {C_YELLOW}[Local ]{C_RESET} [{C_YELLOW}{l_bar}{C_RESET}] {C_BOLD}{local_pct:3d}%{C_RESET} │ {C_WHITE}{clean_app:<26}{C_RESET} {C_YELLOW}{clean_step:<32}{C_RESET}"
+
+    # Si la barra ya estaba dibujada, subimos 1 línea para sobrescribir
+    if _DUAL_BAR_ACTIVE:
+        sys.stdout.write("\033[F\r\033[K" + line1 + "\n\r\033[K" + line2)
+    else:
+        sys.stdout.write("\r\033[K" + line1 + "\n\r\033[K" + line2)
+        _DUAL_BAR_ACTIVE = True
+
     sys.stdout.flush()
 
-def finish_progress_item(app_name: str, success: bool, already_installed: bool = False):
-    if already_installed:
-        badge = f"{C_GRAY}[ YA ESTABA ]{C_RESET}"
-    elif success:
-        badge = f"{C_GREEN}{C_BOLD}[    OK     ]{C_RESET}"
-    else:
-        badge = f"{C_RED}{C_BOLD}[   ERROR   ]{C_RESET}"
+def render_progress_bar(current: int, total: int, app_name: str, status_msg: str):
+    """Wrapper de retrocompatibilidad con una sola barra."""
+    render_dual_progress(
+        global_current=current,
+        global_total=total,
+        app_name=app_name,
+        local_step=1,
+        total_local_steps=2,
+        step_desc=status_msg
+    )
 
-    sys.stdout.write(f"\r  {badge} {C_WHITE}{C_BOLD}{app_name:<34}{C_RESET}                                                    \n")
+def finish_progress_item(
+    app_name: str,
+    success: bool,
+    already_installed: bool = False,
+    was_configured: bool = False
+):
+    """
+    Finaliza el renderizado del ítem actual imprimiendo su badge definitivo y limpiando la barra dual.
+    """
+    global _DUAL_BAR_ACTIVE
+
+    if already_installed and was_configured and success:
+        badge = f"{C_GREEN}{C_BOLD}[ OK (CONFIGURADA) ]{C_RESET}"
+    elif already_installed and not was_configured:
+        badge = f"{C_GRAY}[   YA INSTALADA   ]{C_RESET}"
+    elif success:
+        badge = f"{C_GREEN}{C_BOLD}[    OK (NUEVA)    ]{C_RESET}"
+    else:
+        badge = f"{C_RED}{C_BOLD}[      ERROR       ]{C_RESET}"
+
+    clean_app = app_name[:34]
+
+    # Limpiar las 2 líneas si estaban activas
+    if _DUAL_BAR_ACTIVE:
+        sys.stdout.write("\033[F\r\033[K" + f"  {badge} {C_WHITE}{C_BOLD}{clean_app:<34}{C_RESET}\n\r\033[K\033[F")
+        _DUAL_BAR_ACTIVE = False
+    else:
+        sys.stdout.write(f"\r  {badge} {C_WHITE}{C_BOLD}{clean_app:<34}{C_RESET}\n")
+
     sys.stdout.flush()
 
 def print_app_badge(status: str) -> str:
-    if status == "INSTALADO":
-        return f"{C_GREEN}[  INSTALADO  ]{C_RESET}"
-    elif status in ("EXITO", "ÉXITO"):
-        return f"{C_GREEN}{C_BOLD}[    ÉXITO    ]{C_RESET}"
+    if status in ("CONFIGURADA", "OK (CONFIGURADA)"):
+        return f"{C_GREEN}[  CONFIGURADA  ]{C_RESET}"
+    elif status == "INSTALADO":
+        return f"{C_GRAY}[  YA ESTABA   ]{C_RESET}"
+    elif status in ("EXITO", "ÉXITO", "NUEVA"):
+        return f"{C_GREEN}{C_BOLD}[    ÉXITO     ]{C_RESET}"
     elif status in ("SIMULACION", "SIMULACIÓN"):
-        return f"{C_YELLOW}[ SIMULACIÓN  ]{C_RESET}"
+        return f"{C_YELLOW}[  SIMULACIÓN  ]{C_RESET}"
     elif status == "OMITIDO":
-        return f"{C_GRAY}[   OMITIDO   ]{C_RESET}"
+        return f"{C_GRAY}[   OMITIDO    ]{C_RESET}"
     elif status in ("ERROR", "FALLO"):
-        return f"{C_RED}{C_BOLD}[    ERROR    ]{C_RESET}"
+        return f"{C_RED}{C_BOLD}[    ERROR     ]{C_RESET}"
     else:
         return f"{C_WHITE}[ {status} ]{C_RESET}"
 
 def print_summary_table(results: list):
+    # Asegurar que el cursor baje al final de las barras
+    sys.stdout.write("\n")
+    sys.stdout.flush()
+
     print_header("Resumen Final de Ejecución")
 
-    print(f"{C_BOLD}{C_BLUE}╔═{'═'*34}═╦═{'═'*12}═╦═{'═'*15}═╦═{'═'*16}═╗{C_RESET}")
-    print(f"{C_BOLD}{C_BLUE}║{C_WHITE} {'APLICACIÓN':<34} {C_BLUE}║{C_WHITE} {'INSTALADA':<12} {C_BLUE}║{C_WHITE} {'CONFIGURADA':<15} {C_BLUE}║{C_WHITE} {'ESTADO FINAL':<16} {C_BLUE}║{C_RESET}")
-    print(f"{C_BOLD}{C_BLUE}╠═{'═'*34}═╬═{'═'*12}═╬═{'═'*15}═╬═{'═'*16}═╣{C_RESET}")
+    print(f"{C_BOLD}{C_BLUE}╔═{'═'*34}═╦═{'═'*15}═╦═{'═'*15}═╦═{'═'*18}═╗{C_RESET}")
+    print(f"{C_BOLD}{C_BLUE}║{C_WHITE} {'APLICACIÓN':<34} {C_BLUE}║{C_WHITE} {'INSTALACIÓN':<15} {C_BLUE}║{C_WHITE} {'CONFIGURACIÓN':<15} {C_BLUE}║{C_WHITE} {'ESTADO FINAL':<18} {C_BLUE}║{C_RESET}")
+    print(f"{C_BOLD}{C_BLUE}╠═{'═'*34}═╬═{'═'*15}═╬═{'═'*15}═╬═{'═'*18}═╣{C_RESET}")
 
     for row in results:
         app_name = row["Application"][:34]
@@ -158,9 +234,9 @@ def print_summary_table(results: list):
         st       = row["Status"]
 
         st_badge = print_app_badge(st)
-        inst_color = C_GREEN if inst in ("Si", "Sí") else (C_GRAY if inst == "Ya estaba" else (C_YELLOW if inst == "Simulada" else C_RED))
+        inst_color = C_GREEN if "Sí" in inst or "Nueva" in inst else (C_GRAY if "estaba" in inst else (C_YELLOW if "Simulada" in inst else C_RED))
         cfg_color  = C_GREEN if cfg in ("Si", "Sí") else (C_GRAY if cfg == "N/A" else C_YELLOW)
 
-        print(f"{C_BLUE}║{C_RESET} {app_name:<34} {C_BLUE}║{C_RESET} {inst_color}{inst:<12}{C_RESET} {C_BLUE}║{C_RESET} {cfg_color}{cfg:<15}{C_RESET} {C_BLUE}║{C_RESET} {st_badge:<16} {C_BLUE}║{C_RESET}")
+        print(f"{C_BLUE}║{C_RESET} {app_name:<34} {C_BLUE}║{C_RESET} {inst_color}{inst:<15}{C_RESET} {C_BLUE}║{C_RESET} {cfg_color}{cfg:<15}{C_RESET} {C_BLUE}║{C_RESET} {st_badge:<18} {C_BLUE}║{C_RESET}")
 
-    print(f"{C_BOLD}{C_BLUE}╚═{'═'*34}═╩═{'═'*12}═╩═{'═'*15}═╩═{'═'*16}═╝{C_RESET}\n")
+    print(f"{C_BOLD}{C_BLUE}╚═{'═'*34}═╩═{'═'*15}═╩═{'═'*15}═╩═{'═'*18}═╝{C_RESET}\n")

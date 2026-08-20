@@ -3,6 +3,7 @@ import shutil
 import subprocess
 import winreg
 import zipfile
+from typing import Callable, Optional
 from src.core.logger import get_logger
 
 logger = get_logger()
@@ -231,7 +232,13 @@ def refresh_environment():
     except Exception as e:
         logger.log(f"Aviso al refrescar variables de entorno: {e}", "DEBUG")
 
-def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", dry_run: bool = False) -> tuple[bool, bool]:
+def install_app(
+    manifest: dict,
+    installers_dir: str,
+    target_drive: str = "C:",
+    dry_run: bool = False,
+    progress_callback: Optional[Callable[[str], None]] = None
+) -> tuple[bool, bool]:
     app_name = manifest.get("name", "Unknown")
     install_meta = manifest.get("install", {})
     install_type = install_meta.get("type", "winget")
@@ -240,24 +247,38 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
     silent_args = install_meta.get("silent_args", "")
     should_refresh_env = install_meta.get("refresh_env_after", True)
 
+    def _notify(msg: str):
+        if progress_callback:
+            progress_callback(msg)
+
     try:
         # Tipo script o none: instalacion delegada integramente al hook de configuracion
         if install_type in ["script", "none", "manual"]:
             logger.log(f"La aplicacion '{app_name}' se gestiona mediante scripts de configuracion.", "INFO")
+            _notify("Gestionada por script de configuración...")
             return True, False
 
+        _notify("Comprobando presencia en sistema...")
         if is_app_installed_advanced(manifest):
             logger.log(f"La aplicacion '{app_name}' ya se encuentra instalada en el sistema.", "INFO")
+            _notify("Ya instalada previamente.")
             return True, True
 
         if dry_run:
             logger.log(f"[SIMULACIÓN] Se instalaria '{app_name}' (Tipo: {install_type}, ID: {winget_id}, Local: {local_installer}).", "INFO")
+            _notify("Simulación de instalación...")
             return True, False
 
         # 1. Type: Winget (Silenced Output)
         if install_type == "winget" and winget_id:
             logger.log(f"Ejecutando instalacion de '{app_name}' via Winget (ID: {winget_id})...", "INFO")
+            _notify("Instalando vía Winget...")
+
             cmd = ["winget", "install", "--id", winget_id, "--silent", "--accept-package-agreements", "--accept-source-agreements"]
+            # Si hay silent_args / override_args específicos (ej. workloads de Visual Studio), pasarlos como --override
+            if silent_args and silent_args.strip() and silent_args.strip() != "--silent":
+                cmd.extend(["--override", silent_args.strip()])
+
             res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
             logger.log_raw(res.stdout)
             logger.log_raw(res.stderr)
@@ -265,6 +286,7 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
             if res.returncode == 0:
                 logger.log(f"Instalacion de '{app_name}' completada con exito via Winget.", "SUCCESS")
                 if should_refresh_env:
+                    _notify("Refrescando variables de entorno...")
                     refresh_environment()
                 return True, False
             else:
@@ -274,6 +296,7 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
         choco_id = install_meta.get("choco_id") or (winget_id if install_type == "choco" else None)
         if install_type == "choco" and choco_id:
             logger.log(f"Ejecutando instalacion de '{app_name}' via Chocolatey (Pkg: {choco_id})...", "INFO")
+            _notify("Instalando vía Chocolatey...")
             cmd = ["choco", "install", choco_id, "-y", "--no-progress"]
             res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
             logger.log_raw(res.stdout)
@@ -282,6 +305,7 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
             if res.returncode == 0:
                 logger.log(f"Instalacion de '{app_name}' completada con exito via Chocolatey.", "SUCCESS")
                 if should_refresh_env:
+                    _notify("Refrescando variables de entorno...")
                     refresh_environment()
                 return True, False
             else:
@@ -291,6 +315,7 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
         scoop_id = install_meta.get("scoop_id") or (winget_id if install_type == "scoop" else None)
         if install_type == "scoop" and scoop_id:
             logger.log(f"Ejecutando instalacion de '{app_name}' via Scoop (App: {scoop_id})...", "INFO")
+            _notify("Instalando vía Scoop...")
             cmd = ["scoop", "install", scoop_id]
             res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
             logger.log_raw(res.stdout)
@@ -299,6 +324,7 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
             if res.returncode == 0:
                 logger.log(f"Instalacion de '{app_name}' completada con exito via Scoop.", "SUCCESS")
                 if should_refresh_env:
+                    _notify("Refrescando variables de entorno...")
                     refresh_environment()
                 return True, False
             else:
@@ -313,6 +339,7 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
 
             if install_type == "exe" or (install_type == "winget" and local_installer.endswith(".exe")):
                 logger.log(f"Ejecutando instalador local '{local_installer}'...", "INFO")
+                _notify(f"Ejecutando {local_installer}...")
                 args = silent_args if silent_args else "/S /silent /quiet"
                 res = subprocess.run(f'"{local_path}" {args}', shell=True, capture_output=True, text=True, errors="ignore")
                 logger.log_raw(res.stdout)
@@ -321,6 +348,7 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
                 if res.returncode == 0:
                     logger.log(f"Instalacion local de '{app_name}' finalizada con exito.", "SUCCESS")
                     if should_refresh_env:
+                        _notify("Refrescando variables de entorno...")
                         refresh_environment()
                     return True, False
                 else:
@@ -329,6 +357,7 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
 
             elif install_type == "msi" or (install_type == "winget" and local_installer.endswith(".msi")):
                 logger.log(f"Ejecutando instalacion MSI '{local_installer}'...", "INFO")
+                _notify(f"Instalando MSI {local_installer}...")
                 cmd = f'msiexec /i "{local_path}" /qb /norestart'
                 res = subprocess.run(cmd, shell=True, capture_output=True, text=True, errors="ignore")
                 logger.log_raw(res.stdout)
@@ -337,6 +366,7 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
                 if res.returncode == 0:
                     logger.log(f"Instalacion MSI de '{app_name}' completada con exito.", "SUCCESS")
                     if should_refresh_env:
+                        _notify("Refrescando variables de entorno...")
                         refresh_environment()
                     return True, False
                 else:
@@ -345,6 +375,7 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
 
             elif install_type == "zip":
                 logger.log(f"Descomprimiendo archivo portable '{local_installer}'...", "INFO")
+                _notify("Descomprimiendo archivos...")
                 target_apps_dir = os.path.join(target_drive + "\\", "Apps", manifest.get("id", app_name))
                 os.makedirs(target_apps_dir, exist_ok=True)
                 try:
@@ -352,6 +383,7 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
                         zip_ref.extractall(target_apps_dir)
                     logger.log(f"Descompresion de '{app_name}' completada en '{target_apps_dir}'.", "SUCCESS")
                     if should_refresh_env:
+                        _notify("Refrescando variables de entorno...")
                         refresh_environment()
                     return True, False
                 except Exception as e:

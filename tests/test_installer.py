@@ -85,6 +85,27 @@ class TestInstaller(unittest.TestCase):
 
     @patch("src.core.installer.subprocess.run")
     @patch("src.core.installer.is_app_installed_advanced", return_value=False)
+    def test_install_app_winget_with_override_args(self, mock_is_installed, mock_subproc):
+        """Verifica que si silent_args está definido, se inyecte --override en winget."""
+        mock_subproc.return_value = MagicMock(returncode=0, stdout="Successfully installed", stderr="")
+        manifest = {
+            "id": "visual_studio_community",
+            "name": "Visual Studio 2022 Community",
+            "install": {
+                "type": "winget",
+                "winget_id": "Microsoft.VisualStudio.2022.Community",
+                "silent_args": "--add Microsoft.VisualStudio.Workload.ManagedDesktop --passive",
+                "refresh_env_after": False
+            }
+        }
+        success, already_installed = install_app(manifest, installers_dir="dummy", dry_run=False)
+        self.assertTrue(success)
+        cmd_called = mock_subproc.call_args[0][0]
+        self.assertIn("--override", cmd_called)
+        self.assertIn("--add Microsoft.VisualStudio.Workload.ManagedDesktop --passive", cmd_called)
+
+    @patch("src.core.installer.subprocess.run")
+    @patch("src.core.installer.is_app_installed_advanced", return_value=False)
     def test_install_app_winget_failure_without_fallback(self, mock_is_installed, mock_subproc):
         """Verifica el manejo de error cuando Winget falla y no hay instalador local."""
         mock_subproc.return_value = MagicMock(returncode=1, stdout="", stderr="Installation error")
@@ -143,13 +164,11 @@ class TestInstaller(unittest.TestCase):
         orig_env = dict(os.environ)
         try:
             refresh_environment()
-            # ComSpec debe ser una ruta absoluta válida existente
             comspec = os.environ.get("ComSpec", "")
             self.assertTrue(os.path.isabs(comspec), f"ComSpec '{comspec}' no es ruta absoluta")
             self.assertTrue(os.path.exists(comspec), f"ComSpec '{comspec}' no existe físicamente")
             self.assertNotIn("%", comspec, "ComSpec contiene % sin expandir")
 
-            # PATH debe ser válido y contener rutas expandidas
             path = os.environ.get("PATH", "")
             self.assertGreater(len(path), 0)
             self.assertNotIn("%SystemRoot%", path, "PATH contiene '%SystemRoot%' sin expandir")
@@ -158,8 +177,6 @@ class TestInstaller(unittest.TestCase):
             os.environ.update(orig_env)
 
     def test_candidate_paths_isolation_no_false_positives(self):
-        """Verifica que la presencia de un ejecutable (ej. git) no marque erróneamente otras apps como instaladas."""
-        # App inexistente
         manifest_dummy = {
             "id": "non_existent_custom_app",
             "name": "Non Existent Custom App",
@@ -172,7 +189,6 @@ class TestInstaller(unittest.TestCase):
         self.assertFalse(is_app_installed_advanced(manifest_dummy))
 
     def test_script_install_type_never_false_positive_installed(self):
-        """Verifica que las apps de tipo script no se marquen como preinstaladas."""
         manifest_script = {
             "id": "windows_tweaks",
             "name": "Windows 11 Tweaks",
