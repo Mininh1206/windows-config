@@ -211,5 +211,7 @@ El proyecto tiene configuradas las siguientes skills en `.agents/skills/`:
 - **[2026-08-20] Ejecución de Comandos con PowerShell:** Cualquier comando en `config.commands` se ejecuta a través de PowerShell con el directorio de trabajo (`cwd`) fijado a la carpeta de la app para soportar tanto herramientas de línea de comandos como cmdlets de Windows.
 - **[2026-08-20] Rigor en Pruebas Automatizadas (TDD):** Toda funcionalidad de despliegue de archivos y hooks debe contar con pruebas reales en sandbox (`tests/test_app_isolated.py`, `tests/test_configurer.py`, `tests/test_installer.py`) que simulen el entorno sin modificar el sistema operativo real y eviten falsos positivos basados en meros `dry_run=True`.
 - **[2026-08-20] Publicación Dual ("Súbelo"):** Cuando el usuario indique *"súbelo"*, se debe realizar la publicación completa tanto en GitHub (commit, push y nueva versión/release con binario ejecutable compilado) como en el catálogo oficial de Microsoft Winget (`microsoft/winget-pkgs`).
+- **[2026-08-20] Presentación Previa Obligatoria antes de Publicar:** SIEMPRE se debe presentar al usuario un resumen detallado y exhaustivo de todos los cambios, mejoras y estado de las pruebas antes de publicar cualquier versión/release. NUNCA lanzar la publicación o el comando de release de forma anticipada sin que el usuario lo revise y dé su confirmación explícita.
+
 
 

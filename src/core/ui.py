@@ -1,7 +1,7 @@
 """
 ui.py — Componente de Presentación e Interfaz Visual Premium para Windows Configurator.
 Incluye soporte para Doble Barra de Progreso (Global + Local por App), badges de estado
-y tablas de resumen detalladas.
+persistentes que se acumulan en pantalla y tablas de resumen detalladas.
 """
 
 import sys
@@ -149,7 +149,7 @@ def render_dual_progress(
     clean_step = step_desc[:32]
     line2 = f"  {C_YELLOW}[Local ]{C_RESET} [{C_YELLOW}{l_bar}{C_RESET}] {C_BOLD}{local_pct:3d}%{C_RESET} │ {C_WHITE}{clean_app:<26}{C_RESET} {C_YELLOW}{clean_step:<32}{C_RESET}"
 
-    # Si la barra ya estaba dibujada, subimos 1 línea para sobrescribir
+    # Si la barra ya estaba dibujada en las 2 líneas inferiores, subimos 1 línea para actualizar
     if _DUAL_BAR_ACTIVE:
         sys.stdout.write("\033[F\r\033[K" + line1 + "\n\r\033[K" + line2)
     else:
@@ -176,7 +176,8 @@ def finish_progress_item(
     was_configured: bool = False
 ):
     """
-    Finaliza el renderizado del ítem actual imprimiendo su badge definitivo y limpiando la barra dual.
+    Finaliza el ítem actual: imprime su badge definitivo de forma permanente en pantalla
+    y limpia la línea de progreso local para que el histórico de aplicaciones se acumule.
     """
     global _DUAL_BAR_ACTIVE
 
@@ -191,9 +192,10 @@ def finish_progress_item(
 
     clean_app = app_name[:34]
 
-    # Limpiar las 2 líneas si estaban activas
     if _DUAL_BAR_ACTIVE:
-        sys.stdout.write("\033[F\r\033[K" + f"  {badge} {C_WHITE}{C_BOLD}{clean_app:<34}{C_RESET}\n\r\033[K\033[F")
+        # Subir a la línea 1 (donde estaba [Global]), imprimir el badge definitivo,
+        # bajar a la línea 2 (donde estaba [Local]), limpiarla y avanzar a una nueva línea limpia
+        sys.stdout.write("\033[F\r\033[K" + f"  {badge} {C_WHITE}{C_BOLD}{clean_app:<34}{C_RESET}\n\r\033[K\n")
         _DUAL_BAR_ACTIVE = False
     else:
         sys.stdout.write(f"\r  {badge} {C_WHITE}{C_BOLD}{clean_app:<34}{C_RESET}\n")
@@ -217,7 +219,6 @@ def print_app_badge(status: str) -> str:
         return f"{C_WHITE}[ {status} ]{C_RESET}"
 
 def print_summary_table(results: list):
-    # Asegurar que el cursor baje al final de las barras
     sys.stdout.write("\n")
     sys.stdout.flush()
 

@@ -8,10 +8,12 @@ valida con winget validate, hace commit/push a git, crea el release en GitHub y 
 import os
 import sys
 import re
+import time
 import argparse
 import hashlib
 import subprocess
 import shutil
+import urllib.request
 
 # Forzar UTF-8 en salida
 if sys.platform == "win32":
@@ -56,7 +58,7 @@ def get_latest_git_version() -> str:
         return "1.0.0"
 
 def get_next_patch_version(latest: str) -> str:
-    """Incrementa la versión patch (ej: 1.0.3 -> 1.0.4)."""
+    """Incrementa la versión patch (ej: 1.0.5 -> 1.0.6)."""
     parts = latest.split(".")
     if len(parts) >= 3:
         try:
@@ -183,7 +185,7 @@ def validate_manifests(manifest_dir: str) -> bool:
 
 def main():
     parser = argparse.ArgumentParser(description="Automatización de Publicación Dual (GitHub Releases + Winget)")
-    parser.add_argument("--version", help="Versión a publicar (ej: 1.0.4). Si se omite, se calcula automáticamente.")
+    parser.add_argument("--version", help="Versión a publicar (ej: 1.0.6). Si se omite, se calcula automáticamente.")
     parser.add_argument("--title", help="Título del Release en GitHub.")
     parser.add_argument("--notes", help="Notas del Release.")
     parser.add_argument("--skip-build", action="store_true", help="Omitir compilación de configurador.exe si ya existe.")
@@ -206,7 +208,9 @@ def main():
     print(f"   (Última versión detectada: v{latest_ver})")
     print("========================================================================")
 
-    dist_exe = os.path.join(PROJECT_ROOT, "dist", "configurador.exe")
+    dist_dir = os.path.join(PROJECT_ROOT, "dist")
+    build_dir = os.path.join(PROJECT_ROOT, "build")
+    dist_exe = os.path.join(dist_dir, "configurador.exe")
 
     # 1. Compilación del binario ejecutable
     if not args.skip_build:
@@ -214,11 +218,20 @@ def main():
         if args.dry_run:
             print("[DRY-RUN] Simulación: Se compilaría configurador.exe con PyInstaller.")
         else:
+            # Limpiar compilaciones anteriores para garantizar hash único y fresco
+            if os.path.exists(dist_exe):
+                try: os.remove(dist_exe)
+                except Exception: pass
+            if os.path.exists(build_dir):
+                try: shutil.rmtree(build_dir, ignore_errors=True)
+                except Exception: pass
+
             build_script = os.path.join(PROJECT_ROOT, "src", "build_exe.py")
             res = subprocess.run([sys.executable, build_script], cwd=PROJECT_ROOT)
             if res.returncode != 0 or not os.path.exists(dist_exe):
                 print("[ERROR] Falló la compilación de configurador.exe")
                 sys.exit(1)
+            time.sleep(1)
     else:
         print("\n[PASO 1/5] Omitiendo compilación de configurador.exe (--skip-build)")
 
@@ -258,7 +271,6 @@ def main():
             # Git add y commit
             subprocess.run(["git", "add", "-A"], cwd=PROJECT_ROOT, check=True)
             commit_msg = f"feat: v{target_version} - Release and Winget manifests update"
-            # Comprobar si hay cambios para hacer commit
             diff_res = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=PROJECT_ROOT)
             if diff_res.returncode != 0:
                 subprocess.run(["git", "commit", "-m", commit_msg], cwd=PROJECT_ROOT, check=True)
@@ -281,6 +293,21 @@ def main():
                 print(f"[GH EXITO] Release creado: {gh_res.stdout.strip()}")
             else:
                 print(f"[GH AVISO] Salida de gh release create: {gh_res.stderr.strip() or gh_res.stdout.strip()}")
+
+            # Verificación de integridad: comprobar que el asset descargado de GitHub coincide 100% con el hash
+            asset_url = f"https://github.com/{REPO_OWNER_NAME}/releases/download/v{target_version}/configurador.exe"
+            print(f"[VERIFICACION] Comprobando hash del binario publicado en GitHub...")
+            time.sleep(3)
+            try:
+                remote_bytes = urllib.request.urlopen(asset_url).read()
+                remote_sha = hashlib.sha256(remote_bytes).hexdigest().upper()
+                if remote_sha == sha256_hash:
+                    print(f"[VERIFICACION EXITO] Hash remoto verificado: {remote_sha}")
+                else:
+                    print(f"[VERIFICACION ERROR] Discrepancia de hash: local={sha256_hash} vs remoto={remote_sha}")
+                    sys.exit(1)
+            except Exception as ex:
+                print(f"[VERIFICACION AVISO] No se pudo verificar inmediatamente el hash remoto: {ex}")
     else:
         print("\n[PASO 4/5] Omitiendo publicación en GitHub (--skip-github)")
 
