@@ -458,7 +458,8 @@ def tui_confirm(title: str, question: str, default_yes: bool = True) -> bool:
 def run_tui_app_selector(discovered_apps: list) -> list:
     """
     Renderiza el árbol TUI interactivo del Configurador con soporte de viewport dinámico,
-    scroll inteligente según la dimensión de la consola y navegación extendida.
+    scroll inteligente según la dimensión de la consola, navegación extendida y soporte
+    para aplicaciones deshabilitadas/bloqueadas.
     """
     categories_map = {}
     for item in discovered_apps:
@@ -466,10 +467,14 @@ def run_tui_app_selector(discovered_apps: list) -> list:
         cat = manifest.get("category", "utilidades")
         if cat not in categories_map:
             categories_map[cat] = []
+
+        is_disabled = bool(manifest.get("disabled", False) or (manifest.get("enabled") is False))
         categories_map[cat].append({
             "manifest": manifest,
             "folder_path": item["folder_path"],
-            "selected": True
+            "selected": False if is_disabled else True,
+            "disabled": is_disabled,
+            "disabled_reason": manifest.get("disabled_reason", "Requiere instalador manual / cuenta")
         })
 
     flat_items = []
@@ -495,11 +500,12 @@ def run_tui_app_selector(discovered_apps: list) -> list:
     while True:
         clear_screen()
         total_apps_count = sum(len(v) for v in categories_map.values())
-        selected_count = sum(sum(1 for a in v if a["selected"]) for v in categories_map.values())
+        total_active_count = sum(sum(1 for a in v if not a["disabled"]) for v in categories_map.values())
+        selected_count = sum(sum(1 for a in v if a["selected"] and not a["disabled"]) for v in categories_map.values())
 
         tui_header(
             "MENÚ INTERACTIVO DE SELECCIÓN DE APLICACIONES",
-            f"Seleccionadas: {selected_count}/{total_apps_count} aplicaciones para instalar"
+            f"Seleccionadas: {selected_count}/{total_active_count} aplicaciones activas ({total_apps_count} en catálogo)"
         )
 
         _, term_lines = get_terminal_dimensions()
@@ -522,8 +528,10 @@ def run_tui_app_selector(discovered_apps: list) -> list:
             if node["type"] == "HEADER":
                 cat_key = node["category_key"]
                 apps_in_cat = categories_map[cat_key]
-                all_selected = all(a["selected"] for a in apps_in_cat)
-                some_selected = any(a["selected"] for a in apps_in_cat)
+                active_in_cat = [a for a in apps_in_cat if not a["disabled"]]
+
+                all_selected = len(active_in_cat) > 0 and all(a["selected"] for a in active_in_cat)
+                some_selected = any(a["selected"] for a in active_in_cat)
 
                 check_icon = "[x]" if all_selected else ("[-]" if some_selected else "[ ]")
                 header_style = f"{C_BOLD}{C_CYAN}"
@@ -539,14 +547,21 @@ def run_tui_app_selector(discovered_apps: list) -> list:
                 prio = manifest.get("priority", 3)
                 prio_badge = f"{C_MAGENTA}[P{prio}]{C_RESET}"
 
-                has_cfg = f"{C_GREEN}[+Config]{C_RESET}" if manifest.get("config", {}).get("has_direct_config") or manifest.get("has_direct_config") else ""
-
-                chk = f"{C_GREEN}{C_BOLD}[x]{C_RESET}" if app["selected"] else f"{C_GRAY}[ ]{C_RESET}"
-                item_style = f"{C_WHITE}"
-                if is_cursor:
-                    item_style = f"{C_BOLD}{C_INV}{C_WHITE}"
-
-                print(f" {cursor_mark}    {chk} {prio_badge} {item_style}{app_name:<34}{C_RESET} {has_cfg}")
+                if app.get("disabled"):
+                    chk = f"{C_RED}[-]{C_RESET}"
+                    disabled_tag = f"{C_RED}{C_BOLD}[DESHABILITADO]{C_RESET}"
+                    reason = f"{C_GRAY}({app.get('disabled_reason', 'Manual')}){C_RESET}"
+                    item_style = f"{C_GRAY}"
+                    if is_cursor:
+                        item_style = f"{C_BOLD}{C_INV}{C_GRAY}"
+                    print(f" {cursor_mark}    {chk} {prio_badge} {item_style}{app_name:<28}{C_RESET} {disabled_tag} {reason}")
+                else:
+                    has_cfg = f"{C_GREEN}[+Config]{C_RESET}" if manifest.get("config", {}).get("has_direct_config") or manifest.get("has_direct_config") else ""
+                    chk = f"{C_GREEN}{C_BOLD}[x]{C_RESET}" if app["selected"] else f"{C_GRAY}[ ]{C_RESET}"
+                    item_style = f"{C_WHITE}"
+                    if is_cursor:
+                        item_style = f"{C_BOLD}{C_INV}{C_WHITE}"
+                    print(f" {cursor_mark}    {chk} {prio_badge} {item_style}{app_name:<34}{C_RESET} {has_cfg}")
 
         # Indicador inferior de scroll
         if end_idx < total_nodes:
@@ -574,24 +589,29 @@ def run_tui_app_selector(discovered_apps: list) -> list:
             node = flat_items[current_idx]
             if node["type"] == "HEADER":
                 cat_key = node["category_key"]
-                apps_in_cat = categories_map[cat_key]
-                target_state = not all(a["selected"] for a in apps_in_cat)
-                for a in apps_in_cat:
-                    a["selected"] = target_state
+                active_in_cat = [a for a in categories_map[cat_key] if not a["disabled"]]
+                if active_in_cat:
+                    target_state = not all(a["selected"] for a in active_in_cat)
+                    for a in active_in_cat:
+                        a["selected"] = target_state
             else:
-                node["app_data"]["selected"] = not node["app_data"]["selected"]
+                if not node["app_data"].get("disabled"):
+                    node["app_data"]["selected"] = not node["app_data"]["selected"]
         elif key == "A":
             for cat in categories_map.values():
-                for a in cat: a["selected"] = True
+                for a in cat:
+                    if not a.get("disabled"):
+                        a["selected"] = True
         elif key == "N":
             for cat in categories_map.values():
-                for a in cat: a["selected"] = False
+                for a in cat:
+                    a["selected"] = False
         elif key == "ENTER":
             clear_screen()
             selected_final = []
             for cat in categories_map.values():
                 for a in cat:
-                    if a["selected"]:
+                    if a["selected"] and not a.get("disabled"):
                         selected_final.append({
                             "folder_path": a["folder_path"],
                             "manifest": a["manifest"]

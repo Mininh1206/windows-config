@@ -2,6 +2,9 @@
 [CmdletBinding()]
 param()
 
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
 Write-Host "════════════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
 Write-Host "       EJECUTANDO OPTIMIZACIONES DE WINDOWS 11 Y TWEAKS DE SISTEMA     " -ForegroundColor Cyan
 Write-Host "════════════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
@@ -40,16 +43,23 @@ if (Test-Path "A:\") {
     Write-Host "[CARPETAS] La unidad A:\ no está presente en el sistema. Omitiendo redirección." -ForegroundColor Gray
 }
 
-# 2. Plan de Energía: Máximo Rendimiento (Ultimate Performance)
+# 2. Plan de Energía: Máximo Rendimiento (Ultimate Performance) o Alto Rendimiento
 Write-Host "[ENERGÍA] Configurando Plan de Energía de Máximo Rendimiento..." -ForegroundColor Yellow
-try {
-    # Duplicar esquema de Máximo Rendimiento si no existe
-    $res = powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 2>&1
-    powercfg /setactive e9a42b02-d5df-448d-aa00-03f14749eb61 | Out-Null
+$ultimateGuid = "e9a42b02-d5df-448d-aa00-03f14749eb61"
+$highPerfGuid = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
+
+$dupRes = & powercfg -duplicatescheme $ultimateGuid 2>$null
+$setRes = & powercfg /setactive $ultimateGuid 2>$null
+
+if ($LASTEXITCODE -eq 0) {
     Write-Host "  -> Plan 'Ultimate Performance' activado." -ForegroundColor Green
-} catch {
-    powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c | Out-Null
-    Write-Host "  -> Plan 'High Performance' activado como respaldo." -ForegroundColor Green
+} else {
+    & powercfg /setactive $highPerfGuid 2>$null
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "  -> Plan 'High Performance' activado (entorno sin soporte de Ultimate Performance)." -ForegroundColor Green
+    } else {
+        Write-Host "  -> Manteniendo plan de energía predeterminado del sistema." -ForegroundColor Gray
+    }
 }
 
 # 3. Optimizaciones para Juegos (Game Mode & GPU Scheduling)

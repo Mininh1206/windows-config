@@ -3,10 +3,12 @@
   "name": "NVIDIA App",
   "category": "utilidades",
   "priority": 3,
+  "disabled": true,
+  "disabled_reason": "Requiere GPU NVIDIA física y entorno de escritorio / MSStore",
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Nvidia.App",
+    "winget_id": "XP8CLZL93F5Z4P",
     "choco_id": null,
     "scoop_id": null,
     "local_installer": null,

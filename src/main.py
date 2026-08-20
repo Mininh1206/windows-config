@@ -145,11 +145,15 @@ def main():
         if not selected:
             logger.log(f"No se encontro ninguna aplicacion con la ID '{args.app}'.", "ERROR")
             return
-        logger.log(f"Seleccionada aplicacion especifica: '{selected[0]['manifest'].get('name')}'", "INFO")
+        app_item = selected[0]
+        if app_item["manifest"].get("disabled", False) or app_item["manifest"].get("enabled") is False:
+            reason = app_item["manifest"].get("disabled_reason", "Requiere instalador manual / cuenta")
+            logger.log(f"Aviso: La aplicacion '{app_item['manifest'].get('name')}' esta marcada como deshabilitada ({reason}).", "WARNING")
+        logger.log(f"Seleccionada aplicacion especifica: '{app_item['manifest'].get('name')}'", "INFO")
 
     elif args.test_mode:
-        logger.log("[MODO PRUEBA DESATENDIDO] Seleccionando todas las aplicaciones disponibles...", "INFO")
-        selected = discovered
+        selected = [item for item in discovered if not item["manifest"].get("disabled", False) and item["manifest"].get("enabled") is not False]
+        logger.log(f"[MODO PRUEBA DESATENDIDO] Seleccionando {len(selected)} aplicaciones activas disponibles...", "INFO")
 
     else:
         # Lanzar Selector TUI con Viewport y navegación por teclado

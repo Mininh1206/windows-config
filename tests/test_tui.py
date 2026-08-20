@@ -54,5 +54,69 @@ class TestTUIViewport(unittest.TestCase):
         self.assertEqual(start, 40)
         self.assertEqual(end, 50)
 
+class TestTUIAppSelector(unittest.TestCase):
+    def setUp(self):
+        self.mock_apps = [
+            {
+                "folder_path": "apps/ux_ui/active_app",
+                "manifest": {
+                    "id": "active_app",
+                    "name": "Active App",
+                    "category": "ux_ui",
+                    "priority": 0
+                }
+            },
+            {
+                "folder_path": "apps/vms/disabled_app",
+                "manifest": {
+                    "id": "disabled_app",
+                    "name": "Disabled App",
+                    "category": "vms",
+                    "priority": 2,
+                    "disabled": True,
+                    "disabled_reason": "Requiere instalador manual"
+                }
+            }
+        ]
+
+    @patch("src.core.tui.read_key")
+    @patch("src.core.tui.clear_screen")
+    @patch("builtins.print")
+    def test_disabled_app_not_selected_by_default(self, mock_print, mock_clear, mock_key):
+        """Verifica que las apps deshabilitadas no se seleccionen por defecto al presionar ENTER."""
+        from src.core.tui import run_tui_app_selector
+        mock_key.side_effect = ["ENTER"]
+
+        selected = run_tui_app_selector(self.mock_apps)
+        selected_ids = [item["manifest"]["id"] for item in selected]
+        self.assertIn("active_app", selected_ids)
+        self.assertNotIn("disabled_app", selected_ids)
+
+    @patch("src.core.tui.read_key")
+    @patch("src.core.tui.clear_screen")
+    @patch("builtins.print")
+    def test_select_all_ignores_disabled_apps(self, mock_print, mock_clear, mock_key):
+        """Verifica que 'A' (Seleccionar todas) ignore las apps deshabilitadas."""
+        from src.core.tui import run_tui_app_selector
+        mock_key.side_effect = ["A", "ENTER"]
+
+        selected = run_tui_app_selector(self.mock_apps)
+        selected_ids = [item["manifest"]["id"] for item in selected]
+        self.assertIn("active_app", selected_ids)
+        self.assertNotIn("disabled_app", selected_ids)
+
+    @patch("src.core.tui.read_key")
+    @patch("src.core.tui.clear_screen")
+    @patch("builtins.print")
+    def test_space_on_disabled_app_does_not_toggle(self, mock_print, mock_clear, mock_key):
+        """Verifica que presionar ESPACIO sobre una app deshabilitada no la marque."""
+        from src.core.tui import run_tui_app_selector
+        # flat_items: 0=HEADER(ux_ui), 1=APP(active_app), 2=HEADER(vms), 3=APP(disabled_app)
+        mock_key.side_effect = ["DOWN", "DOWN", "DOWN", "SPACE", "ENTER"]
+
+        selected = run_tui_app_selector(self.mock_apps)
+        selected_ids = [item["manifest"]["id"] for item in selected]
+        self.assertNotIn("disabled_app", selected_ids)
+
 if __name__ == "__main__":
     unittest.main()

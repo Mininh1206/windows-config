@@ -60,6 +60,12 @@ class TestManifestIntegrity(unittest.TestCase):
                     self.assertIsInstance(data["priority"], int)
                     self.assertGreaterEqual(data["priority"], 0)
 
+                # Check disabled / disabled_reason if present
+                if "disabled" in data:
+                    self.assertIsInstance(data["disabled"], bool)
+                if "disabled_reason" in data:
+                    self.assertIsInstance(data["disabled_reason"], str)
+
                 # Check depends_on if present
                 if "depends_on" in data:
                     self.assertIsInstance(data["depends_on"], list)

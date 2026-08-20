@@ -6,7 +6,7 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "dbeaver.dbeaver",
+    "winget_id": "DBeaver.DBeaver.Community",
     "local_installer": null,
     "silent_args": "/S",
     "check_command": "dbeaver",

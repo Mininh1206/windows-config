@@ -115,6 +115,19 @@ def check_standard_paths(app_id: str, check_command: str) -> bool:
         ]
     }
 
+    # Búsqueda dinámica para aplicaciones con versiones en la ruta de instalación (ej. UltiMaker Cura 5.x)
+    if app_id.lower() == "ultimaker_cura":
+        try:
+            for d in [program_files, program_files_x86]:
+                if os.path.exists(d):
+                    for item in os.listdir(d):
+                        if item.lower().startswith("ultimaker cura"):
+                            candidate = os.path.join(d, item, "UltiMaker-Cura.exe")
+                            if os.path.exists(candidate):
+                                return True
+        except Exception:
+            pass
+
     candidate_paths = app_specific_paths.get(app_id.lower(), [])
     for p in candidate_paths:
         if os.path.exists(p):
@@ -283,12 +296,16 @@ def install_app(
             logger.log_raw(res.stdout)
             logger.log_raw(res.stderr)
 
-            if res.returncode == 0:
+            if res.returncode in (0, 3010, 1641):
                 logger.log(f"Instalacion de '{app_name}' completada con exito via Winget.", "SUCCESS")
                 if should_refresh_env:
                     _notify("Refrescando variables de entorno...")
                     refresh_environment()
                 return True, False
+            elif res.returncode in (2316632107, 2316632109, -1978335189, -1978335187):
+                logger.log(f"La aplicacion '{app_name}' ya se encuentra instalada y actualizada en el sistema (Winget).", "INFO")
+                _notify("Ya instalada y actualizada.")
+                return True, True
             else:
                 logger.log(f"Winget devolvio el codigo de error {res.returncode}. Evaluando fallback local...", "WARNING")
 

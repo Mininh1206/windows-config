@@ -6,7 +6,7 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "UnityTechnologies.UnityHub",
+    "winget_id": "Unity.UnityHub",
     "choco_id": null,
     "scoop_id": null,
     "local_installer": null,

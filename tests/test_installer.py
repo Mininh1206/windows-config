@@ -106,6 +106,50 @@ class TestInstaller(unittest.TestCase):
 
     @patch("src.core.installer.subprocess.run")
     @patch("src.core.installer.is_app_installed_advanced", return_value=False)
+    def test_install_app_winget_no_upgrade_found_exit_code(self, mock_is_installed, mock_subproc):
+        """Verifica que el código de retorno 2316632107 (NO_UPGRADE_FOUND) sea tratado como éxito/ya instalada."""
+        mock_subproc.return_value = MagicMock(
+            returncode=2316632107,
+            stdout="Found an existing package already installed. No available upgrade found.",
+            stderr=""
+        )
+        manifest = {
+            "id": "ultimaker_cura",
+            "name": "UltiMaker Cura 3D Slicer",
+            "install": {
+                "type": "winget",
+                "winget_id": "UltiMaker.Cura",
+                "refresh_env_after": False
+            }
+        }
+        success, already_installed = install_app(manifest, installers_dir="dummy", dry_run=False)
+        self.assertTrue(success)
+        self.assertTrue(already_installed)
+
+    @patch("src.core.installer.subprocess.run")
+    @patch("src.core.installer.is_app_installed_advanced", return_value=False)
+    def test_install_app_winget_reboot_required_exit_code(self, mock_is_installed, mock_subproc):
+        """Verifica que el código de retorno 3010 (Reboot required) sea tratado como éxito."""
+        mock_subproc.return_value = MagicMock(
+            returncode=3010,
+            stdout="Install complete. Reboot required.",
+            stderr=""
+        )
+        manifest = {
+            "id": "test_reboot_app",
+            "name": "Test Reboot App",
+            "install": {
+                "type": "winget",
+                "winget_id": "Test.Reboot.App",
+                "refresh_env_after": False
+            }
+        }
+        success, already_installed = install_app(manifest, installers_dir="dummy", dry_run=False)
+        self.assertTrue(success)
+        self.assertFalse(already_installed)
+
+    @patch("src.core.installer.subprocess.run")
+    @patch("src.core.installer.is_app_installed_advanced", return_value=False)
     def test_install_app_winget_failure_without_fallback(self, mock_is_installed, mock_subproc):
         """Verifica el manejo de error cuando Winget falla y no hay instalador local."""
         mock_subproc.return_value = MagicMock(returncode=1, stdout="", stderr="Installation error")

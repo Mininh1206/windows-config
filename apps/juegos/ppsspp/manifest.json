@@ -6,7 +6,7 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "HenrikRydgard.PPSSPP",
+    "winget_id": "PPSSPPTeam.PPSSPP",
     "local_installer": null,
     "silent_args": "/S",
     "check_command": "PPSSPPShell",
