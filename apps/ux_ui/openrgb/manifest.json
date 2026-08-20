@@ -44,9 +44,7 @@
         "create_backup": true
       }
     ],
-    "commands": [
-      "powershell.exe -ExecutionPolicy Bypass -File \"$PSScriptRoot/configure.ps1\""
-    ],
+    "commands": [],
     "environment_vars": {}
   }
 }

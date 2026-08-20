@@ -204,5 +204,11 @@ El proyecto tiene configuradas las siguientes skills en `.agents/skills/`:
   - `hermes_agent`: Incluir soul y configuración relevante del agente Hermes.
   - `antigravity`: Sincronizar configuraciones, reglas (`GEMINI.md`) y agentes.
   - `nilesoft_shell`: Desplegar menú contextual básico optimizado con `shell.nss`.
+- **[2026-08-20] Manejo del Tipo `script`:** Paquetes del sistema y optimizaciones declarados con `install.type = "script"` o `"none"` se consideran componentes válidos cuya ejecución delega directamente en `configure.ps1` o `configure.py`.
+- **[2026-08-20] Expansión Estricta de Variables en `refresh_environment`:** Toda variable leída del Registro de Windows (`%SystemRoot%`, `%USERPROFILE%`, etc.) DEBE ser expandida con `os.path.expandvars()` antes de insertarse en `os.environ` para prevenir la corrupción de `ComSpec` y `PATH`.
+- **[2026-08-20] No Duplicar Hooks en `commands`:** La ejecución de `configure.ps1` se realiza automáticamente por el motor `configurer.py`. El array `commands` nunca debe incluir llamadas redundantes como `powershell.exe -File "$PSScriptRoot/configure.ps1"`.
+- **[2026-08-20] Ejecución de Comandos con PowerShell:** Cualquier comando en `config.commands` se ejecuta a través de PowerShell con el directorio de trabajo (`cwd`) fijado a la carpeta de la app para soportar tanto herramientas de línea de comandos como cmdlets de Windows.
+- **[2026-08-20] Rigor en Pruebas Automatizadas (TDD):** Toda funcionalidad de despliegue de archivos y hooks debe contar con pruebas reales en sandbox (`tests/test_app_isolated.py`, `tests/test_configurer.py`, `tests/test_installer.py`) que simulen el entorno sin modificar el sistema operativo real y eviten falsos positivos basados en meros `dry_run=True`.
+- **[2026-08-20] Publicación Dual ("Súbelo"):** Cuando el usuario indique *"súbelo"*, se debe realizar la publicación completa tanto en GitHub (commit, push y nueva versión/release con binario ejecutable compilado) como en el catálogo oficial de Microsoft Winget (`microsoft/winget-pkgs`).
 
 

@@ -95,7 +95,10 @@ apps/<categoria>/<app_id>/
 5. **`portable`**: Binarios portables unitarios que se copian y agregan a `PATH`.
 6. **`choco`**: Paquetes de Chocolatey (`install.choco_id`).
 7. **`scoop`**: Paquetes de Scoop (`install.scoop_id`).
-8. **`script`**: Lógica de instalación personalizada vía `configure.ps1`.
+8. **`script`**: Lógica de instalación personalizada vía `configure.ps1` o `configure.py`. No requiere instalador binario ni Winget ID.
+
+> [!IMPORTANT]
+> **Regla sobre `configure.ps1` y `commands`:** Si una aplicación cuenta con `configure.ps1`, el motor `configurer.py` lo ejecutará automáticamente. **NUNCA** debes incluir `powershell.exe -File "$PSScriptRoot/configure.ps1"` dentro del array `config.commands`. El array `commands` se reserva exclusivamente para comandos adicionales o cmdlets específicos.
 
 ---
 

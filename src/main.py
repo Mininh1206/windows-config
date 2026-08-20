@@ -183,21 +183,27 @@ def main():
         app_name = manifest.get("name", "Unknown")
 
         logger.log(f"--- Procesando: {app_name} ---", "INFO")
-
-        # Step 1: Install
-        render_progress_bar(idx, total_apps, app_name, "Instalando...")
-        install_success, already_installed = install_app(manifest, installers_dir=installers_dir, target_drive=sys_info['TargetDrive'], dry_run=args.dry_run)
-
-        # Step 2: Direct Config
+        install_success = False
+        already_installed = False
         config_success = False
         has_direct_config = manifest.get("config", {}).get("has_direct_config") or manifest.get("has_direct_config")
 
-        if install_success:
-            if has_direct_config:
-                render_progress_bar(idx, total_apps, app_name, "Configurando...")
-                config_success = apply_direct_configuration(folder, target_paths, dry_run=args.dry_run)
-            else:
-                config_success = True
+        try:
+            # Step 1: Install
+            render_progress_bar(idx, total_apps, app_name, "Instalando...")
+            install_success, already_installed = install_app(manifest, installers_dir=installers_dir, target_drive=sys_info['TargetDrive'], dry_run=args.dry_run)
+
+            # Step 2: Direct Config
+            if install_success:
+                if has_direct_config:
+                    render_progress_bar(idx, total_apps, app_name, "Configurando...")
+                    config_success = apply_direct_configuration(folder, target_paths, dry_run=args.dry_run)
+                else:
+                    config_success = True
+        except Exception as err:
+            logger.log(f"Error critico no controlado al procesar '{app_name}': {err}", "ERROR")
+            install_success = False
+            config_success = False
 
         # Finish UI item render
         finish_progress_item(app_name, success=(install_success and config_success), already_installed=already_installed)

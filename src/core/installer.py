@@ -96,7 +96,7 @@ def is_app_installed_advanced(manifest: dict) -> bool:
 def refresh_environment():
     """
     Refresca las variables de entorno del sistema y de usuario directamente desde el Registro de Windows
-    para que nuevas herramientas instaladas (git, python, node, winget) esten inmediatamente disponibles en PATH.
+    expandiendo correctamente variables como %SystemRoot% y %USERPROFILE% para evitar romper PATH y ComSpec.
     """
     try:
         system_path = ""
@@ -108,7 +108,9 @@ def refresh_environment():
                     if name.upper() == "PATH":
                         system_path = str(val)
                     else:
-                        os.environ[name] = str(val)
+                        expanded_val = os.path.expandvars(str(val))
+                        if expanded_val and not (expanded_val.startswith("%") and expanded_val.endswith("%")):
+                            os.environ[name] = expanded_val
         except OSError:
             pass
 
@@ -121,19 +123,46 @@ def refresh_environment():
                     if name.upper() == "PATH":
                         user_path = str(val)
                     else:
-                        os.environ[name] = str(val)
+                        expanded_val = os.path.expandvars(str(val))
+                        if expanded_val and not (expanded_val.startswith("%") and expanded_val.endswith("%")):
+                            os.environ[name] = expanded_val
         except OSError:
             pass
 
+        # Asegurar que ComSpec sea valido y apunte a cmd.exe real
+        if "COMSPEC" not in os.environ or "%" in os.environ["COMSPEC"] or not os.path.exists(os.environ["COMSPEC"]):
+            sys_root = os.environ.get("SystemRoot", r"C:\Windows")
+            candidate_cmd = os.path.join(sys_root, "system32", "cmd.exe")
+            if os.path.exists(candidate_cmd):
+                os.environ["ComSpec"] = candidate_cmd
+
+        # Combinar y limpiar PATH expandiendo todas las variables
         current_path = os.environ.get("PATH", "")
-        combined = ";".join(filter(None, [system_path, user_path, current_path]))
+        raw_combined = ";".join(filter(None, [system_path, user_path, current_path]))
         seen = set()
         cleaned_paths = []
-        for p in combined.split(";"):
+        for p in raw_combined.split(";"):
             p_strip = p.strip()
-            if p_strip and p_strip.lower() not in seen:
-                seen.add(p_strip.lower())
-                cleaned_paths.append(p_strip)
+            if not p_strip:
+                continue
+            p_expanded = os.path.expandvars(p_strip)
+            if p_expanded and p_expanded.lower() not in seen:
+                seen.add(p_expanded.lower())
+                cleaned_paths.append(p_expanded)
+
+        # Garantizar que las rutas esenciales de Windows estén siempre presentes en PATH
+        sys_root = os.environ.get("SystemRoot", r"C:\Windows")
+        essential_paths = [
+            os.path.join(sys_root, "system32"),
+            sys_root,
+            os.path.join(sys_root, "System32", "Wbem"),
+            os.path.join(sys_root, "System32", "WindowsPowerShell", "v1.0")
+        ]
+        for ep in essential_paths:
+            if ep.lower() not in seen and os.path.exists(ep):
+                seen.add(ep.lower())
+                cleaned_paths.append(ep)
+
         os.environ["PATH"] = ";".join(cleaned_paths)
         logger.log("Variables de entorno y PATH refrescados en caliente desde el Registro.", "DEBUG")
     except Exception as e:
@@ -148,117 +177,126 @@ def install_app(manifest: dict, installers_dir: str, target_drive: str = "C:", d
     silent_args = install_meta.get("silent_args", "")
     should_refresh_env = install_meta.get("refresh_env_after", True)
 
-    if is_app_installed_advanced(manifest):
-        logger.log(f"La aplicacion '{app_name}' ya se encuentra instalada en el sistema.", "INFO")
-        return True, True
-
-    if dry_run:
-        logger.log(f"[SIMULACIÓN] Se instalaria '{app_name}' (Tipo: {install_type}, ID: {winget_id}, Local: {local_installer}).", "INFO")
-        return True, False
-
-    # 1. Type: Winget (Silenced Output)
-    if install_type == "winget" and winget_id:
-        logger.log(f"Ejecutando instalacion de '{app_name}' via Winget (ID: {winget_id})...", "INFO")
-        cmd = ["winget", "install", "--id", winget_id, "--silent", "--accept-package-agreements", "--accept-source-agreements"]
-        res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
-        logger.log_raw(res.stdout)
-        logger.log_raw(res.stderr)
-
-        if res.returncode == 0:
-            logger.log(f"Instalacion de '{app_name}' completada con exito via Winget.", "SUCCESS")
-            if should_refresh_env:
-                refresh_environment()
+    try:
+        # Tipo script o none: instalacion delegada integramente al hook de configuracion
+        if install_type in ["script", "none", "manual"]:
+            logger.log(f"La aplicacion '{app_name}' se gestiona mediante scripts de configuracion.", "INFO")
             return True, False
-        else:
-            logger.log(f"Winget devolvio el codigo de error {res.returncode}. Evaluando fallback local...", "WARNING")
 
-    # 2. Type: Chocolatey
-    choco_id = install_meta.get("choco_id") or (winget_id if install_type == "choco" else None)
-    if install_type == "choco" and choco_id:
-        logger.log(f"Ejecutando instalacion de '{app_name}' via Chocolatey (Pkg: {choco_id})...", "INFO")
-        cmd = ["choco", "install", choco_id, "-y", "--no-progress"]
-        res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
-        logger.log_raw(res.stdout)
-        logger.log_raw(res.stderr)
+        if is_app_installed_advanced(manifest):
+            logger.log(f"La aplicacion '{app_name}' ya se encuentra instalada en el sistema.", "INFO")
+            return True, True
 
-        if res.returncode == 0:
-            logger.log(f"Instalacion de '{app_name}' completada con exito via Chocolatey.", "SUCCESS")
-            if should_refresh_env:
-                refresh_environment()
+        if dry_run:
+            logger.log(f"[SIMULACIÓN] Se instalaria '{app_name}' (Tipo: {install_type}, ID: {winget_id}, Local: {local_installer}).", "INFO")
             return True, False
-        else:
-            logger.log(f"Chocolatey devolvio el codigo de error {res.returncode}.", "WARNING")
 
-    # 3. Type: Scoop
-    scoop_id = install_meta.get("scoop_id") or (winget_id if install_type == "scoop" else None)
-    if install_type == "scoop" and scoop_id:
-        logger.log(f"Ejecutando instalacion de '{app_name}' via Scoop (App: {scoop_id})...", "INFO")
-        cmd = ["scoop", "install", scoop_id]
-        res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
-        logger.log_raw(res.stdout)
-        logger.log_raw(res.stderr)
-
-        if res.returncode == 0:
-            logger.log(f"Instalacion de '{app_name}' completada con exito via Scoop.", "SUCCESS")
-            if should_refresh_env:
-                refresh_environment()
-            return True, False
-        else:
-            logger.log(f"Scoop devolvio el codigo de error {res.returncode}.", "WARNING")
-
-    # Fallback / Local Installers (Silenced Output)
-    if local_installer:
-        local_path = os.path.join(installers_dir, local_installer)
-        if not os.path.exists(local_path):
-            logger.log(f"ERROR: No se encontro el instalador local en '{local_path}'.", "ERROR")
-            return False, False
-
-        if install_type == "exe" or (install_type == "winget" and local_installer.endswith(".exe")):
-            logger.log(f"Ejecutando instalador local '{local_installer}'...", "INFO")
-            args = silent_args if silent_args else "/S /silent /quiet"
-            res = subprocess.run(f'"{local_path}" {args}', shell=True, capture_output=True, text=True, errors="ignore")
+        # 1. Type: Winget (Silenced Output)
+        if install_type == "winget" and winget_id:
+            logger.log(f"Ejecutando instalacion de '{app_name}' via Winget (ID: {winget_id})...", "INFO")
+            cmd = ["winget", "install", "--id", winget_id, "--silent", "--accept-package-agreements", "--accept-source-agreements"]
+            res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
             logger.log_raw(res.stdout)
             logger.log_raw(res.stderr)
 
             if res.returncode == 0:
-                logger.log(f"Instalacion local de '{app_name}' finalizada con exito.", "SUCCESS")
+                logger.log(f"Instalacion de '{app_name}' completada con exito via Winget.", "SUCCESS")
                 if should_refresh_env:
                     refresh_environment()
                 return True, False
             else:
-                logger.log(f"El instalador local devolvio el codigo de salida de error {res.returncode}.", "ERROR")
-                return False, False
+                logger.log(f"Winget devolvio el codigo de error {res.returncode}. Evaluando fallback local...", "WARNING")
 
-        elif install_type == "msi" or (install_type == "winget" and local_installer.endswith(".msi")):
-            logger.log(f"Ejecutando instalacion MSI '{local_installer}'...", "INFO")
-            cmd = f'msiexec /i "{local_path}" /qb /norestart'
-            res = subprocess.run(cmd, shell=True, capture_output=True, text=True, errors="ignore")
+        # 2. Type: Chocolatey
+        choco_id = install_meta.get("choco_id") or (winget_id if install_type == "choco" else None)
+        if install_type == "choco" and choco_id:
+            logger.log(f"Ejecutando instalacion de '{app_name}' via Chocolatey (Pkg: {choco_id})...", "INFO")
+            cmd = ["choco", "install", choco_id, "-y", "--no-progress"]
+            res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
             logger.log_raw(res.stdout)
             logger.log_raw(res.stderr)
 
             if res.returncode == 0:
-                logger.log(f"Instalacion MSI de '{app_name}' completada con exito.", "SUCCESS")
+                logger.log(f"Instalacion de '{app_name}' completada con exito via Chocolatey.", "SUCCESS")
                 if should_refresh_env:
                     refresh_environment()
                 return True, False
             else:
-                logger.log(f"El instalador MSI devolvio el codigo de error {res.returncode}.", "ERROR")
-                return False, False
+                logger.log(f"Chocolatey devolvio el codigo de error {res.returncode}.", "WARNING")
 
-        elif install_type == "zip":
-            logger.log(f"Descomprimiendo archivo portable '{local_installer}'...", "INFO")
-            target_apps_dir = os.path.join(target_drive + "\\", "Apps", manifest.get("id", app_name))
-            os.makedirs(target_apps_dir, exist_ok=True)
-            try:
-                with zipfile.ZipFile(local_path, 'r') as zip_ref:
-                    zip_ref.extractall(target_apps_dir)
-                logger.log(f"Descompresion de '{app_name}' completada en '{target_apps_dir}'.", "SUCCESS")
+        # 3. Type: Scoop
+        scoop_id = install_meta.get("scoop_id") or (winget_id if install_type == "scoop" else None)
+        if install_type == "scoop" and scoop_id:
+            logger.log(f"Ejecutando instalacion de '{app_name}' via Scoop (App: {scoop_id})...", "INFO")
+            cmd = ["scoop", "install", scoop_id]
+            res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
+            logger.log_raw(res.stdout)
+            logger.log_raw(res.stderr)
+
+            if res.returncode == 0:
+                logger.log(f"Instalacion de '{app_name}' completada con exito via Scoop.", "SUCCESS")
                 if should_refresh_env:
                     refresh_environment()
                 return True, False
-            except Exception as e:
-                logger.log(f"Error al descomprimir archivo zip: {e}", "ERROR")
+            else:
+                logger.log(f"Scoop devolvio el codigo de error {res.returncode}.", "WARNING")
+
+        # Fallback / Local Installers (Silenced Output)
+        if local_installer:
+            local_path = os.path.join(installers_dir, local_installer)
+            if not os.path.exists(local_path):
+                logger.log(f"ERROR: No se encontro el instalador local en '{local_path}'.", "ERROR")
                 return False, False
 
-    logger.log(f"Fallo la instalacion de '{app_name}'. Ningun instalador o paquete Winget pudo completarse.", "ERROR")
-    return False, False
+            if install_type == "exe" or (install_type == "winget" and local_installer.endswith(".exe")):
+                logger.log(f"Ejecutando instalador local '{local_installer}'...", "INFO")
+                args = silent_args if silent_args else "/S /silent /quiet"
+                res = subprocess.run(f'"{local_path}" {args}', shell=True, capture_output=True, text=True, errors="ignore")
+                logger.log_raw(res.stdout)
+                logger.log_raw(res.stderr)
+
+                if res.returncode == 0:
+                    logger.log(f"Instalacion local de '{app_name}' finalizada con exito.", "SUCCESS")
+                    if should_refresh_env:
+                        refresh_environment()
+                    return True, False
+                else:
+                    logger.log(f"El instalador local devolvio el codigo de salida de error {res.returncode}.", "ERROR")
+                    return False, False
+
+            elif install_type == "msi" or (install_type == "winget" and local_installer.endswith(".msi")):
+                logger.log(f"Ejecutando instalacion MSI '{local_installer}'...", "INFO")
+                cmd = f'msiexec /i "{local_path}" /qb /norestart'
+                res = subprocess.run(cmd, shell=True, capture_output=True, text=True, errors="ignore")
+                logger.log_raw(res.stdout)
+                logger.log_raw(res.stderr)
+
+                if res.returncode == 0:
+                    logger.log(f"Instalacion MSI de '{app_name}' completada con exito.", "SUCCESS")
+                    if should_refresh_env:
+                        refresh_environment()
+                    return True, False
+                else:
+                    logger.log(f"El instalador MSI devolvio el codigo de error {res.returncode}.", "ERROR")
+                    return False, False
+
+            elif install_type == "zip":
+                logger.log(f"Descomprimiendo archivo portable '{local_installer}'...", "INFO")
+                target_apps_dir = os.path.join(target_drive + "\\", "Apps", manifest.get("id", app_name))
+                os.makedirs(target_apps_dir, exist_ok=True)
+                try:
+                    with zipfile.ZipFile(local_path, 'r') as zip_ref:
+                        zip_ref.extractall(target_apps_dir)
+                    logger.log(f"Descompresion de '{app_name}' completada en '{target_apps_dir}'.", "SUCCESS")
+                    if should_refresh_env:
+                        refresh_environment()
+                    return True, False
+                except Exception as e:
+                    logger.log(f"Error al descomprimir archivo zip: {e}", "ERROR")
+                    return False, False
+
+        logger.log(f"Fallo la instalacion de '{app_name}'. Ningun instalador o paquete Winget pudo completarse.", "ERROR")
+        return False, False
+    except Exception as ex:
+        logger.log(f"Excepcion inesperada al instalar '{app_name}': {ex}", "ERROR")
+        return False, False

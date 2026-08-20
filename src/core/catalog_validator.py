@@ -134,6 +134,17 @@ def validate_app_manifest(app_folder: str, check_online: bool = False) -> Dict:
             result["valid"] = False
             result["errors"].append("Tipo 'scoop' requiere 'install.scoop_id'")
 
+    elif install_type in ["script", "none", "manual"]:
+        # Los tipos script/none se gestionan mediante hooks configure.ps1 o configure.py
+        pass
+
+    # 2.5 Validación de comandos post-instalación
+    commands = manifest.get("config", {}).get("commands", [])
+    for cmd in commands:
+        if "$PSScriptRoot" in cmd:
+            result["valid"] = False
+            result["errors"].append("Comando contiene '$PSScriptRoot' (debe omitirse si configure.ps1 existe)")
+
     # 3. Validación de archivos estáticos (files/)
     config_meta = manifest.get("config", {})
     if config_meta.get("has_direct_config"):

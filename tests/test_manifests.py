@@ -15,7 +15,7 @@ VALID_CATEGORIES = [
     "ux_ui", "ides", "frameworks", "herramientas",
     "vms", "agil", "navegadores", "utilidades", "juegos"
 ]
-VALID_INSTALL_TYPES = ["winget", "exe", "msi", "zip", "portable", "script"]
+VALID_INSTALL_TYPES = ["winget", "exe", "msi", "zip", "portable", "script", "choco", "scoop"]
 
 class TestManifestIntegrity(unittest.TestCase):
     def get_all_manifest_paths(self):
@@ -84,6 +84,15 @@ class TestManifestIntegrity(unittest.TestCase):
                 config = data["config"]
                 self.assertIn("has_direct_config", config, f"Falta config.has_direct_config en {m_path}")
                 self.assertIsInstance(config["has_direct_config"], bool)
+
+                # Check commands
+                commands = config.get("commands", [])
+                for cmd in commands:
+                    self.assertNotIn(
+                        "$PSScriptRoot",
+                        cmd,
+                        f"Comando en {m_path} contiene '$PSScriptRoot' no resuelto: '{cmd}'"
+                    )
 
                 # If files are declared, verify source files actually exist in files/ folder
                 if config.get("has_direct_config") and "files" in config:
