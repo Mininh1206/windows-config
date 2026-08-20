@@ -1,22 +1,22 @@
-# Hook de instalación y activación de Windows Sandbox (Compatible con Home y Pro)
+# Hook de instalacion y activacion de Windows Sandbox (Compatible con Home y Pro)
 [CmdletBinding()]
 param()
 
 $isElevated = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
 if (-not $isElevated) {
-    Write-Host "[ELEVACIÓN] Solicitando permisos de Administrador para instalar Windows Sandbox..." -ForegroundColor Yellow
+    Write-Host "[ELEVACION] Solicitando permisos de Administrador para instalar Windows Sandbox..." -ForegroundColor Yellow
     $scriptPath = $MyInvocation.MyCommand.Path
     Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$scriptPath`"" -Verb RunAs
     exit 0
 }
 
-Write-Host "════════════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host "            ACTIVACIÓN Y CONFIGURACIÓN DE WINDOWS SANDBOX              " -ForegroundColor Cyan
-Write-Host "════════════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
+Write-Host "========================================================================" -ForegroundColor Cyan
+Write-Host "            ACTIVACION Y CONFIGURACION DE WINDOWS SANDBOX              " -ForegroundColor Cyan
+Write-Host "========================================================================" -ForegroundColor Cyan
 
-# 1. Habilitar Plataforma de Máquina Virtual e Hipervisor
-Write-Host "[1/3] Habilitando soporte de virtualización (VirtualMachinePlatform & HypervisorPlatform)..." -ForegroundColor Yellow
+# 1. Habilitar Plataforma de Maquina Virtual e Hipervisor
+Write-Host "[1/3] Habilitando soporte de virtualizacion (VirtualMachinePlatform e HypervisorPlatform)..." -ForegroundColor Yellow
 Start-Process "dism.exe" -ArgumentList "/online /enable-feature /featurename:VirtualMachinePlatform /all /norestart" -Wait -NoNewWindow
 Start-Process "dism.exe" -ArgumentList "/online /enable-feature /featurename:HypervisorPlatform /all /norestart" -Wait -NoNewWindow
 
@@ -32,15 +32,15 @@ if ($mumPackages.Count -gt 0) {
     }
 }
 
-# 3. Habilitar la característica Containers-DisposableClientVM
-Write-Host "[3/3] Habilitando característica opcional Containers-DisposableClientVM..." -ForegroundColor Yellow
+# 3. Habilitar la caracteristica Containers-DisposableClientVM
+Write-Host "[3/3] Habilitando caracteristica opcional Containers-DisposableClientVM..." -ForegroundColor Yellow
 $dismRes = Start-Process "dism.exe" -ArgumentList "/online /enable-feature /featurename:Containers-DisposableClientVM /all /norestart" -Wait -PassThru -NoNewWindow
 
 if ($dismRes.ExitCode -eq 0 -or $dismRes.ExitCode -eq 3010) {
-    Write-Host "════════════════════════════════════════════════════════════════════════" -ForegroundColor Green
-    Write-Host " [ÉXITO] Windows Sandbox ha sido instalado y activado en el sistema." -ForegroundColor Green
+    Write-Host "========================================================================" -ForegroundColor Green
+    Write-Host " [EXITO] Windows Sandbox ha sido instalado y activado en el sistema." -ForegroundColor Green
     Write-Host " IMPORTANTE: Debes reiniciar tu PC para que WindowsSandbox.exe se cargue." -ForegroundColor Yellow
-    Write-Host "════════════════════════════════════════════════════════════════════════" -ForegroundColor Green
+    Write-Host "========================================================================" -ForegroundColor Green
 } else {
-    Write-Warning "DISM finalizó con código $($dismRes.ExitCode)."
+    Write-Warning "DISM finalizo con codigo $($dismRes.ExitCode)."
 }

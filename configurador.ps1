@@ -13,6 +13,23 @@ param(
     [string]$App
 )
 
+$isElevated = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if (-not $isElevated -and -not $DryRun) {
+    Write-Host "========================================================================" -ForegroundColor Yellow
+    Write-Host " [ELEVACION UAC] Se requieren permisos de Administrador para instalar" -ForegroundColor Yellow
+    Write-Host " aplicaciones, registrar dotfiles y aplicar optimizaciones del sistema." -ForegroundColor Yellow
+    Write-Host " Solicitando permisos elevados..." -ForegroundColor Cyan
+    Write-Host "========================================================================" -ForegroundColor Yellow
+
+    $argsList = "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+    if ($TargetDrive) { $argsList += " -TargetDrive `"$TargetDrive`"" }
+    if ($TestMode) { $argsList += " -TestMode" }
+    if ($App) { $argsList += " -App `"$App`"" }
+
+    Start-Process powershell.exe -ArgumentList $argsList -Verb RunAs
+    exit 0
+}
+
 # Función para verificar si un ejecutable es realmente Python 3 funcional (y no el alias vacío de MS Store)
 function Test-RealPython {
     param([string]$ExePath = "python")

@@ -157,5 +157,30 @@ class TestInstaller(unittest.TestCase):
             os.environ.clear()
             os.environ.update(orig_env)
 
+    def test_candidate_paths_isolation_no_false_positives(self):
+        """Verifica que la presencia de un ejecutable (ej. git) no marque erróneamente otras apps como instaladas."""
+        # App inexistente
+        manifest_dummy = {
+            "id": "non_existent_custom_app",
+            "name": "Non Existent Custom App",
+            "install": {
+                "type": "winget",
+                "winget_id": "NonExistent.CustomApp.999",
+                "check_command": "non_existent_binary_xyz"
+            }
+        }
+        self.assertFalse(is_app_installed_advanced(manifest_dummy))
+
+    def test_script_install_type_never_false_positive_installed(self):
+        """Verifica que las apps de tipo script no se marquen como preinstaladas."""
+        manifest_script = {
+            "id": "windows_tweaks",
+            "name": "Windows 11 Tweaks",
+            "install": {
+                "type": "script"
+            }
+        }
+        self.assertFalse(is_app_installed_advanced(manifest_script))
+
 if __name__ == "__main__":
     unittest.main()

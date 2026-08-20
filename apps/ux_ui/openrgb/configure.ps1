@@ -2,7 +2,8 @@
 [CmdletBinding()]
 param()
 
-$openRgbExe = (Get-Command "openrgb.exe" -ErrorAction SilentlyContinue)?.Source
+$openRgbCmd = Get-Command "openrgb.exe" -ErrorAction SilentlyContinue
+$openRgbExe = if ($openRgbCmd) { $openRgbCmd.Source } else { $null }
 if (-not $openRgbExe) {
     $candidates = @(
         "$env:ProgramFiles\OpenRGB\OpenRGB.exe",

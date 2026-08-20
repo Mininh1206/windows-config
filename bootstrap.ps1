@@ -14,11 +14,18 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "════════════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host "   ⚡ WINDOWS 11 CONFIGURATOR — INSTALADOR Y DESPLIEGUE DESATENDIDO     " -ForegroundColor Cyan
-Write-Host "════════════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
+$isElevated = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if (-not $isElevated -and -not $DryRun) {
+    Write-Host "========================================================================" -ForegroundColor Yellow
+    Write-Host " [ELEVACION UAC] Se requieren permisos de Administrador para instalar" -ForegroundColor Yellow
+    Write-Host " y configurar Windows 11 de forma completa." -ForegroundColor Yellow
+    Write-Host " Solicitando permisos elevados..." -ForegroundColor Cyan
+    Write-Host "========================================================================" -ForegroundColor Yellow
 
-$tempDir = Join-Path $env:TEMP "windows-config"
+    $cmd = "irm https://raw.githubusercontent.com/Mininh1206/windows-config/main/bootstrap.ps1 | iex"
+    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"$cmd`"" -Verb RunAs
+    exit 0
+}
 if (Test-Path $tempDir) {
     Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
 }

@@ -26,7 +26,7 @@
     "files": [],
     "commands": [
       "Get-Process PowerToys -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue",
-      "Start-Process -FilePath \"$env:LOCALAPPDATA/PowerToys/PowerToys.exe\" -ErrorAction SilentlyContinue"
+      "if (Test-Path \"$env:LOCALAPPDATA/PowerToys/PowerToys.exe\") { Start-Process -FilePath \"$env:LOCALAPPDATA/PowerToys/PowerToys.exe\" -ErrorAction SilentlyContinue } elseif (Test-Path \"$env:ProgramFiles/PowerToys/PowerToys.exe\") { Start-Process -FilePath \"$env:ProgramFiles/PowerToys/PowerToys.exe\" -ErrorAction SilentlyContinue }"
     ],
     "environment_vars": {}
   }

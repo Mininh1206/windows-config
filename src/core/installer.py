@@ -8,15 +8,17 @@ from src.core.logger import get_logger
 logger = get_logger()
 
 def check_registry_uninstall(app_name: str, winget_id: str = None) -> bool:
+    if not app_name and not winget_id:
+        return False
+
     registry_paths = [
         (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"),
         (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"),
         (winreg.HKEY_CURRENT_USER, r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall")
     ]
 
-    target_names = [app_name.lower()]
-    if winget_id:
-        target_names.append(winget_id.lower())
+    target_name = app_name.strip().lower() if app_name else ""
+    target_winget = winget_id.strip().lower() if winget_id else ""
 
     for hkey, subkey_path in registry_paths:
         try:
@@ -25,13 +27,22 @@ def check_registry_uninstall(app_name: str, winget_id: str = None) -> bool:
                 for i in range(num_subkeys):
                     try:
                         subkey_name = winreg.EnumKey(key, i)
+                        # 1. Comprobar si la subclave coincide con el Winget ID oficial
+                        if target_winget and subkey_name.lower() == target_winget:
+                            return True
+
                         with winreg.OpenKey(key, subkey_name) as subkey:
                             display_name, _ = winreg.QueryValueEx(subkey, "DisplayName")
                             if display_name:
-                                d_lower = str(display_name).lower()
-                                for t in target_names:
-                                    if t in d_lower:
+                                d_lower = str(display_name).strip().lower()
+                                # 2. Comprobar coincidencia exacta o por prefijo estricto de nombre
+                                if target_name:
+                                    if d_lower == target_name:
                                         return True
+                                    if len(target_name) >= 5 and (d_lower.startswith(target_name + " ") or d_lower.startswith(target_name + " -")):
+                                        return True
+                                if target_winget and len(target_winget) >= 6 and target_winget in d_lower:
+                                    return True
                     except (OSError, ValueError):
                         continue
         except OSError:
@@ -40,24 +51,70 @@ def check_registry_uninstall(app_name: str, winget_id: str = None) -> bool:
     return False
 
 def check_standard_paths(app_id: str, check_command: str) -> bool:
+    # 1. Comprobación rápida por ejecutable en PATH
     if check_command and shutil.which(check_command):
         return True
+
+    if not app_id:
+        return False
 
     user_profile = os.environ.get("USERPROFILE", os.path.expanduser("~"))
     local_app_data = os.environ.get("LOCALAPPDATA", os.path.join(user_profile, "AppData", "Local"))
     program_files = os.environ.get("ProgramFiles", r"C:\Program Files")
     program_files_x86 = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
 
-    candidate_paths = [
-        os.path.join(local_app_data, "Microsoft", "PowerToys", "PowerToys.exe"),
-        os.path.join(local_app_data, "Programs", "Microsoft VS Code", "Code.exe"),
-        os.path.join(program_files, "PowerToys", "PowerToys.exe"),
-        os.path.join(program_files, "Git", "cmd", "git.exe"),
-        os.path.join(program_files, "7-Zip", "7z.exe"),
-        os.path.join(program_files, "Notepad++", "notepad++.exe"),
-        os.path.join(program_files_x86, "Notepad++", "notepad++.exe"),
-    ]
+    # 2. Mapeo explícito y exclusivo por ID de aplicación
+    app_specific_paths = {
+        "powertoys": [
+            os.path.join(local_app_data, "Microsoft", "PowerToys", "PowerToys.exe"),
+            os.path.join(program_files, "PowerToys", "PowerToys.exe")
+        ],
+        "vscode": [
+            os.path.join(local_app_data, "Programs", "Microsoft VS Code", "Code.exe"),
+            os.path.join(program_files, "Microsoft VS Code", "Code.exe")
+        ],
+        "git": [
+            os.path.join(program_files, "Git", "cmd", "git.exe"),
+            os.path.join(program_files, "Git", "bin", "git.exe")
+        ],
+        "7zip": [
+            os.path.join(program_files, "7-Zip", "7z.exe"),
+            os.path.join(program_files_x86, "7-Zip", "7z.exe")
+        ],
+        "windhawk": [
+            os.path.join(program_files, "Windhawk", "windhawk.exe")
+        ],
+        "everything": [
+            os.path.join(program_files, "Everything", "Everything.exe"),
+            os.path.join(program_files_x86, "Everything", "Everything.exe")
+        ],
+        "brave": [
+            os.path.join(program_files, "BraveSoftware", "Brave-Browser", "Application", "brave.exe"),
+            os.path.join(local_app_data, "BraveSoftware", "Brave-Browser", "Application", "brave.exe")
+        ],
+        "chrome": [
+            os.path.join(program_files, "Google", "Chrome", "Application", "chrome.exe"),
+            os.path.join(program_files_x86, "Google", "Chrome", "Application", "chrome.exe"),
+            os.path.join(local_app_data, "Google", "Chrome", "Application", "chrome.exe")
+        ],
+        "discord": [
+            os.path.join(local_app_data, "Discord", "Update.exe")
+        ],
+        "steam": [
+            os.path.join(program_files_x86, "Steam", "steam.exe"),
+            os.path.join(program_files, "Steam", "steam.exe")
+        ],
+        "obsidian": [
+            os.path.join(local_app_data, "Obsidian", "Obsidian.exe"),
+            os.path.join(program_files, "Obsidian", "Obsidian.exe")
+        ],
+        "notepadplusplus": [
+            os.path.join(program_files, "Notepad++", "notepad++.exe"),
+            os.path.join(program_files_x86, "Notepad++", "notepad++.exe")
+        ]
+    }
 
+    candidate_paths = app_specific_paths.get(app_id.lower(), [])
     for p in candidate_paths:
         if os.path.exists(p):
             return True
@@ -79,12 +136,18 @@ def check_winget_list(winget_id: str) -> bool:
     return False
 
 def is_app_installed_advanced(manifest: dict) -> bool:
+    app_id = manifest.get("id", "")
     app_name = manifest.get("name", "")
     install_meta = manifest.get("install", {})
     winget_id = install_meta.get("winget_id") or manifest.get("winget_id")
     check_command = install_meta.get("check_command") or manifest.get("check_command")
 
-    if check_standard_paths(manifest.get("id", ""), check_command):
+    # Si es tipo script o none, la app no se considera instalada previamente de forma estática
+    install_type = install_meta.get("type", "winget")
+    if install_type in ["script", "none", "manual"]:
+        return False
+
+    if check_standard_paths(app_id, check_command):
         return True
     if check_registry_uninstall(app_name, winget_id):
         return True
