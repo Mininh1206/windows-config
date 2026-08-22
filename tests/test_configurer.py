@@ -29,6 +29,15 @@ class TestConfigurer(unittest.TestCase):
         res_appdata = resolve_path_vars("$env:APPDATA/TestConfig")
         self.assertNotIn("$env:APPDATA", res_appdata)
 
+        # Multi-drive locations
+        os.environ["DRIVE_APPS"] = "A:"
+        os.environ["DRIVE_GAMES"] = "J:"
+        os.environ["DRIVE_DATA"] = "D:"
+        
+        self.assertTrue(resolve_path_vars("$DRIVE_APPS/Aplicaciones").startswith("A:"))
+        self.assertTrue(resolve_path_vars("$DRIVE_GAMES/SteamLibrary").startswith("J:"))
+        self.assertTrue(resolve_path_vars("$DRIVE_DATA/Daniel").startswith("D:"))
+
     def test_apply_direct_configuration_files_and_backup(self):
         """Verifica el copiado de dotfiles con generación de copia de respaldo .bak en sandbox."""
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -136,7 +145,7 @@ class TestConfigurer(unittest.TestCase):
             mock_subproc.assert_called_once()
             call_cmd = mock_subproc.call_args[0][0]
             self.assertEqual(call_cmd[0], "powershell")
-            self.assertIn(ps1_file, call_cmd)
+            self.assertTrue(any(ps1_file in arg for arg in call_cmd))
             self.assertEqual(mock_subproc.call_args[1]["cwd"], app_dir)
 
     @patch("src.core.configurer.is_process_running")

@@ -23,11 +23,10 @@
   },
   "config": {
     "has_direct_config": true,
+    "restart_process": ["PowerToys", "PowerToys.PowerLauncher"],
+    "launch_executable": "$env:ProgramFiles/PowerToys/PowerToys.exe",
     "files": [],
-    "commands": [
-      "Get-Process PowerToys -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue",
-      "if (Test-Path \"$env:LOCALAPPDATA/PowerToys/PowerToys.exe\") { Start-Process -FilePath \"$env:LOCALAPPDATA/PowerToys/PowerToys.exe\" -ErrorAction SilentlyContinue } elseif (Test-Path \"$env:ProgramFiles/PowerToys/PowerToys.exe\") { Start-Process -FilePath \"$env:ProgramFiles/PowerToys/PowerToys.exe\" -ErrorAction SilentlyContinue }"
-    ],
+    "commands": [],
     "environment_vars": {}
   }
 }

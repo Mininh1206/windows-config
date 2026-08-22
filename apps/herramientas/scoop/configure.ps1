@@ -1,9 +1,4 @@
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
-
 # Hook de instalación y configuración de Scoop
-[CmdletBinding()]
-param()
 
 $scoopCmd = Get-Command "scoop" -ErrorAction SilentlyContinue
 
@@ -14,8 +9,9 @@ if (-not $scoopCmd) {
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
     
     # Configurar directorio destino si existe unidad personalizada
-    if ($env:TARGET_DRIVE -and (Test-Path "$env:TARGET_DRIVE\")) {
-        $scoopDir = "$env:TARGET_DRIVE\Scoop"
+    $driveApps = if ($env:DRIVE_APPS -and (Test-Path "$($env:DRIVE_APPS)\")) { $env:DRIVE_APPS } elseif ($env:TARGET_DRIVE -and (Test-Path "$($env:TARGET_DRIVE)\")) { $env:TARGET_DRIVE } else { $null }
+    if ($driveApps) {
+        $scoopDir = "$driveApps\Scoop"
         [System.Environment]::SetEnvironmentVariable("SCOOP", $scoopDir, "User")
         $env:SCOOP = $scoopDir
     }

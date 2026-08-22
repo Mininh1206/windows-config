@@ -1,31 +1,28 @@
-# Windows 11 Tweaks: Redirección de Carpetas a A:\Daniel, Modo de Energía y Optimizaciones de Juego
-[CmdletBinding()]
-param()
-
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$OutputEncoding = [System.Text.Encoding]::UTF8
+# Windows 11 Tweaks: Redirección de Carpetas de Datos/Usuario, Modo de Energía y Optimizaciones de Juego
 
 Write-Host "════════════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
 Write-Host "       EJECUTANDO OPTIMIZACIONES DE WINDOWS 11 Y TWEAKS DE SISTEMA     " -ForegroundColor Cyan
 Write-Host "════════════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
 
-# 1. Redirección de Carpetas de Usuario a A:\Daniel
-$targetBase = "A:\Daniel"
-if (Test-Path "A:\") {
+# 1. Redirección de Carpetas de Usuario al disco de Datos
+$dataDrive = if ($env:DRIVE_DATA -and (Test-Path "$($env:DRIVE_DATA)\")) { $env:DRIVE_DATA } elseif (Test-Path "A:\") { "A:" } else { $null }
+
+if ($dataDrive) {
+    $targetBase = "$dataDrive\Daniel"
     Write-Host "[CARPETAS] Configurando redirección de carpetas de usuario a $targetBase..." -ForegroundColor Yellow
     
     $folderMap = @{
-        "Personal"           = "$targetBase\Documentos"
+        "Personal"                                  = "$targetBase\Documentos"
         "{F42EE2D3-909F-4907-8871-4C22FC0BF756}" = "$targetBase\Documentos"
         "{374DE290-123F-4565-9164-39C4925E467B}" = "$targetBase\Descargas"
         "{7D83EE9B-2244-4E70-B1F5-546DEB7AE3E6}" = "$targetBase\Descargas"
-        "My Pictures"        = "$targetBase\Imágenes"
+        "My Pictures"                               = "$targetBase\Imágenes"
         "{0DDD015D-B06C-45D5-8C4C-F59713854639}" = "$targetBase\Imágenes"
-        "My Music"           = "$targetBase\Música"
+        "My Music"                                  = "$targetBase\Música"
         "{A0C69A99-21C8-4671-8703-7934162FBE1D}" = "$targetBase\Música"
-        "My Video"           = "$targetBase\Vídeos"
+        "My Video"                                  = "$targetBase\Vídeos"
         "{35286A68-3379-488F-91F8-204D33F03016}" = "$targetBase\Vídeos"
-        "Desktop"            = "$targetBase\Escritorio"
+        "Desktop"                                   = "$targetBase\Escritorio"
         "{754AC886-DF64-4C3D-86B5-92960F72B550}" = "$targetBase\Escritorio"
     }
 
@@ -40,7 +37,7 @@ if (Test-Path "A:\") {
     }
     Write-Host "  -> Carpetas de usuario redirigidas a $targetBase con éxito." -ForegroundColor Green
 } else {
-    Write-Host "[CARPETAS] La unidad A:\ no está presente en el sistema. Omitiendo redirección." -ForegroundColor Gray
+    Write-Host "[CARPETAS] No se detectó unidad dedicada de datos. Omitiendo redirección de carpetas de usuario." -ForegroundColor Gray
 }
 
 # 2. Plan de Energía: Máximo Rendimiento (Ultimate Performance) o Alto Rendimiento

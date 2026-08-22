@@ -288,9 +288,12 @@ def install_app(
             _notify("Instalando vía Winget...")
 
             cmd = ["winget", "install", "--id", winget_id, "--silent", "--accept-package-agreements", "--accept-source-agreements"]
-            # Si hay silent_args / override_args específicos (ej. workloads de Visual Studio), pasarlos como --override
-            if silent_args and silent_args.strip() and silent_args.strip() != "--silent":
-                cmd.extend(["--override", silent_args.strip()])
+            # Si hay silent_args / override_args específicos y no genéricos (ej. workloads de Visual Studio o mergetasks de VSCode), pasarlos como --override
+            generic_silent_switches = {"/s", "/verysilent", "/quiet", "/silent", "--silent", "--quiet", "/qn", "/qb", "-s"}
+            if silent_args and silent_args.strip():
+                clean_s = silent_args.strip()
+                if clean_s.lower() not in generic_silent_switches:
+                    cmd.extend(["--override", clean_s])
 
             res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
             logger.log_raw(res.stdout)

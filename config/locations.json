@@ -1,0 +1,29 @@
+[
+  {
+    "id": "apps",
+    "name": "Aplicaciones y Entornos",
+    "description": "Programas portables, SDKs, editores, CLI y herramientas",
+    "env_var": "DRIVE_APPS",
+    "preferred_drive": "A:",
+    "fallback_drive": "C:",
+    "target_subpath": "Aplicaciones"
+  },
+  {
+    "id": "games",
+    "name": "Juegos y Bibliotecas",
+    "description": "Bibliotecas de Steam, Playnite, emuladores y launchers",
+    "env_var": "DRIVE_GAMES",
+    "preferred_drive": "J:",
+    "fallback_drive": "C:",
+    "target_subpath": "Juegos"
+  },
+  {
+    "id": "data",
+    "name": "Archivos, Modelos y Documentos",
+    "description": "Redirección de usuario (Documentos, Descargas), Obsidian y modelos LLM",
+    "env_var": "DRIVE_DATA",
+    "preferred_drive": "A:",
+    "fallback_drive": "C:",
+    "target_subpath": "Daniel"
+  }
+]

@@ -1,14 +1,24 @@
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
+# Hook de sincronización de extensiones, configuraciones y reglas para Antigravity IDE
 
-# Hook de configuración de Antigravity: Sincronización de agentes, skills y reglas globales
-[CmdletBinding()]
-param()
-
-$geminiConfig = "$env:USERPROFILE\.gemini"
-if (-not (Test-Path $geminiConfig)) {
-    New-Item -ItemType Directory -Path $geminiConfig -Force | Out-Null
+$codeExe = Get-Command "antigravity.exe" -ErrorAction SilentlyContinue
+if (-not $codeExe) {
+    $codeExe = Get-Command "code.exe" -ErrorAction SilentlyContinue
 }
 
-Write-Host "[ANTIGRAVITY] Configurando entorno de trabajo y agentes de Antigravity..." -ForegroundColor Cyan
-Write-Host "  -> Entorno preparado en $geminiConfig" -ForegroundColor Green
+$extensions = @(
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-vscode.powershell",
+    "esbenp.prettier-vscode",
+    "pkief.material-icon-theme",
+    "usernamehw.errorlens"
+)
+
+if ($codeExe) {
+    Write-Host "[ANTIGRAVITY] Verificando e instalando extensiones recomendadas de desarrollo..." -ForegroundColor Cyan
+    foreach ($ext in $extensions) {
+        Write-Host "  -> Verificando extensión: $ext..." -ForegroundColor Gray
+        Start-Process -FilePath $codeExe.Source -ArgumentList "--install-extension $ext --force" -Wait -NoNewWindow -ErrorAction SilentlyContinue
+    }
+    Write-Host "  -> Extensiones verificadas y sincronizadas." -ForegroundColor Green
+}

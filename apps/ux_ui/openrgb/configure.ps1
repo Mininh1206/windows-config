@@ -1,6 +1,4 @@
 # Hook post-instalación de OpenRGB: Carga de perfil por defecto y programación horaria
-[CmdletBinding()]
-param()
 
 $openRgbCmd = Get-Command "openrgb.exe" -ErrorAction SilentlyContinue
 $openRgbExe = if ($openRgbCmd) { $openRgbCmd.Source } else { $null }
@@ -9,9 +7,6 @@ if (-not $openRgbExe) {
         "$env:ProgramFiles\OpenRGB\OpenRGB.exe",
         "$env:LOCALAPPDATA\Programs\OpenRGB\OpenRGB.exe"
     )
-
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
     foreach ($cand in $candidates) {
         if (Test-Path $cand) {
             $openRgbExe = $cand

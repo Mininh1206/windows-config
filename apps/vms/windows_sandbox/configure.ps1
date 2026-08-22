@@ -1,9 +1,4 @@
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
-
 # Hook de instalacion y activacion optimizada de Windows Sandbox (Compatible con Home, Pro y Enterprise)
-[CmdletBinding()]
-param()
 
 $isElevated = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 

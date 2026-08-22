@@ -1,8 +1,8 @@
 # Hook de configuración de Google Drive Desktop para sincronización de Obsidian
-[CmdletBinding()]
-param()
 
-$obsidianPath = "A:\Daniel\Documents\Obsidian"
+$driveData = if ($env:DRIVE_DATA -and (Test-Path "$($env:DRIVE_DATA)\")) { $env:DRIVE_DATA } elseif (Test-Path "A:\") { "A:" } else { $null }
+$obsidianPath = if ($driveData) { "$driveData\Daniel\Documents\Obsidian" } else { "$HOME\Documents\Obsidian" }
+
 if (-not (Test-Path $obsidianPath)) {
     New-Item -ItemType Directory -Path $obsidianPath -Force | Out-Null
 }
@@ -40,9 +40,6 @@ if os.path.exists(db_path):
                     "VALUES (?, b'', '', 'Obsidian', 'Daniel\\\\Documents\\\\Obsidian', '', 1, 1, 1, 2, 0, 0, '', ?);",
                     (new_id, obsidian_path)
                 )
-
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
                 conn.commit()
                 print('Root Obsidian insertado en Google Drive.')
             else:

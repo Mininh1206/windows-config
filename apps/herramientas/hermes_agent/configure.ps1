@@ -1,9 +1,4 @@
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
-
 # Hook de configuración de Hermes Agent, SOUL y Skills
-[CmdletBinding()]
-param()
 
 $hermesDir = "$env:LOCALAPPDATA\hermes"
 if (-not (Test-Path $hermesDir)) {

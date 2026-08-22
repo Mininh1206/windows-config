@@ -1,9 +1,4 @@
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
-
 # Hook post-instalación de AutoHotkey: Despliegue de Windows Desktop Switcher en Startup
-[CmdletBinding()]
-param()
 
 $destDir = "$HOME\.config\windows-desktop-switcher"
 if (-not (Test-Path $destDir)) {

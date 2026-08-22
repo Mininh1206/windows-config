@@ -1,8 +1,7 @@
-# Hook de configuración de Steam y biblioteca en unidad J:\
-[CmdletBinding()]
-param()
+# Hook de configuración de Steam y biblioteca modular en unidad de juegos
 
-$steamLib = "J:\SteamLibrary"
+$gamesDrive = if ($env:DRIVE_GAMES -and (Test-Path "$($env:DRIVE_GAMES)\")) { $env:DRIVE_GAMES } elseif (Test-Path "J:\") { "J:" } else { "C:" }
+$steamLib = "$gamesDrive\SteamLibrary"
 $steamAppsCommon = Join-Path $steamLib "steamapps\common"
 
 if (-not (Test-Path $steamAppsCommon)) {
@@ -11,16 +10,12 @@ if (-not (Test-Path $steamAppsCommon)) {
 
 Write-Host "[STEAM] Configurando biblioteca de juegos en: $steamLib" -ForegroundColor Cyan
 
-# Desplegar libraryfolders.vdf si Steam está instalado
 $steamDirs = @(
     "${env:ProgramFiles(x86)}\Steam\steamapps",
     "$env:ProgramFiles\Steam\steamapps",
-    "A:\Steam\steamapps",
-    "J:\Steam\steamapps"
+    "$env:LOCALAPPDATA\Programs\Steam\steamapps",
+    "$gamesDrive\Steam\steamapps"
 )
-
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
 
 $sourceVdf = Join-Path $PSScriptRoot "files\libraryfolders.vdf"
 if (Test-Path $sourceVdf) {
@@ -34,4 +29,4 @@ if (Test-Path $sourceVdf) {
     }
 }
 
-Write-Host "  -> Biblioteca secundaria J:\SteamLibrary vinculada en Steam." -ForegroundColor Green
+Write-Host "  -> Biblioteca secundaria $steamLib vinculada en Steam." -ForegroundColor Green

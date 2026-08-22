@@ -66,15 +66,21 @@ def print_diagnostics_card(sys_info: dict):
     target_drv = sys_info.get("TargetDrive", "C:")
     disk_free  = sys_info.get("FreeDiskSpaceGB", 0)
     is_admin   = sys_info.get("IsAdmin", False)
+    drives_map = sys_info.get("DrivesMap", {})
 
     admin_badge = f"{C_GREEN}{C_BOLD}[ SÍ (Administrador) ]{C_RESET}" if is_admin else f"{C_YELLOW}[ NO (Modo Estándar) ]{C_RESET}"
+
+    if drives_map:
+        drives_summary = "  │  ".join([f"{k.capitalize()}: {C_BOLD}{v}{C_RESET}" for k, v in drives_map.items()])
+    else:
+        drives_summary = f"{C_BOLD}{target_drv}{C_RESET} ({disk_free} GB libres)"
 
     card = f"""{C_BLUE}{C_BOLD}╔══ {C_WHITE}DIAGNÓSTICO Y REQUISITOS DEL SISTEMA{C_BLUE} {'═' * (w - 44)}╗
 ║                                                                                    ║
 ║   {C_CYAN}Sistema Operativo :{C_RESET} {C_WHITE}{os_name}{C_RESET} {C_GRAY}(Build {os_ver}){C_RESET}
 ║   {C_CYAN}Procesador        :{C_RESET} {C_WHITE}{cpu_name}{C_RESET}
 ║   {C_CYAN}Memoria RAM       :{C_RESET} Total {C_BOLD}{ram_total} GB{C_RESET}  │  Disponible {C_GREEN}{C_BOLD}{ram_free} GB{C_RESET}
-║   {C_CYAN}Unidad Destino    :{C_RESET} {C_BOLD}{target_drv}{C_RESET}        │  Espacio Libre {C_GREEN}{C_BOLD}{disk_free} GB{C_RESET}
+║   {C_CYAN}Unidades Destino  :{C_RESET} {drives_summary}
 ║   {C_CYAN}Privilegios Admin :{C_RESET} {admin_badge}
 ║                                                                                    ║
 ╚{'═' * (w - 2)}╝{C_RESET}"""

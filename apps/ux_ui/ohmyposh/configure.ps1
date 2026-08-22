@@ -1,9 +1,4 @@
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
-
 # Hook de configuracion y descarga silenciosa de fuentes para Oh My Posh
-[CmdletBinding()]
-param()
 
 Write-Host "[OH-MY-POSH] Configurando tema darkside e instalando fuentes..." -ForegroundColor Cyan
 

@@ -9,7 +9,7 @@ import argparse
 # Add project root to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from src.core.app_builder import interactive_create_app
+from src.core.app_builder import interactive_create_app, interactive_manage_locations
 from src.core.sync_dotfiles import interactive_sync_dotfiles
 from src.core.populate_catalog import populate_all
 from src.core.tui import tui_select_menu, clear_screen
@@ -28,6 +28,7 @@ def main():
         # Menú principal TUI del Constructor
         options = [
             {"label": "Registrar / Añadir Nueva Aplicación", "badge": "NUEVA", "detail": "Buscar en repositorios o instalador local", "value": "create"},
+            {"label": "Administrar Ubicaciones y Discos", "badge": "DISCOS", "detail": "Configurar destinos (Apps, Juegos, Datos, etc.)", "value": "locations"},
             {"label": "Sincronizar Dotfiles desde el Sistema", "badge": "SYNC", "detail": "Volcar configuraciones vivas de tu Windows al repo", "value": "sync"}
         ]
         sel = tui_select_menu(
@@ -39,6 +40,8 @@ def main():
         if sel:
             if sel["value"] == "create":
                 interactive_create_app()
+            elif sel["value"] == "locations":
+                interactive_manage_locations()
             elif sel["value"] == "sync":
                 interactive_sync_dotfiles()
         else:

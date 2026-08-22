@@ -1,11 +1,8 @@
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
-
 # Hook de configuración de Unity Hub y preparación de Unity Editor LTS
-[CmdletBinding()]
-param()
 
-$unityInstallDir = "A:\Aplicaciones\Unity"
+$appsDrive = if ($env:DRIVE_APPS -and (Test-Path "$($env:DRIVE_APPS)\")) { $env:DRIVE_APPS } elseif (Test-Path "A:\") { "A:" } else { "C:" }
+$unityInstallDir = "$appsDrive\Aplicaciones\Unity"
+
 if (-not (Test-Path $unityInstallDir)) {
     New-Item -ItemType Directory -Path $unityInstallDir -Force | Out-Null
 }
@@ -18,7 +15,7 @@ if (-not (Test-Path $hubConfigDir)) {
 Write-Host "[UNITY HUB] Directorio de editores de Unity configurado en: $unityInstallDir" -ForegroundColor Cyan
 
 # Preparar log de fondo
-$logsDir = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) "logs"
+$logsDir = Join-Path (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent) "logs"
 if (-not (Test-Path $logsDir)) {
     New-Item -ItemType Directory -Path $logsDir -Force | Out-Null
 }

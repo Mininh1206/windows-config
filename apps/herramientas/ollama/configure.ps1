@@ -1,11 +1,8 @@
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
+# Hook de configuración de Ollama y descarga asíncrona de modelos en disco de datos
 
-# Hook de configuración de Ollama y descarga asíncrona de modelos
-[CmdletBinding()]
-param()
+$dataDrive = if ($env:DRIVE_DATA -and (Test-Path "$($env:DRIVE_DATA)\")) { $env:DRIVE_DATA } elseif (Test-Path "A:\") { "A:" } else { "C:" }
+$modelsPath = "$dataDrive\LLM"
 
-$modelsPath = "A:\LLM"
 if (-not (Test-Path $modelsPath)) {
     New-Item -ItemType Directory -Path $modelsPath -Force | Out-Null
 }
@@ -16,7 +13,7 @@ $env:OLLAMA_MODELS = $modelsPath
 Write-Host "[OLLAMA] Directorio de modelos configurado en $modelsPath." -ForegroundColor Cyan
 
 # Preparar log de fondo
-$logsDir = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) "logs"
+$logsDir = Join-Path (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent) "logs"
 if (-not (Test-Path $logsDir)) {
     New-Item -ItemType Directory -Path $logsDir -Force | Out-Null
 }
@@ -24,7 +21,7 @@ $bgLog = Join-Path $logsDir "bg_ollama_models.log"
 
 $scriptBlock = @"
 `$env:OLLAMA_MODELS = '$modelsPath'
-Add-Content -Path '$bgLog' -Value "=== Inciando descarga de modelos Ollama: `$(Get-Date) ==="
+Add-Content -Path '$bgLog' -Value "=== Iniciando descarga de modelos Ollama: `$(Get-Date) ==="
 & ollama pull qwen3.8:27b *>> '$bgLog'
 & ollama pull gemma4:e4b *>> '$bgLog'
 Add-Content -Path '$bgLog' -Value "=== Descarga completada: `$(Get-Date) ==="

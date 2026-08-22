@@ -24,7 +24,7 @@
       "PowerToys",
       "PowerToys.PowerLauncher"
     ],
-    "launch_executable": "$env:LOCALAPPDATA/Microsoft/PowerToys/PowerToys.exe",
+    "launch_executable": "$env:ProgramFiles/PowerToys/PowerToys.exe",
     "files": [
       {
         "source": "settings.json",

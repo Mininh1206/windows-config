@@ -12,6 +12,7 @@ import subprocess
 from typing import List, Dict, Optional
 
 from src.core.multi_search import search_all_repositories
+from src.core.locations import load_locations, save_locations, add_custom_location
 from src.core.tui import (
     tui_header, tui_select_menu, tui_multi_checkbox, tui_radio_select,
     tui_input_box, tui_confirm, clear_screen, read_key,
@@ -75,6 +76,7 @@ def create_app_package(
     check_command: Optional[str] = None,
     priority: int = 3,
     depends_on: Optional[List[str]] = None,
+    target_location: str = "apps",
     min_ram_gb: float = 2.0,
     min_disk_gb: float = 0.5,
     has_direct_config: bool = False,
@@ -109,6 +111,7 @@ def create_app_package(
         "name": name,
         "category": category,
         "priority": priority,
+        "target_location": target_location,
         "depends_on": depends_on or [],
         "install": install_block,
         "requirements": {
@@ -362,6 +365,27 @@ def interactive_create_app(apps_base_dir: Optional[str] = None):
     priority = prio_menu["value"] if prio_menu else suggested_priority
 
     # =========================================================================
+    # PASO 3.5: ASIGNACIÓN DE DISCO / UBICACIÓN DE DESTINO (MULTIDISCO)
+    # =========================================================================
+    locations = load_locations()
+    loc_options = []
+    for loc in locations:
+        loc_options.append({
+            "label": loc.get("name", loc["id"]),
+            "badge": loc["id"].upper(),
+            "detail": f"[{loc.get('env_var', '')}] {loc.get('description', '')}",
+            "value": loc["id"]
+        })
+    default_loc = "games" if category == "juegos" else ("data" if category in ["agil"] else "apps")
+    sel_loc = tui_radio_select(
+        "UBICACIÓN DE DISCO DE DESTINO",
+        loc_options,
+        default_value=default_loc,
+        subtitle="Selecciona a qué tipo de disco se vincula la app y sus configuraciones"
+    )
+    target_location = sel_loc["value"] if sel_loc else default_loc
+
+    # =========================================================================
     # PASO 4: SELECCIÓN TUI DE DEPENDENCIAS DAG
     # =========================================================================
     existing_apps = get_existing_apps(apps_base_dir)
@@ -430,7 +454,7 @@ def interactive_create_app(apps_base_dir: Optional[str] = None):
                     "RUTA DESTINO POST-FORMATEO",
                     "Ruta destino en el sistema donde se desplegará:",
                     default_val=f"$HOME/{os.path.basename(src_file)}",
-                    subtitle="Usa variables como $HOME, $env:APPDATA, $env:LOCALAPPDATA"
+                    subtitle="Usa variables como $HOME, $env:APPDATA, $env:LOCALAPPDATA, $DRIVE_APPS, $DRIVE_DATA"
                 )
                 filename = os.path.basename(src_file)
                 imported_files_map[src_file] = filename
@@ -478,6 +502,7 @@ def interactive_create_app(apps_base_dir: Optional[str] = None):
         check_command=check_cmd,
         priority=priority,
         depends_on=depends_on,
+        target_location=target_location,
         has_direct_config=has_config,
         config_files=config_files,
         config_commands=config_commands,
@@ -495,6 +520,7 @@ def interactive_create_app(apps_base_dir: Optional[str] = None):
     print(f"  {C_CYAN}Nombre Visual   :{C_RESET} {C_BOLD}{app_name}{C_RESET}")
     print(f"  {C_CYAN}Identificador ID:{C_RESET} {C_WHITE}{app_id}{C_RESET}")
     print(f"  {C_CYAN}Categoría       :{C_RESET} {C_WHITE}{category}{C_RESET}")
+    print(f"  {C_CYAN}Ubicación Disco :{C_RESET} {C_YELLOW}{target_location.upper()}{C_RESET}")
     print(f"  {C_CYAN}Tipo Instalación:{C_RESET} {C_GREEN}{install_type.upper()}{C_RESET} {C_GRAY}({selected_pkg_id or local_installer_name}){C_RESET}")
     print(f"  {C_CYAN}Fase / Prioridad:{C_RESET} {C_MAGENTA}Fase {priority}{C_RESET}")
     if depends_on:
@@ -513,3 +539,80 @@ def interactive_create_app(apps_base_dir: Optional[str] = None):
     print(f"  {C_WHITE}Presiona ENTER para finalizar y volver a la consola...{C_RESET}")
     read_key()
     clear_screen()
+
+def interactive_manage_locations():
+    """Asistente interactivo TUI para ver y registrar nuevas ubicaciones de disco."""
+    while True:
+        locations = load_locations()
+        options = []
+        for loc in locations:
+            options.append({
+                "label": loc.get("name", loc["id"]),
+                "badge": loc["id"].upper(),
+                "detail": f"[{loc.get('env_var', '')}] Pref: {loc.get('preferred_drive', 'C:')} | {loc.get('description', '')}",
+                "value": loc["id"]
+            })
+            
+        options.append({
+            "label": "➕ Añadir Nueva Ubicación de Disco",
+            "badge": "NUEVO",
+            "detail": "Registrar un nuevo destino (ej. vms, models, backups)",
+            "value": "__add_new__"
+        })
+        
+        sel = tui_select_menu(
+            "GESTIÓN MODULAR DE UBICACIONES Y DISCOS",
+            options,
+            subtitle="Selecciona una ubicación para verla o añade una nueva (ESC para salir)"
+        )
+        
+        if not sel:
+            break
+            
+        if sel["value"] == "__add_new__":
+            clear_screen()
+            tui_header("NUEVA UBICACIÓN DE DISCO", "Define un nuevo destino para almacenamiento y variables de entorno")
+            
+            loc_id = tui_input_box("IDENTIFICADOR DE UBICACIÓN", "Introduce el ID único en minúsculas (ej: vms, models, backups):", default_val="vms").strip().lower()
+            if not loc_id:
+                continue
+                
+            name = tui_input_box("NOMBRE VISUAL", "Nombre descriptivo para la interfaz:", default_val=f"Disco para {loc_id.capitalize()}")
+            description = tui_input_box("DESCRIPCIÓN", "Explicación del tipo de contenido:", default_val=f"Archivos y datos de {loc_id}")
+            env_var = tui_input_box("VARIABLE DE ENTORNO", "Nombre de variable de entorno a inyectar:", default_val=f"DRIVE_{loc_id.upper()}").upper()
+            pref_drv = tui_input_box("UNIDAD PREFERIDA", "Letra de unidad preferida por defecto (ej: D:, E:, C:):", default_val="C:").upper()
+            subpath = tui_input_box("SUBCARPETA PREDETERMINADA", "Subcarpeta opcional dentro de la unidad (ej: VMs, Models):", default_val=loc_id.capitalize())
+            
+            success = add_custom_location(
+                loc_id=loc_id,
+                name=name,
+                description=description,
+                env_var=env_var,
+                preferred_drive=pref_drv,
+                fallback_drive="C:",
+                target_subpath=subpath
+            )
+            
+            if success:
+                clear_screen()
+                print(f"{C_GREEN}{C_BOLD}✓ Ubicación '{name}' [{loc_id.upper()}] guardada con éxito en config/locations.json.{C_RESET}\n")
+                print(f"  {C_CYAN}Variable exportada:{C_RESET} {C_WHITE}${env_var}{C_RESET}")
+                print(f"  {C_CYAN}Unidad preferida   :{C_RESET} {C_WHITE}{pref_drv}{C_RESET}")
+                print(f"\n{C_GRAY}Presiona ENTER para continuar...{C_RESET}")
+                read_key()
+            else:
+                print(f"{C_RED}Error al guardar la ubicación.{C_RESET}")
+                read_key()
+        else:
+            # Mostrar detalle de la ubicación existente
+            loc = next((l for l in locations if l["id"] == sel["value"]), None)
+            if loc:
+                clear_screen()
+                tui_header(f"DETALLE DE UBICACIÓN: {loc.get('name', loc['id']).upper()}", f"ID: {loc['id']}")
+                print(f"  {C_CYAN}Nombre         :{C_RESET} {C_WHITE}{loc.get('name', '')}{C_RESET}")
+                print(f"  {C_CYAN}Descripción    :{C_RESET} {C_GRAY}{loc.get('description', '')}{C_RESET}")
+                print(f"  {C_CYAN}Variable Env   :{C_RESET} {C_YELLOW}${loc.get('env_var', '')}{C_RESET}")
+                print(f"  {C_CYAN}Unidad Pref.   :{C_RESET} {C_GREEN}{loc.get('preferred_drive', 'C:')}{C_RESET}")
+                print(f"  {C_CYAN}Subcarpeta     :{C_RESET} {C_WHITE}{loc.get('target_subpath', '')}{C_RESET}")
+                print(f"\n{C_GRAY}Presiona ENTER para volver a la lista...{C_RESET}")
+                read_key()

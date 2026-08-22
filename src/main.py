@@ -17,17 +17,17 @@ from src.core.logger import get_logger
 from src.core.power import keep_awake
 from src.core.installer import install_app
 from src.core.configurer import apply_direct_configuration
+from src.core.locations import prompt_all_locations, export_location_env_vars, load_locations
 from src.core.tui import run_tui_app_selector, CATEGORY_NAMES
 from src.core.ui import (
     print_banner, print_header, print_diagnostics_card,
-    print_summary_table, prompt_select_target_drive,
-    render_dual_progress, finish_progress_item,
+    print_summary_table, render_dual_progress, finish_progress_item,
     C_CYAN, C_YELLOW, C_GREEN, C_WHITE, C_RESET, C_BOLD, C_GRAY
 )
 
 logger = get_logger()
 
-def get_system_diagnostics(target_drive="C:"):
+def get_system_diagnostics(drives_map: dict = None):
     try:
         import ctypes
         is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
@@ -38,6 +38,8 @@ def get_system_diagnostics(target_drive="C:"):
     os_ver = platform.version()
     cpu_name = platform.processor() or "Procesador AMD64 / x86_64"
 
+    drives_map = drives_map or {"apps": "C:"}
+    target_drive = drives_map.get("apps", "C:")
     drive_letter = target_drive[0].upper() + ":"
     free_disk_gb = 0.0
     try:
@@ -72,6 +74,7 @@ def get_system_diagnostics(target_drive="C:"):
         "TotalRAM_GB": ram_total_gb,
         "FreeRAM_GB": ram_free_gb,
         "TargetDrive": drive_letter,
+        "DrivesMap": drives_map,
         "FreeDiskSpaceGB": free_disk_gb,
         "IsAdmin": is_admin
     }
@@ -98,7 +101,11 @@ def discover_applications(script_root):
 
 def main():
     parser = argparse.ArgumentParser(description="Configurador de Windows 11 — Motor Unificado")
-    parser.add_argument("--target-drive", default=None, help="Unidad de disco de destino")
+    parser.add_argument("--target-drive", default=None, help="Unidad de disco global/por defecto")
+    parser.add_argument("--drive-apps", default=None, help="Unidad de disco para aplicaciones y entornos")
+    parser.add_argument("--drive-games", default=None, help="Unidad de disco para juegos y bibliotecas")
+    parser.add_argument("--drive-data", default=None, help="Unidad de disco para archivos, datos y modelos")
+    parser.add_argument("--drive", action="append", help="Sobrescribir unidad específica (formato: id=letra, ej: vms=D:)")
     parser.add_argument("--dry-run", action="store_true", help="Modo simulación (no modifica el sistema)")
     parser.add_argument("--test-mode", action="store_true", help="Modo prueba desatendido con todas las apps")
     parser.add_argument("--app", default=None, help="Instalar una aplicación específica por su ID")
@@ -114,18 +121,36 @@ def main():
     if args.dry_run:
         logger.log("[MODO SIMULACION ACTIVADO] No se realizaran cambios reales en el sistema.", "WARNING")
 
-    # 1. Selección de Unidad de Disco (Interactivo vs CLI)
-    target_drive = args.target_drive
-    if not target_drive and not args.test_mode and not args.app:
-        target_drive = prompt_select_target_drive(default_drive="C:")
-    elif not target_drive:
-        target_drive = "C:"
+    # 1. Preparar overrides de CLI para ubicaciones
+    cli_overrides = {}
+    if args.target_drive:
+        cli_overrides["apps"] = args.target_drive
+        cli_overrides["games"] = args.target_drive
+        cli_overrides["data"] = args.target_drive
+    if args.drive_apps:
+        cli_overrides["apps"] = args.drive_apps
+    if args.drive_games:
+        cli_overrides["games"] = args.drive_games
+    if args.drive_data:
+        cli_overrides["data"] = args.drive_data
+    if args.drive:
+        for d_spec in args.drive:
+            if "=" in d_spec:
+                k, v = d_spec.split("=", 1)
+                cli_overrides[k.strip().lower()] = v.strip()
 
-    logger.log(f"Unidad de destino configurada: {target_drive}", "INFO")
+    is_interactive = not (args.test_mode or args.app)
+
+    # 1.1 Selección Secuencial de Unidades de Disco (Modular)
+    selected_drives = prompt_all_locations(cli_overrides=cli_overrides, interactive=is_interactive)
+    export_location_env_vars(selected_drives)
+
+    for loc_id, drv in selected_drives.items():
+        logger.log(f"Unidad de destino [{loc_id.upper()}]: {drv}", "INFO")
 
     # 2. Diagnóstico del sistema
     logger.log("Ejecutando diagnostico del sistema...", "INFO")
-    sys_info = get_system_diagnostics(target_drive)
+    sys_info = get_system_diagnostics(selected_drives)
     print_diagnostics_card(sys_info)
 
     # 3. Descubrir aplicaciones
@@ -178,6 +203,9 @@ def main():
 
     target_paths = {
         "DriveLetter": sys_info['TargetDrive'],
+        "DriveApps": selected_drives.get("apps", "C:"),
+        "DriveGames": selected_drives.get("games", "C:"),
+        "DriveData": selected_drives.get("data", "C:"),
         "UserProfilePath": os.environ.get("USERPROFILE", os.path.expanduser("~")),
         "AppDataPath": os.environ.get("APPDATA", ""),
         "LocalAppDataPath": os.environ.get("LOCALAPPDATA", ""),

@@ -8,7 +8,7 @@
     "type": "winget",
     "winget_id": "DBeaver.DBeaver.Community",
     "local_installer": null,
-    "silent_args": "/S",
+    "silent_args": null,
     "check_command": "dbeaver",
     "target_drive_supported": true,
     "refresh_env_after": false

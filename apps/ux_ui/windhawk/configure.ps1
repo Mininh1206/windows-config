@@ -1,9 +1,4 @@
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
-
 # Hook de post-instalación de Windhawk: Despliegue de Mods
-[CmdletBinding()]
-param()
 
 $modsSource = "$env:ProgramData\Windhawk\ModsSource"
 if (-not (Test-Path $modsSource)) {

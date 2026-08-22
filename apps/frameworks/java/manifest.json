@@ -22,7 +22,7 @@
     "has_direct_config": true,
     "files": [],
     "commands": [
-      "$jdkDir = (Get-ChildItem -Path 'C:\\Program Files\\Eclipse Adoptium' -Filter 'jdk-21*' -Directory -ErrorAction SilentlyContinue | Select-Object -First 1).FullName; if ($jdkDir) { [Environment]::SetEnvironmentVariable('JAVA_HOME', $jdkDir, 'User') }"
+      "$jdkDir = (Get-ChildItem -Path \"$env:ProgramFiles\\Eclipse Adoptium\" -Filter 'jdk-21*' -Directory -ErrorAction SilentlyContinue | Select-Object -First 1).FullName; if ($jdkDir) { [Environment]::SetEnvironmentVariable('JAVA_HOME', $jdkDir, 'User') }"
     ],
     "environment_vars": {}
   }

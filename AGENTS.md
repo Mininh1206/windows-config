@@ -171,16 +171,18 @@ python -m unittest discover -s tests
 
 ## 📝 9. Memoria del Proyecto & Registro de Decisiones Definitivas
 
-### 9.1 Rutas de Almacenamiento y Sistema
-- **Ruta de Instalación Predeterminada:** `A:\Aplicaciones` (para apps que admitan selección de unidad).
-- **Almacenamiento de Juegos:** `J:\` (biblioteca secundaria de Steam `J:\SteamLibrary` y plataformas en Playnite).
-- **Redirección de Carpetas de Usuario:** Redirección automática a `A:\Daniel\<Documentos|Imágenes|Descargas|Música|Vídeos|Escritorio>`.
-- **Modelos de LLM Locales:** `OLLAMA_MODELS` configurado en `A:\LLM` (modelos por defecto: `qwen3.8:27b` y `gemma4:e4b`).
-- **Bóveda Obsidian:** `A:\Daniel\Documents\Obsidian` con sincronización automática asíncrona mediante Google Drive Desktop (`Google.GoogleDrive`).
+### 9.1 Arquitectura Multidisco y Ubicaciones
+- **Modularidad de Discos (`config/locations.json` & `src/core/locations.py`):** Sistema declarativo y extensible para asignar discos por propósito:
+  - **Disco de Aplicaciones (`DRIVE_APPS`):** `<DRIVE_APPS>\Aplicaciones` para programas portables, Scoop, runtimes y editores de Unity.
+  - **Disco de Juegos (`DRIVE_GAMES`):** `<DRIVE_GAMES>\SteamLibrary` para bibliotecas de Steam, Playnite y emuladores.
+  - **Disco de Datos y Modelos (`DRIVE_DATA`):** Redirección de carpetas de usuario a `<DRIVE_DATA>\Daniel\<Carpetas>`, Obsidian en `<DRIVE_DATA>\Daniel\Documents\Obsidian` y modelos de LLM en `<DRIVE_DATA>\LLM`.
+  - **Alias Retrocompatible (`TARGET_DRIVE`):** Vinculado por defecto al disco de aplicaciones (`DRIVE_APPS`).
 
-### 9.2 Motor de Ejecución y Configuración
+### 9.2 Motor de Ejecución, SOLID y Configuración
+- **Runner Central con Responsabilidad Única (SRP):** `src/core/configurer.py` prepara la sesión de PowerShell con codificación UTF-8 e inyección de variables (`$DRIVE_APPS`, `$DRIVE_GAMES`, `$DRIVE_DATA`, `$TARGET_DRIVE`), liberando a los scripts individuales `configure.ps1` de código boilerplate redundante.
 - **Ejecución Incondicional de Configuración:** Toda aplicación seleccionada con dotfiles, scripts, comandos o variables ejecuta siempre su configuración, reflejando `[ OK (CONFIGURADA) ]` si ya estaba instalada en el sistema.
 - **Gestor de Ciclo de Vida de Procesos (`restart_process`):** El motor detiene procesos activos antes de escribir archivos en disco (previniendo bloqueos de Windows) y los relanza automáticamente tras aplicar la configuración.
+- **Unificación de Plugins (PowerToys Run):** Plugins de archivos van en `apps/utilidades/powertoys/files/PowerToys Run/Plugins/<Plugin>` (ej. `ProcessKiller` `kl`), mientras que plugins empaquetados van como paquetes modulares de Winget (ej. `everything_powertoys` `lin-ycv.EverythingPowerToys`) con dependencias DAG.
 - **Tareas Asíncronas en Segundo Plano:** Tareas pesadas (descarga de modelos LLM, plugins de BBDD, motores) se ejecutan desasociadas con logging en `logs/bg_<app_id>.log`.
 - **Refresco en Caliente:** `refresh_environment()` expande variables del Registro (`%SystemRoot%`, `%USERPROFILE%`) en caliente sin corromper `ComSpec` ni `PATH`.
 - **Orden por Prioridades & DAG:** Resolución topológica en 4 fases (Fase 0: Shell/Gestores -> Fase 1: Runtimes -> Fase 2: IDEs/Herramientas -> Fase 3: Utilidades/Juegos).

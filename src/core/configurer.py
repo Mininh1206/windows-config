@@ -13,8 +13,16 @@ logger = get_logger()
 def resolve_path_vars(path_str: str) -> str:
     user_profile = os.environ.get("USERPROFILE", os.path.expanduser("~"))
     documents = os.environ.get("DOCUMENTS", os.path.join(user_profile, "Documents"))
+    drive_apps = os.environ.get("DRIVE_APPS", os.environ.get("TARGET_DRIVE", "C:"))
+    drive_games = os.environ.get("DRIVE_GAMES", "C:")
+    drive_data = os.environ.get("DRIVE_DATA", "C:")
+    target_drive = os.environ.get("TARGET_DRIVE", drive_apps)
 
-    # 1. Reemplazos de alias estándar y Unix
+    # 1. Reemplazos de alias de disco y rutas estándar
+    path_str = path_str.replace("$DRIVE_APPS", drive_apps)
+    path_str = path_str.replace("$DRIVE_GAMES", drive_games)
+    path_str = path_str.replace("$DRIVE_DATA", drive_data)
+    path_str = path_str.replace("$TARGET_DRIVE", target_drive)
     path_str = path_str.replace("$HOME", user_profile)
     path_str = path_str.replace("$env:DOCUMENTS", documents)
 
@@ -86,20 +94,39 @@ def restart_processes(
     if not to_restart and not launch_executable:
         return
 
-    # 1. Si hay un launch_executable explícito
+    # 1. Si hay un launch_executable explícito o candidatos
     if launch_executable:
         resolved_exe = resolve_path_vars(launch_executable)
+        target_exe = None
         if os.path.exists(resolved_exe):
-            logger.log(f"Relanzando aplicacion mediante '{resolved_exe}'...", "INFO")
+            target_exe = resolved_exe
+        else:
+            # Comprobar ubicaciones alternativas comunes si la ruta no existió
+            exe_basename = os.path.basename(resolved_exe)
+            prog_files = os.environ.get("ProgramFiles", r"C:\Program Files")
+            local_app = os.environ.get("LOCALAPPDATA", "")
+            candidates = [
+                os.path.join(prog_files, "PowerToys", exe_basename),
+                os.path.join(local_app, "Microsoft", "PowerToys", exe_basename),
+                os.path.join(local_app, "Programs", exe_basename),
+                shutil.which(exe_basename) or ""
+            ]
+            for cand in candidates:
+                if cand and os.path.exists(cand):
+                    target_exe = cand
+                    break
+
+        if target_exe:
+            logger.log(f"Relanzando aplicacion mediante '{target_exe}'...", "INFO")
             try:
                 cmd = [
                     "powershell", "-NoProfile", "-NonInteractive", "-Command",
-                    f"Start-Process -FilePath '{resolved_exe}' -ErrorAction SilentlyContinue"
+                    f"Start-Process -FilePath '{target_exe}' -WindowStyle Normal -ErrorAction SilentlyContinue"
                 ]
-                subprocess.run(cmd, cwd=cwd or os.path.dirname(resolved_exe), capture_output=True, timeout=5)
+                subprocess.run(cmd, cwd=cwd or os.path.dirname(target_exe), capture_output=True, timeout=5)
                 return
             except Exception as e:
-                logger.log(f"Aviso al relanzar ejecutable '{resolved_exe}': {e}", "WARNING")
+                logger.log(f"Aviso al relanzar ejecutable '{target_exe}': {e}", "WARNING")
 
     # 2. Relanzar por nombre de proceso si estaba activo
     for proc in to_restart:
@@ -108,7 +135,7 @@ def restart_processes(
         try:
             cmd = [
                 "powershell", "-NoProfile", "-NonInteractive", "-Command",
-                f"Start-Process -FilePath '{clean_name}' -ErrorAction SilentlyContinue"
+                f"Start-Process -FilePath '{clean_name}' -WindowStyle Normal -ErrorAction SilentlyContinue"
             ]
             subprocess.run(cmd, cwd=cwd, capture_output=True, timeout=5)
         except Exception as e:
@@ -202,8 +229,11 @@ def apply_direct_configuration(
         logger.log(f"Ejecutando hook configure.ps1 ({script_ps1})...", "INFO")
         _notify("Ejecutando script de configuración...")
         try:
-            cmd = ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", script_ps1]
-            res = subprocess.run(cmd, cwd=app_folder_path, capture_output=True, text=True, encoding="utf-8", errors="replace")
+            ps_cmd = [
+                "powershell", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
+                "-Command", f"$OutputEncoding = [System.Text.Encoding]::UTF8; [Console]::OutputEncoding = [System.Text.Encoding]::UTF8; & '{script_ps1}'"
+            ]
+            res = subprocess.run(ps_cmd, cwd=app_folder_path, capture_output=True, text=True, encoding="utf-8", errors="replace")
             logger.log_raw(res.stdout)
             logger.log_raw(res.stderr)
             ps1_executed = True
