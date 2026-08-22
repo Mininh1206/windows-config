@@ -1,10 +1,6 @@
-name: Release Builder & Publisher
+name: Release Builder & Publisher (Manual)
 
 on:
-  push:
-    tags:
-      - 'v*'
-      - 'v.*'
   workflow_dispatch:
     inputs:
       tag_name:
