@@ -1,3 +1,6 @@
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
+
 # Hook de instalación y configuración de Scoop
 [CmdletBinding()]
 param()

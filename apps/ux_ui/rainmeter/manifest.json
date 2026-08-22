@@ -21,7 +21,8 @@
     "RequireAdmin": false
   },
   "config": {
-    "has_direct_config": false,
+    "has_direct_config": true,
+    "restart_process": ["Rainmeter"],
     "files": [],
     "commands": [],
     "environment_vars": {}

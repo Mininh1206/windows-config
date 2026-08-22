@@ -1,6 +1,6 @@
 """
 Pruebas unitarias completas para el motor de configuración directa (configurer.py).
-Garantiza el despliegue de dotfiles, copias de respaldo (.bak), hooks y resolución de variables en sandbox.
+Garantiza el despliegue de dotfiles, copias de respaldo (.bak), hooks, ciclo de vida de procesos y resolución de variables en sandbox.
 """
 
 import os
@@ -10,7 +10,13 @@ import tempfile
 import unittest
 from unittest.mock import patch, MagicMock
 
-from src.core.configurer import resolve_path_vars, apply_direct_configuration
+from src.core.configurer import (
+    resolve_path_vars,
+    apply_direct_configuration,
+    is_process_running,
+    stop_processes,
+    restart_processes
+)
 
 class TestConfigurer(unittest.TestCase):
     def test_resolve_path_vars(self):
@@ -132,6 +138,21 @@ class TestConfigurer(unittest.TestCase):
             self.assertEqual(call_cmd[0], "powershell")
             self.assertIn(ps1_file, call_cmd)
             self.assertEqual(mock_subproc.call_args[1]["cwd"], app_dir)
+
+    @patch("src.core.configurer.is_process_running")
+    @patch("src.core.configurer.subprocess.run")
+    def test_process_lifecycle_stop_and_restart(self, mock_subproc, mock_is_running):
+        """Verifica la parada y reinicio de procesos declarados en manifest."""
+        mock_is_running.side_effect = lambda name: name.lower() in ["powertoys", "everything"]
+        mock_subproc.return_value = MagicMock(returncode=0, stdout="", stderr="")
+
+        # Probar stop_processes
+        active = stop_processes(["PowerToys", "NonExistentApp", "Everything.exe"])
+        self.assertEqual(active, ["PowerToys", "Everything"])
+
+        # Probar restart_processes
+        restart_processes(["PowerToys", "Everything"], active_processes=["PowerToys"])
+        self.assertTrue(mock_subproc.called)
 
     def test_apply_direct_configuration_nonexistent_manifest(self):
         """Verifica que carpetas sin manifest.json retornen False limpiamente."""

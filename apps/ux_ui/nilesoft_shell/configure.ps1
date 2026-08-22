@@ -1,3 +1,6 @@
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
+
 # Hook post-instalación de Nilesoft Shell: Registro del menú contextual
 [CmdletBinding()]
 param()

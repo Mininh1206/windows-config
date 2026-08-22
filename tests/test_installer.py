@@ -128,6 +128,28 @@ class TestInstaller(unittest.TestCase):
 
     @patch("src.core.installer.subprocess.run")
     @patch("src.core.installer.is_app_installed_advanced", return_value=False)
+    def test_install_app_winget_stdout_already_installed(self, mock_is_installed, mock_subproc):
+        """Verifica que si stdout contiene 'found an existing package already installed', sea tratado como ya instalada."""
+        mock_subproc.return_value = MagicMock(
+            returncode=1,
+            stdout="Found an existing package already installed. Trying to upgrade the installed package... No newer package versions are available.",
+            stderr=""
+        )
+        manifest = {
+            "id": "test_pkg",
+            "name": "Test Package",
+            "install": {
+                "type": "winget",
+                "winget_id": "Test.Package",
+                "refresh_env_after": False
+            }
+        }
+        success, already_installed = install_app(manifest, installers_dir="dummy", dry_run=False)
+        self.assertTrue(success)
+        self.assertTrue(already_installed)
+
+    @patch("src.core.installer.subprocess.run")
+    @patch("src.core.installer.is_app_installed_advanced", return_value=False)
     def test_install_app_winget_reboot_required_exit_code(self, mock_is_installed, mock_subproc):
         """Verifica que el código de retorno 3010 (Reboot required) sea tratado como éxito."""
         mock_subproc.return_value = MagicMock(

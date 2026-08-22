@@ -20,6 +20,11 @@
   },
   "config": {
     "has_direct_config": true,
+    "restart_process": [
+      "PowerToys",
+      "PowerToys.PowerLauncher"
+    ],
+    "launch_executable": "$env:LOCALAPPDATA/Microsoft/PowerToys/PowerToys.exe",
     "files": [
       {
         "source": "settings.json",

@@ -48,18 +48,24 @@ Write-Host "[ENERGÍA] Configurando Plan de Energía de Máximo Rendimiento..." 
 $ultimateGuid = "e9a42b02-d5df-448d-aa00-03f14749eb61"
 $highPerfGuid = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
 
-$dupRes = & powercfg -duplicatescheme $ultimateGuid 2>$null
-$setRes = & powercfg /setactive $ultimateGuid 2>$null
-
-if ($LASTEXITCODE -eq 0) {
-    Write-Host "  -> Plan 'Ultimate Performance' activado." -ForegroundColor Green
-} else {
-    & powercfg /setactive $highPerfGuid 2>$null
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host "  -> Plan 'High Performance' activado (entorno sin soporte de Ultimate Performance)." -ForegroundColor Green
-    } else {
-        Write-Host "  -> Manteniendo plan de energía predeterminado del sistema." -ForegroundColor Gray
+try {
+    $schemes = & powercfg /list 2>$null
+    if ($schemes -notmatch $ultimateGuid) {
+        $null = & powercfg -duplicatescheme $ultimateGuid 2>$null
     }
+    $null = & powercfg /setactive $ultimateGuid 2>$null
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "  -> Plan 'Ultimate Performance' activado." -ForegroundColor Green
+    } else {
+        $null = & powercfg /setactive $highPerfGuid 2>$null
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "  -> Plan 'High Performance' activado (entorno sin soporte de Ultimate Performance)." -ForegroundColor Green
+        } else {
+            Write-Host "  -> Manteniendo plan de energía predeterminado del sistema." -ForegroundColor Gray
+        }
+    }
+} catch {
+    Write-Host "  -> Manteniendo plan de energía predeterminado del sistema." -ForegroundColor Gray
 }
 
 # 3. Optimizaciones para Juegos (Game Mode & GPU Scheduling)

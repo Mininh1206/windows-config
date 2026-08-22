@@ -20,6 +20,7 @@
   },
   "config": {
     "has_direct_config": true,
+    "restart_process": ["Everything"],
     "files": [],
     "commands": [
       "if (Test-Path '$env:ProgramFiles/Everything/Everything.exe') { Start-Process -FilePath '$env:ProgramFiles/Everything/Everything.exe' -ArgumentList '-install-service' -Verb RunAs -Wait -ErrorAction SilentlyContinue }"

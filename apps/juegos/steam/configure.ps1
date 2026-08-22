@@ -19,6 +19,9 @@ $steamDirs = @(
     "J:\Steam\steamapps"
 )
 
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
+
 $sourceVdf = Join-Path $PSScriptRoot "files\libraryfolders.vdf"
 if (Test-Path $sourceVdf) {
     foreach ($dir in $steamDirs) {

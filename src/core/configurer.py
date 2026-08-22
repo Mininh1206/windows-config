@@ -1,10 +1,11 @@
 import os
 import sys
 import re
+import time
 import shutil
 import subprocess
 import datetime
-from typing import Callable, Optional
+from typing import Callable, Optional, List
 from src.core.logger import get_logger
 
 logger = get_logger()
@@ -32,6 +33,87 @@ def resolve_path_vars(path_str: str) -> str:
     path_str = os.path.expandvars(path_str)
     return os.path.normpath(path_str)
 
+def is_process_running(process_name: str) -> bool:
+    """Verifica si un proceso está actualmente en ejecución en Windows."""
+    if not process_name:
+        return False
+    clean_name = process_name[:-4] if process_name.lower().endswith(".exe") else process_name
+    try:
+        cmd = [
+            "powershell", "-NoProfile", "-NonInteractive", "-Command",
+            f"$OutputEncoding = [System.Text.Encoding]::UTF8; if (Get-Process -Name '{clean_name}' -ErrorAction SilentlyContinue) {{ exit 0 }} else {{ exit 1 }}"
+        ]
+        res = subprocess.run(cmd, capture_output=True, timeout=5)
+        return res.returncode == 0
+    except Exception:
+        return False
+
+def stop_processes(process_names: List[str]) -> List[str]:
+    """Detiene los procesos indicados si están en ejecución y retorna la lista de los que estaban activos."""
+    active_procs = []
+    if not process_names:
+        return active_procs
+
+    for proc in process_names:
+        clean_name = proc[:-4] if proc.lower().endswith(".exe") else proc
+        if is_process_running(clean_name):
+            active_procs.append(clean_name)
+            logger.log(f"Deteniendo proceso activo '{clean_name}' para desplegar configuracion...", "INFO")
+            try:
+                cmd = [
+                    "powershell", "-NoProfile", "-NonInteractive", "-Command",
+                    f"Stop-Process -Name '{clean_name}' -Force -ErrorAction SilentlyContinue"
+                ]
+                subprocess.run(cmd, capture_output=True, timeout=5)
+            except Exception as e:
+                logger.log(f"Aviso al detener proceso '{clean_name}': {e}", "WARNING")
+
+    if active_procs:
+        time.sleep(1)
+
+    return active_procs
+
+def restart_processes(
+    process_names: List[str],
+    launch_executable: Optional[str] = None,
+    active_processes: Optional[List[str]] = None,
+    cwd: Optional[str] = None
+):
+    """
+    Reinicia o relanza los procesos que estaban previamente activos o cuyo ejecutable fue indicado.
+    """
+    to_restart = active_processes if active_processes is not None else process_names
+    if not to_restart and not launch_executable:
+        return
+
+    # 1. Si hay un launch_executable explícito
+    if launch_executable:
+        resolved_exe = resolve_path_vars(launch_executable)
+        if os.path.exists(resolved_exe):
+            logger.log(f"Relanzando aplicacion mediante '{resolved_exe}'...", "INFO")
+            try:
+                cmd = [
+                    "powershell", "-NoProfile", "-NonInteractive", "-Command",
+                    f"Start-Process -FilePath '{resolved_exe}' -ErrorAction SilentlyContinue"
+                ]
+                subprocess.run(cmd, cwd=cwd or os.path.dirname(resolved_exe), capture_output=True, timeout=5)
+                return
+            except Exception as e:
+                logger.log(f"Aviso al relanzar ejecutable '{resolved_exe}': {e}", "WARNING")
+
+    # 2. Relanzar por nombre de proceso si estaba activo
+    for proc in to_restart:
+        clean_name = proc[:-4] if proc.lower().endswith(".exe") else proc
+        logger.log(f"Relanzando proceso '{clean_name}' tras aplicar configuracion...", "INFO")
+        try:
+            cmd = [
+                "powershell", "-NoProfile", "-NonInteractive", "-Command",
+                f"Start-Process -FilePath '{clean_name}' -ErrorAction SilentlyContinue"
+            ]
+            subprocess.run(cmd, cwd=cwd, capture_output=True, timeout=5)
+        except Exception as e:
+            logger.log(f"Aviso al relanzar proceso '{clean_name}': {e}", "DEBUG")
+
 def apply_direct_configuration(
     app_folder_path: str,
     target_paths: dict,
@@ -53,11 +135,6 @@ def apply_direct_configuration(
     app_name = manifest.get("name", "Unknown")
     config_meta = manifest.get("config", {})
 
-    has_direct_config = config_meta.get("has_direct_config", False) or manifest.get("has_direct_config", False)
-    if not has_direct_config:
-        logger.log(f"La aplicacion '{app_name}' no requiere configuracion directa.", "INFO")
-        return True
-
     def _notify(msg: str):
         if progress_callback:
             progress_callback(msg)
@@ -69,6 +146,21 @@ def apply_direct_configuration(
         logger.log(f"[SIMULACION] Se aplicaria la configuracion directa de '{app_name}' ({app_folder_path}).", "INFO")
         _notify("Simulación de configuración...")
         return True
+
+    # Obtener configuración de ciclo de vida de procesos
+    restart_procs_raw = config_meta.get("restart_process", [])
+    if isinstance(restart_procs_raw, str):
+        restart_procs = [restart_procs_raw]
+    else:
+        restart_procs = list(restart_procs_raw)
+
+    launch_exe = config_meta.get("launch_executable")
+
+    # 0. Detener procesos activos para prevenir bloqueos de archivos de configuración
+    active_procs = []
+    if restart_procs:
+        _notify("Comprobando procesos en ejecución...")
+        active_procs = stop_processes(restart_procs)
 
     overall_success = True
     files_dir = os.path.join(app_folder_path, "files")
@@ -111,7 +203,7 @@ def apply_direct_configuration(
         _notify("Ejecutando script de configuración...")
         try:
             cmd = ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", script_ps1]
-            res = subprocess.run(cmd, cwd=app_folder_path, capture_output=True, text=True, errors="ignore")
+            res = subprocess.run(cmd, cwd=app_folder_path, capture_output=True, text=True, encoding="utf-8", errors="replace")
             logger.log_raw(res.stdout)
             logger.log_raw(res.stderr)
             ps1_executed = True
@@ -126,7 +218,7 @@ def apply_direct_configuration(
         _notify("Ejecutando script de configuración...")
         try:
             cmd = [sys.executable, script_py]
-            res = subprocess.run(cmd, cwd=app_folder_path, capture_output=True, text=True, errors="ignore")
+            res = subprocess.run(cmd, cwd=app_folder_path, capture_output=True, text=True, encoding="utf-8", errors="replace")
             logger.log_raw(res.stdout)
             logger.log_raw(res.stderr)
             if res.returncode != 0:
@@ -141,16 +233,17 @@ def apply_direct_configuration(
         cmd_strip = cmd_str.strip()
         if not cmd_strip:
             continue
-        # Si el comando es una llamada redundante a configure.ps1 y ya fue ejecutado, omitir
         if "configure.ps1" in cmd_strip and ps1_executed:
             continue
 
         logger.log(f"Ejecutando comando de post-instalacion: '{cmd_strip}'...", "INFO")
         _notify("Ejecutando comandos post-instalación...")
         try:
-            # Ejecutar mediante PowerShell para soporte universal de cmdlets y herramientas nativas
-            ps_cmd = ["powershell", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", cmd_strip]
-            res = subprocess.run(ps_cmd, cwd=app_folder_path, capture_output=True, text=True, errors="ignore")
+            ps_cmd = [
+                "powershell", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
+                "-Command", f"$OutputEncoding = [System.Text.Encoding]::UTF8; [Console]::OutputEncoding = [System.Text.Encoding]::UTF8; {cmd_strip}"
+            ]
+            res = subprocess.run(ps_cmd, cwd=app_folder_path, capture_output=True, text=True, encoding="utf-8", errors="replace")
             logger.log_raw(res.stdout)
             logger.log_raw(res.stderr)
             if res.returncode != 0:
@@ -168,6 +261,16 @@ def apply_direct_configuration(
             os.environ[var_name] = resolved_val
         except Exception as e:
             logger.log(f"Error al registrar variable de entorno {var_name}: {e}", "WARNING")
+
+    # 5. Reinicio / relanzamiento de procesos si estaban activos o si se especificó launch_executable
+    if restart_procs or launch_exe:
+        _notify("Reiniciando procesos asociados...")
+        restart_processes(
+            restart_procs,
+            launch_executable=launch_exe,
+            active_processes=active_procs,
+            cwd=app_folder_path
+        )
 
     if overall_success:
         logger.log(f"Configuracion directa de '{app_name}' finalizada con exito.", "SUCCESS")

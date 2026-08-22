@@ -1,3 +1,6 @@
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
+
 # Hook de configuración de Playnite e integraciones de plataformas
 [CmdletBinding()]
 param()

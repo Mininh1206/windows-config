@@ -14,62 +14,70 @@ Este documento constituye la **guía maestra de instrucciones, arquitectura, met
 - **Regla Obligatoria:** **SIEMPRE** que surja una decisión de diseño, una nueva funcionalidad (feature), una alternativa de arquitectura, una ambigüedad o un cambio de comportamiento importante, el agente **NO debe asumir ni imponer una solución unilateral**.
 - **Acción:** Debe plantear **preguntas abiertas** al usuario, exponiendo opciones, ventajas, desventajas y consideraciones técnicas para que el usuario decida el rumbo deseado.
 
+### 3. Protocolo de Publicación Dual ("Súbelo")
+- Cuando el usuario indique *"súbelo"*, se debe realizar la publicación completa en GitHub Releases y en Microsoft Winget (`microsoft/winget-pkgs`).
+- **Presentación Previa Obligatoria:** SIEMPRE se debe presentar al usuario un resumen detallado de cambios, mejoras y estado de las pruebas antes de enviar el PR oficial a Winget.
+
 ---
 
 ## 🎯 1. Visión y Objetivos del Proyecto
 
-El **Configurador de Windows 11** es un sistema modular híbrido (PowerShell + Python) diseñado para automatizar por completo la preparación, instalación y personalización del entorno de trabajo tras una instalación limpia o en un nuevo equipo:
-- **Customizaciones del Usuario:** Inyección directa de perfiles de terminal (PowerShell 7, tema Oh My Posh `darkside`, `Terminal-Icons`, `PSReadLine`, `Get-NativeDir`), configuración global de Git (`.gitconfig`), PowerToys, Everything, IDEs, etc.
-- **Selección Interactiva TUI:** Interfaz gráfica en consola (TUI con soporte de navegación por flechas y selección de casillas con la tecla **Espacio**).
-- **Soporte Multidisco:** Capacidad de elegir la unidad de almacenamiento (`C:`, `D:`, `E:`) para apps portables, entornos virtuales, bibliotecas de juegos y datos.
-- **Instalación Multitipo:** Soporte para `winget`, instaladores locales `.exe`, paquetes `.msi`, `.zip` y binarios portables (`portable`).
+El **Configurador de Windows 11** es un sistema modular híbrido (PowerShell + Python) diseñado para automatizar por completo la preparación, instalación y personalización del entorno de trabajo tras una instalación limpia:
+- **Customizaciones del Usuario:** Inyección directa de perfiles de terminal (PowerShell 7 tema Oh My Posh `darkside`, `Terminal-Icons`, `PSReadLine`), Git global (`.gitconfig`), PowerToys Run, Everything, IDEs y herramientas de IA.
+- **Selección Interactiva TUI:** Selector en consola con navegación por flechas y selección múltiple con tecla **Espacio**.
+- **Soporte Multidisco:** Capacidad de elegir la unidad de almacenamiento (`C:`, `D:`, `E:`) para apps portables y entornos.
+- **Instalación Multitipo:** Soporte desacoplado para `winget`, `choco`, `scoop`, `.exe`, `.msi`, `.zip` y `script`.
 
 ---
 
-## 🏗️ 2. Principios de Arquitectura y Estructura
+## 🏗️ 2. Arquitectura y Estructura del Repositorio
 
 ### 2.1 Raíz del Repositorio Limpia
-La raíz del proyecto contiene únicamente:
-- Documentación principal (`README.md`, `AGENTS.md`) y carpeta [`docs/`](docs/) (`aplicaciones.md`, `MANUAL.md`, `arquitectura.md`, `requisitos.md`, `PLAN_DESARROLLO.md`, `GUIA_PUBLICACION_WINGET.md`).
-- Wrappers ejecutables mínimos: `configurador.ps1`, `constructor.ps1`, `bootstrap.ps1`, `build.ps1`, `windows_config.wsb`.
-- Configuración de dependencias y skills (`skills-lock.json`, `.gitignore`, `.gitattributes`).
+- **Documentación:** `README.md`, `AGENTS.md` y carpeta [`docs/`](docs/).
+- **Wrappers Ejecutables:** `configurador.ps1`, `constructor.ps1`, `bootstrap.ps1`, `build.ps1`, `windows_config.wsb`.
+- **Configuración:** `skills-lock.json`, `.gitignore`, `.gitattributes`.
 
-
-### 2.2 Unicidad de Motores de Ejecución
-- **Motor Principal:** `src/main.py` (diagnóstico HW, interfaz TUI, orquestador de instalación y configuración).
-- **Constructor de Aplicaciones:** `src/builder.py` (asistente guiado interactivo para registrar apps mediante búsqueda en Winget o instaladores locales).
-- **Módulos Core:** Ubicados en `src/core/`:
+### 2.2 Motores de Ejecución (`src/`)
+- **`src/main.py`:** Orquestador principal, diagnóstico HW, interfaz TUI y pipeline de ejecución con Keep-Awake.
+- **`src/builder.py`:** Asistente interactivo para registrar y sincronizar aplicaciones.
+- **Módulos Core (`src/core/`):**
   - `tui.py`: Motor de navegación interactiva por teclado.
-  - `ui.py`: Renderizado de tarjetas visuales, colores ANSI y barra de progreso animada.
-  - `installer.py`: Motor de instalación desacoplado multitipo (`winget`, `exe`, `msi`, `zip`, `portable`).
-  - `configurer.py`: Motor de inyección de dotfiles, hooks de scripts y variables de entorno.
-  - `winget_search.py`: Integración y parseo con el catálogo de Winget CLI.
-  - `logger.py`: Registro de eventos por timestamp.
-- **Wrappers PowerShell:** `configurador.ps1` y `constructor.ps1` son envoltorios transparentes que invocan a `src/main.py` y `src/builder.py` respectivamente, pasando los argumentos de consola.
+  - `ui.py`: Renderizado visual, colores ANSI, tarjetas y barra de progreso dual.
+  - `installer.py`: Motor de instalación multitipo y refresco de variables en caliente (`refresh_environment`).
+  - `configurer.py`: Motor de inyección de dotfiles, hooks (`configure.ps1`/`configure.py`) y ciclo de vida de procesos (`stop_processes`, `restart_processes`).
+  - `dag.py`: Resolución de dependencias y orden topológico por prioridades (Fases 0 a 3).
+  - `winget_search.py`: Búsqueda e integración con el catálogo oficial de Winget.
+  - `logger.py`: Registro de eventos con timestamp en `logs/`.
 
 ---
 
 ## 📦 3. Convención de Manifiestos (`apps/<categoria>/<app_id>/manifest.json`)
 
-Cada aplicación debe residir en su propia carpeta: `apps/<categoria>/<app_id>/` con la siguiente estructura:
-- `manifest.json`: Definición declarativa de la aplicación.
-- `configure.ps1` / `configure.py`: Script opcional con hooks post-instalación.
-- `files/`: Carpeta con archivos estáticos, dotfiles o plantillas a copiar.
+Cada aplicación reside en `apps/<categoria>/<app_id>/`:
+- `manifest.json`: Esquema declarativo oficial.
+- `configure.ps1` / `configure.py`: Hook opcional post-instalación (forzar UTF-8).
+- `files/`: Dotfiles y plantillas a copiar.
 
-### Esquema Oficial del Manifiesto:
+### Esquema Oficial:
 ```json
 {
   "id": "app_id",
   "name": "Nombre Visual de la Aplicación",
   "category": "ux_ui | ides | frameworks | herramientas | vms | agil | navegadores | utilidades | juegos",
+  "priority": 0,
+  "depends_on": ["app_id_dep"],
+  "disabled": false,
+  "disabled_reason": null,
   "install": {
-    "type": "winget | exe | msi | zip | portable",
-    "winget_id": "Identificador.Winget.Oficial",
+    "type": "winget | choco | scoop | exe | msi | zip | script | none",
+    "winget_id": "Publisher.Package",
+    "choco_id": null,
+    "scoop_id": null,
     "local_installer": null,
-    "silent_args": "/verysilent /quiet /qn",
+    "silent_args": "/S",
     "check_command": "ejecutable",
     "target_drive_supported": true,
-    "zip_extract_subpath": null
+    "refresh_env_after": false
   },
   "requirements": {
     "MinRAM_GB": 4.0,
@@ -78,18 +86,18 @@ Cada aplicación debe residir en su propia carpeta: `apps/<categoria>/<app_id>/`
   },
   "config": {
     "has_direct_config": true,
+    "restart_process": ["ProcessName"],
+    "launch_executable": "$env:LOCALAPPDATA/App/App.exe",
     "files": [
       {
-        "source": "nombre_archivo_en_files",
-        "destination": "$env:APPDATA/Ruta/Destino",
+        "source": "config.json",
+        "destination": "$env:APPDATA/App/config.json",
         "create_backup": true
       }
     ],
-    "commands": [
-      "comando_post_instalacion"
-    ],
+    "commands": ["comando_post_instalacion"],
     "environment_vars": {
-      "VARIABLE": "valor"
+      "VAR_NAME": "valor"
     }
   }
 }
@@ -97,32 +105,21 @@ Cada aplicación debe residir en su propia carpeta: `apps/<categoria>/<app_id>/`
 
 ---
 
-## 🖥️ 4. Estándar de Experiencia de Consola, TUI y Logging
+## 🖥️ 4. Estándar de Consola, TUI y Logging
 
-1. **Salida Limpia:** Todos los subprocesos (`winget`, `powershell`, `msiexec`, instaladores externos) deben ser ejecutados en segundo plano capturando `stdout` y `stderr`. No deben contaminar la pantalla del usuario.
-2. **Interactividad TUI:**
-   - Flechas `↑` / `↓`: Desplazamiento por el árbol de categorías y aplicaciones.
-   - Tecla **Espacio**: Alternar selección de checkbox (`[ ]` $\leftrightarrow$ `[x]`). Si se pulsa sobre una cabecera de categoría, marca o desmarca en bloque todas sus aplicaciones.
-   - Teclas de acceso rápido: `[A]` (Marcar todas), `[N]` (Desmarcar todas), `[ENTER]` (Confirmar e iniciar).
-3. **Progreso Visual:** Durante la ejecución se utiliza la barra de progreso animada `render_progress_bar()` con estados por paso (`finish_progress_item()`).
-4. **Logs Timestamped:** Cada sesión genera un archivo único e independiente en `logs/configurador_YYYYMMDD_HHMMSS.log` garantizando trazabilidad completa.
-5. **Codificación:** Todo el código fuente, archivos `.json` y scripts deben guardarse en codificación **UTF-8 sin BOM**. En la inicialización se fuerza `sys.stdout` y `sys.stderr` a UTF-8.
+1. **Salida Limpia:** Todos los subprocesos ejecutan en segundo plano capturando `stdout` y `stderr` sin contaminar la consola.
+2. **Navegación TUI:** Flechas `↑`/`↓` para scroll, **Espacio** para marcar/desmarcar individual o por categoría, `A` para todas, `N` para ninguna, `ENTER` para confirmar.
+3. **Apps Deshabilitadas:** Apps con `"disabled": true` se renderizan atenuadas con `[DESHABILITADO]`, no seleccionables por lote ni con Espacio.
+4. **Logs Timestamped:** Logs detallados de cada sesión en `logs/configurador_YYYYMMDD_HHMMSS.log` y logs asíncronos en `logs/bg_<app_id>.log`.
+5. **Codificación:** Todo el código fuente, archivos `.json` y scripts en **UTF-8 sin BOM** con `[Console]::OutputEncoding = UTF8`.
 
 ---
 
-## 🧪 5. Metodología de Desarrollo: TDD Estricto y Garantía de Seguridad
+## 🧪 5. Metodología TDD y Garantía de Seguridad
 
 > [!IMPORTANT]
-> **REGLA DE SEGURIDAD ABSOLUTA:** Ninguna prueba unitaria o de integración debe modificar, sobreescribir ni eliminar archivos del sistema operativo real del usuario.
-> - Toda prueba de inyección de configuraciones, resolución de rutas y copia de dotfiles debe realizarse en un sandbox temporal (`tempfile.TemporaryDirectory()`) o mediante mocks.
-> - **NADA debe romper el ordenador del usuario.**
-
-### 5.1 Ciclo Red-Green-Refactor por Aplicación
-Cada aplicación que se añada al catálogo **DEBE tener un test automatizado** que verifique:
-1. **Validez del Manifiesto:** Estructura JSON correcta, tipos requeridos, categoría válida, prioridad y dependencias (`depends_on`).
-2. **Existencia de Archivos Estáticos:** Si declara `config.files`, cada archivo debe existir físicamente en `apps/<cat>/<app>/files/`.
-3. **Resolución Segura de Rutas:** Comprobación de que las rutas destino (`$HOME`, `$env:APPDATA`, etc.) se mapeen correctamente al sandbox sin errores de sintaxis.
-4. **Comandos No Destructivos:** Los comandos post-instalación deben tener sintaxis válida y control de errores.
+> **REGLA DE SEGURIDAD ABSOLUTA:** Ninguna prueba unitaria o de integración debe modificar el sistema operativo real del usuario.
+> - Toda prueba de dotfiles y rutas se ejecuta en sandbox temporal (`tempfile.TemporaryDirectory()`) o mediante mocks.
 
 Comando para ejecutar la suite completa de pruebas:
 ```powershell
@@ -131,21 +128,14 @@ python -m unittest discover -s tests
 
 ---
 
-## 🛠️ 6. Skills del Ecosistema Integradas en el Proyecto
+## 🛠️ 6. Skills Integradas en `.agents/skills/`
 
-El proyecto tiene configuradas las siguientes skills en `.agents/skills/`:
-- **`add-app`**: Flujo estandarizado para crear y validar cualquier tipo de aplicación (Winget, EXE, MSI, ZIP, Portable, Script).
-- **`windows-config`**: Gestión y orquestación integral del configurador de Windows 11, manifiestos, catálogo, DAG y diagnósticos.
-- **`tdd`**: Flujo de trabajo guiado por pruebas (Test-Driven Development).
-- **`python-testing-patterns`**: Patrones, mocks y fixtures para pruebas en Python con pytest / unittest.
-- **`improve-codebase-architecture`**: Optimización y mantenimiento de la arquitectura del software.
-- **`planning-with-files`**: Metodología de planificación modular y trazabilidad de tareas mediante archivos.
-- **`create-agentsmd`**: Directrices y generación del estándar `AGENTS.md`.
-- **`skill-creator`**: Creación, refinamiento y benchmarking de skills para agentes.
-- **`find-skills`**: Localización e instalación de nuevas extensiones en el ecosistema abierto de skills.
-- **`winget-publish`**: Empaquetado, validación de manifiestos v1.12.0, pruebas en Windows Sandbox (`SandboxTest.ps1`) y publicación oficial en `microsoft/winget-pkgs`.
-- **`publish-release`**: Publicación dual automatizada integral (compilación de binario autónomo, cálculo de SHA256, manifiestos Winget v1.12.0, GitHub Releases y envío a `microsoft/winget-pkgs`).
-- **`gh-cli`**: Flujos autenticados con GitHub CLI (`gh`) para operaciones con repositorios, PRs, issues y releases.
+- **`add-app`**: Flujo para crear y validar nuevas aplicaciones en el catálogo.
+- **`windows-config`**: Gestión y orquestación integral del configurador, manifiestos y DAG.
+- **`publish-release`**: Publicación dual automatizada (compilación PyInstaller, SHA256, manifiestos Winget v1.12.0, GitHub Releases y PR a Winget).
+- **`winget-publish`**: Empaquetado y validación de manifiestos Winget v1.12.0.
+- **`tdd` / `python-testing-patterns`**: Flujo TDD y pruebas unitarias en Python.
+- **`gh-cli`**: Flujos autenticados con GitHub CLI (`gh`).
 
 ---
 
@@ -155,13 +145,12 @@ El proyecto tiene configuradas las siguientes skills en `.agents/skills/`:
 | :--- | :--- |
 | **Ejecutar Configurador TUI** | `.\configurador.ps1` o `python src/main.py` |
 | **Modo Simulación (Dry Run)** | `.\configurador.ps1 -DryRun` o `python src/main.py --dry-run` |
-| **Modo Test Desatendido (Todas las apps)** | `.\configurador.ps1 -TestMode -DryRun` |
-| **Instalar App Específica** | `.\configurador.ps1 -App powertoys` |
-| **Seleccionar Disco Alternativo** | `.\configurador.ps1 -TargetDrive D:` |
+| **Modo Test Desatendido** | `.\configurador.ps1 -TestMode -DryRun` |
+| **Instalar App Específica** | `.\configurador.ps1 -App <id>` |
 | **Asistente de Nueva App (TUI)** | `.\constructor.ps1` o `python src/builder.py` |
-| **Sincronización Inversa de Dotfiles** | `.\constructor.ps1 -SyncFromSystem` o `python src/builder.py --sync-from-system` |
-| **Regenerar Catálogo de Apps** | `python src/core/populate_catalog.py` |
+| **Validar Catálogo de Apps** | `python src/core/catalog_validator.py` |
 | **Ejecutar Pruebas Unitarias** | `python -m unittest discover -s tests` |
+| **Publicar Release (Dual)** | `python .agents/skills/publish-release/scripts/publish_release.py` |
 
 ---
 
@@ -170,55 +159,36 @@ El proyecto tiene configuradas las siguientes skills en `.agents/skills/`:
 1. **`ux_ui`**: PowerShell 7, Oh My Posh, Terminal-Icons, Windhawk, OpenRGB, AutoHotkey, Rainmeter, Nilesoft Shell.
 2. **`ides`**: Antigravity, VS Code, Visual Studio Community, JetBrains, Android Studio, Arduino IDE, Unity Hub, DBeaver, Eclipse, NetBeans.
 3. **`frameworks`**: Python, Node.js, Java JDK, Flutter, PHP, Go, Rust, C/C++ (MinGW/MSVC), Ruby.
-4. **`herramientas`**: Git, Docker Desktop, GitHub Desktop, Claude Code, OpenCode, Hermes Agent, LM Studio, Ollama, XAMPP, Postman.
-5. **`vms`**: VMware Workstation Pro, WSL (Ubuntu/WSL2), VirtualBox.
+4. **`herramientas`**: Git, Docker Desktop, GitHub Desktop, Claude Code, OpenCode, Hermes Agent, LM Studio, Ollama, XAMPP, Postman, Scoop, Chocolatey.
+5. **`vms`**: VMware Workstation Pro, WSL (Ubuntu/WSL2), VirtualBox, Windows Sandbox.
 6. **`agil`**: Obsidian, ClickUp.
 7. **`navegadores`**: Brave Browser, Google Chrome.
-8. **`utilidades`**: PowerToys, Everything (Voidtools), 7-Zip, WinRAR, KeePass, Blender, Orca Slicer, Creality Print, Ultimaker Cura, Logitech G HUB, NVIDIA App, Quick Share, Zoom, Teams, Thunderbird, Discord.
+8. **`utilidades`**: PowerToys, Everything, 7-Zip, WinRAR, KeePass, Blender, Orca Slicer, Creality Print, Ultimaker Cura, Logitech G HUB, NVIDIA App, Quick Share, Zoom, Teams, Thunderbird, Discord, Google Drive, Windows Tweaks.
 9. **`juegos`**: Playnite, Steam, Epic Games, GOG Galaxy, EA App, Ubisoft Connect, Xbox App, CurseForge, PPSSPP.
 
 ---
 
-## 📝 9. Memoria del Proyecto & Registro de Decisiones
+## 📝 9. Memoria del Proyecto & Registro de Decisiones Definitivas
 
-*Esta sección se actualiza dinámicamente cuando el usuario da instrucciones con "recuerda", "apunta esto" o define preferencias del proyecto.*
+### 9.1 Rutas de Almacenamiento y Sistema
+- **Ruta de Instalación Predeterminada:** `A:\Aplicaciones` (para apps que admitan selección de unidad).
+- **Almacenamiento de Juegos:** `J:\` (biblioteca secundaria de Steam `J:\SteamLibrary` y plataformas en Playnite).
+- **Redirección de Carpetas de Usuario:** Redirección automática a `A:\Daniel\<Documentos|Imágenes|Descargas|Música|Vídeos|Escritorio>`.
+- **Modelos de LLM Locales:** `OLLAMA_MODELS` configurado en `A:\LLM` (modelos por defecto: `qwen3.8:27b` y `gemma4:e4b`).
+- **Bóveda Obsidian:** `A:\Daniel\Documents\Obsidian` con sincronización automática asíncrona mediante Google Drive Desktop (`Google.GoogleDrive`).
 
-### Preferencias y Directivas Registradas:
-- **[2026-08-19] Memoria Activa:** Toda instrucción precedida de "recuerda" o similar debe ser persistida en este archivo `AGENTS.md`.
-- **[2026-08-19] Diálogo de Diseño:** SIEMPRE que se requiera tomar una decisión de arquitectura, diseño de interfaz o nuevas funcionalidades, se formularán **preguntas abiertas** al usuario.
-- **[2026-08-19] Arquitectura Base:** Se mantiene la combinación de motor Python en `src/` con wrappers transparentes en PowerShell (`configurador.ps1`, `constructor.ps1`) en la raíz.
-- **[2026-08-19] Enfoque TDD:** El desarrollo de nuevas funcionalidades y refactorizaciones debe apoyarse en pruebas automatizadas y en el modo `--dry-run`.
-- **[2026-08-19] Customización Personal:** El sistema debe priorizar las dotfiles y configuraciones del usuario (PowerShell 7 perfil darkside, alias de Git, PowerToys, Everywhere integration).
-- **[2026-08-19] Pipeline por Prioridades & Refresco en Caliente:** Las instalaciones deben ordenarse por niveles de prioridad/fases (Fase 0: Gestores y Shell -> Fase 1: Lenguajes/Runtimes -> Fase 2: IDEs/Herramientas -> Fase 3: Utilidades/Apps). Cuando una app modifique `PATH` o el entorno del sistema, se refrescan las variables de entorno en el proceso en caliente sin requerir reinicios prematuros de consola.
-- **[2026-08-19] Grafo de Dependencias (DAG):** Las aplicaciones pueden declarar `depends_on: ["app_id1", "app_id2"]`. El motor resuelve el orden de instalación topológico e incluye automáticamente prerrequisitos necesarios si no están instalados.
-- **[2026-08-19] Captura Selectiva de Configuraciones:** Para aplicaciones estándar sin dotfiles o configuraciones complejas, el agente puede crear los manifiestos directamente sin confirmación intermedia. En el Configurador interactivo TUI, la UI siempre ofrecerá las opciones de selección al usuario. Para aplicaciones con configuraciones relevantes, perfiles, dotfiles o plugins instalados en el sistema (ej. `powershell`, `antigravity`, `windhawk` con sus mods/plugins, `nilesoft_shell`, etc.), se DEBE consultar al usuario si desea capturar/copiar la configuración activa del sistema.
-- **[2026-08-19] Rutas de Instalación por Defecto:** Todas las aplicaciones que admitan selección de destino deben instalarse por defecto en `A:\Aplicaciones`.
-- **[2026-08-19] Almacenamiento de Juegos:** Las plataformas y juegos deben configurarse por defecto en la unidad `J:\`.
-- **[2026-08-19] Redirección de Carpetas de Usuario:** Automatizar la reubicación de las carpetas estándar de usuario (Documentos, Imágenes, Descargas, Música, Vídeos, Escritorio) hacia `A:\Daniel\<Carpeta>`.
-- **[2026-08-19] Optimizaciones y Tweaks de Windows:** Se debe integrar un módulo de optimizaciones para Windows 11 (plan de energía de Máximo Rendimiento / Ultimate Performance, optimizaciones para juegos / Game Mode / HAGS, deshabilitar telemetría y bloatware no deseado).
-- **[2026-08-19] Preferencias Específicas de Aplicaciones:**
-  - `visual_studio_community`: Workloads por defecto: `.NET Desktop`, `Unity Game Development`, `Mobile Development (MAUI/Android)`.
-  - `windhawk`: Extraer e incluir automáticamente los mods/plugins y configuraciones activas en `%ProgramData%\Windhawk`.
-  - `openrgb`: Perfil por defecto `Azul.orp`, perfil alternativo `Negro.orp`. Configurar automatización para alternar a Negro entre 22:00 y 09:00 y Azul el resto del tiempo.
-  - `autohotkey`: Incluir script `.ahk` para cambio rápido de escritorios virtuales (`Win+1`, `Win+2`, etc.) en el inicio.
-  - `rk_keyboard`: Modelo de teclado del usuario: **RK-S98** (Royal Kludge S98).
-  - `hermes_agent`: Incluir soul y configuración relevante del agente Hermes.
-  - `antigravity`: Sincronizar configuraciones, reglas (`GEMINI.md`) y agentes.
-  - `nilesoft_shell`: Desplegar menú contextual básico optimizado con `shell.nss`.
-- **[2026-08-20] Manejo del Tipo `script`:** Paquetes del sistema y optimizaciones declarados con `install.type = "script"` o `"none"` se consideran componentes válidos cuya ejecución delega directamente en `configure.ps1` o `configure.py`.
-- **[2026-08-20] Expansión Estricta de Variables en `refresh_environment`:** Toda variable leída del Registro de Windows (`%SystemRoot%`, `%USERPROFILE%`, etc.) DEBE ser expandida con `os.path.expandvars()` antes de insertarse en `os.environ` para prevenir la corrupción de `ComSpec` y `PATH`.
-- **[2026-08-20] No Duplicar Hooks en `commands`:** La ejecución de `configure.ps1` se realiza automáticamente por el motor `configurer.py`. El array `commands` nunca debe incluir llamadas redundantes como `powershell.exe -File "$PSScriptRoot/configure.ps1"`.
-- **[2026-08-20] Ejecución de Comandos con PowerShell:** Cualquier comando en `config.commands` se ejecuta a través de PowerShell con el directorio de trabajo (`cwd`) fijado a la carpeta de la app para soportar tanto herramientas de línea de comandos como cmdlets de Windows.
-- **[2026-08-20] Rigor en Pruebas Automatizadas (TDD):** Toda funcionalidad de despliegue de archivos y hooks debe contar con pruebas reales en sandbox (`tests/test_app_isolated.py`, `tests/test_configurer.py`, `tests/test_installer.py`) que simulen el entorno sin modificar el sistema operativo real y eviten falsos positivos basados en meros `dry_run=True`.
-- **[2026-08-20] Publicación Dual ("Súbelo"):** Cuando el usuario indique *"súbelo"*, se debe realizar la publicación completa tanto en GitHub (commit, push y nueva versión/release con binario ejecutable compilado) como en el catálogo oficial de Microsoft Winget (`microsoft/winget-pkgs`).
-- **[2026-08-20] Presentación Previa Obligatoria antes de Publicar:** SIEMPRE se debe presentar al usuario un resumen detallado y exhaustivo de todos los cambios, mejoras y estado de las pruebas antes de publicar cualquier versión/release. NUNCA lanzar la publicación o el comando de release de forma anticipada sin que el usuario lo revise y dé su confirmación explícita.
-- **[2026-08-20] Modificador `disabled` para Apps con Instalador Manual:** Aplicaciones que requieran inicio de sesión obligatorio en cuentas propietarias o descargas manuales (ej. `vmware_workstation`, `fusion360`, `rk_keyboard`, `nvidia_app`) deben declararse con `"disabled": true` y `"disabled_reason"` en su manifiesto. En el TUI se renderizan atenuadas con la etiqueta `[DESHABILITADO]`, bloqueadas para selección con la tecla Espacio y omitidas al seleccionar todo (`A`) o por cabecera de categoría.
-- **[2026-08-22] Modelos de Ollama en `A:\LLM`:** La variable de entorno `OLLAMA_MODELS` se fija en `A:\LLM`. Los modelos predeterminados a descargar en segundo plano son `qwen3.8:27b` y `gemma4:e4b`.
-- **[2026-08-22] Sincronización de Obsidian vía Google Drive (Buffer Cloud):** La bóveda `A:\Daniel\Documents\Obsidian` se sincroniza automáticamente con Google Drive Desktop (`Google.GoogleDrive`) preconfigurando `root_preference_sqlite.db`, permitiendo la sincronización asíncrona entre sobremesa y portátil sin requerir que ambos equipos permanezcan encendidos simultáneamente.
-- **[2026-08-22] Tareas Asíncronas en Segundo Plano:** Tareas de post-instalación de larga duración (descarga de modelos de Ollama, drivers de DBeaver, preparación de Unity Editor y componentes de Visual Studio) se ejecutan como subprocesos desasociados en segundo plano con registros dedicados en `logs/bg_<app_id>.log` para mantener la interfaz TUI ágil y no bloqueante.
-- **[2026-08-22] Configuración de Gaming (Steam & Playnite):** Steam vincula por defecto la biblioteca secundaria `J:\SteamLibrary` en `libraryfolders.vdf`. Playnite despliega configuraciones de vista e integraciones de plataforma (Steam, Epic, GOG, Ubisoft, EA, Xbox) en `%APPDATA%\Playnite`.
+### 9.2 Motor de Ejecución y Configuración
+- **Ejecución Incondicional de Configuración:** Toda aplicación seleccionada con dotfiles, scripts, comandos o variables ejecuta siempre su configuración, reflejando `[ OK (CONFIGURADA) ]` si ya estaba instalada en el sistema.
+- **Gestor de Ciclo de Vida de Procesos (`restart_process`):** El motor detiene procesos activos antes de escribir archivos en disco (previniendo bloqueos de Windows) y los relanza automáticamente tras aplicar la configuración.
+- **Tareas Asíncronas en Segundo Plano:** Tareas pesadas (descarga de modelos LLM, plugins de BBDD, motores) se ejecutan desasociadas con logging en `logs/bg_<app_id>.log`.
+- **Refresco en Caliente:** `refresh_environment()` expande variables del Registro (`%SystemRoot%`, `%USERPROFILE%`) en caliente sin corromper `ComSpec` ni `PATH`.
+- **Orden por Prioridades & DAG:** Resolución topológica en 4 fases (Fase 0: Shell/Gestores -> Fase 1: Runtimes -> Fase 2: IDEs/Herramientas -> Fase 3: Utilidades/Juegos).
 
-
-
-
-
+### 9.3 Configuraciones Específicas de Aplicaciones
+- `visual_studio_community`: Workloads por defecto: `.NET Desktop`, `Unity Game Development`, `Mobile Development (MAUI/Android)`.
+- `openrgb`: Perfil por defecto `Azul.orp`, perfil alternativo `Negro.orp` con cambio programado (22:00 a 09:00 Negro, resto Azul).
+- `autohotkey`: Script `.ahk` para cambio rápido de escritorios virtuales (`Win+1`, `Win+2`, etc.).
+- `rk_keyboard`: Modelo de hardware: **RK-S98** (Royal Kludge S98).
+- `hermes_agent` & `antigravity`: Sincronización de soul, reglas (`GEMINI.md`) y agentes.
+- `nilesoft_shell`: Menú contextual optimizado mediante `shell.nss`.
+- `windows_tweaks`: Plan de energía Ultimate/High Performance, Game Mode y HAGS protegidos contra errores de hipervisor.

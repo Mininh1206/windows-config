@@ -195,9 +195,17 @@ def main():
 
             logger.log(f"--- Procesando: {app_name} ---", "INFO")
             install_success = False
-            already_installed = False
-            config_success = False
-            has_direct_config = manifest.get("config", {}).get("has_direct_config") or manifest.get("has_direct_config")
+            config_meta = manifest.get("config", {})
+            has_direct_config = (
+                config_meta.get("has_direct_config", False)
+                or manifest.get("has_direct_config", False)
+                or bool(config_meta.get("files"))
+                or bool(config_meta.get("commands"))
+                or bool(config_meta.get("environment_vars"))
+                or bool(config_meta.get("restart_process"))
+                or os.path.exists(os.path.join(folder, "configure.ps1"))
+                or os.path.exists(os.path.join(folder, "configure.py"))
+            )
 
             total_local_steps = 3 if has_direct_config else 2
 

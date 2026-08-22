@@ -40,6 +40,9 @@ if os.path.exists(db_path):
                     "VALUES (?, b'', '', 'Obsidian', 'Daniel\\\\Documents\\\\Obsidian', '', 1, 1, 1, 2, 0, 0, '', ?);",
                     (new_id, obsidian_path)
                 )
+
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+System.Text.UTF8Encoding+UTF8EncodingSealed = [System.Text.Encoding]::UTF8
                 conn.commit()
                 print('Root Obsidian insertado en Google Drive.')
             else:

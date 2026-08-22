@@ -20,6 +20,10 @@
   },
   "config": {
     "has_direct_config": true,
+    "restart_process": [
+      "Playnite.DesktopApp",
+      "Playnite.FullscreenApp"
+    ],
     "files": [
       {
         "source": "config.json",

@@ -296,13 +296,18 @@ def install_app(
             logger.log_raw(res.stdout)
             logger.log_raw(res.stderr)
 
+            stdout_lower = (res.stdout or "").lower()
             if res.returncode in (0, 3010, 1641):
                 logger.log(f"Instalacion de '{app_name}' completada con exito via Winget.", "SUCCESS")
                 if should_refresh_env:
                     _notify("Refrescando variables de entorno...")
                     refresh_environment()
                 return True, False
-            elif res.returncode in (2316632107, 2316632109, -1978335189, -1978335187):
+            elif (
+                res.returncode in (2316632107, 2316632109, -1978335189, -1978335187)
+                or "found an existing package already installed" in stdout_lower
+                or "no available upgrade found" in stdout_lower
+            ):
                 logger.log(f"La aplicacion '{app_name}' ya se encuentra instalada y actualizada en el sistema (Winget).", "INFO")
                 _notify("Ya instalada y actualizada.")
                 return True, True

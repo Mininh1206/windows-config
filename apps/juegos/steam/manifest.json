@@ -20,6 +20,7 @@
   },
   "config": {
     "has_direct_config": true,
+    "restart_process": ["steam"],
     "files": [],
     "commands": [],
     "environment_vars": {}
