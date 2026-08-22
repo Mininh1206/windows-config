@@ -19,7 +19,7 @@
     "RequireAdmin": false
   },
   "config": {
-    "has_direct_config": false,
+    "has_direct_config": true,
     "files": [],
     "commands": [],
     "environment_vars": {}

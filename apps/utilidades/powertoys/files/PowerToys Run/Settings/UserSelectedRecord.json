@@ -1,0 +1,1014 @@
+{
+  "Records": {
+    "mini-players : Everything: A:\\Proyectos\\mini-players": {
+      "SelectedCount": 2,
+      "LastSelected": "2025-10-13T20:27:19.7042535Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "mini-players",
+      "Search": "mini-pla",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Proyectos\\mini-players",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Splitly : Everything: A:\\Proyectos\\tfg-ingenieria-informatica\\Splitly": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-10-13T11:32:56.9906957Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Splitly",
+      "Search": "splitly",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Proyectos\\tfg-ingenieria-informatica\\Splitly",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Android Studio : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-10-13T11:40:13.6705821Z",
+      "IconPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Android Studio\\Android Studio.lnk",
+      "Title": "Android Studio",
+      "Search": "andro",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "GitHub Desktop : Aplicaci\u00F3n": {
+      "SelectedCount": 3,
+      "LastSelected": "2025-12-08T08:38:59.4863787Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\GitHub, Inc\\GitHub Desktop.lnk",
+      "Title": "GitHub Desktop",
+      "Search": "githubdes",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "LM Studio : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-10-13T14:29:51.0925792Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\LM Studio.lnk",
+      "Title": "LM Studio",
+      "Search": "lm s",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "splitly : Everything: A:\\Proyectos\\tfg-ingenieria-informatica\\splitly": {
+      "SelectedCount": 3,
+      "LastSelected": "2025-10-14T20:49:53.9799507Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "splitly",
+      "Search": "splitly",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Proyectos\\tfg-ingenieria-informatica\\splitly",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Database.kdbx : Everything: F:\\Otros\\Database.kdbx": {
+      "SelectedCount": 124,
+      "LastSelected": "2026-08-15T17:01:06.4872731Z",
+      "IconPath": "F:\\Otros\\Database.kdbx",
+      "Title": "Database.kdbx",
+      "Search": "database.k",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Otros\\Database.kdbx",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Rufus : Everything: F:\\Otros\\Utilidades\\Rufus": {
+      "SelectedCount": 2,
+      "LastSelected": "2025-10-16T10:17:59.7383194Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Rufus",
+      "Search": "rufus",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Otros\\Utilidades\\Rufus",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "rufus.log : Everything: A:\\Respaldos\\DANIEL\\Otros\\Utilidades\\Rufus\\rufus.log": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-10-16T10:18:03.0072476Z",
+      "IconPath": "A:\\Respaldos\\DANIEL\\Otros\\Utilidades\\Rufus\\rufus.log",
+      "Title": "rufus.log",
+      "Search": "rufus",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Respaldos\\DANIEL\\Otros\\Utilidades\\Rufus\\rufus.log",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "rufus-3.17p.exe : Everything: F:\\Otros\\Utilidades\\rufus-3.17p.exe": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-10-16T10:18:10.4898789Z",
+      "IconPath": "F:\\Otros\\Utilidades\\rufus-3.17p.exe",
+      "Title": "rufus-3.17p.exe",
+      "Search": "rufus",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Otros\\Utilidades\\rufus-3.17p.exe",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Rufus : Everything: A:\\Respaldos\\DANIEL\\Otros\\Utilidades\\Rufus": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-10-16T10:18:13.4293053Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Rufus",
+      "Search": "rufus",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Respaldos\\DANIEL\\Otros\\Utilidades\\Rufus",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "See more... : Open Everything and see the remaining results": {
+      "SelectedCount": 7,
+      "LastSelected": "2026-07-22T11:04:11.5742071Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/Everything.light.png",
+      "Title": "See more...",
+      "Search": ".hermes",
+      "Score": 0,
+      "SubTitle": "Open Everything and see the remaining results",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Respaldos : Everything: A:\\Respaldos": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-10-16T12:35:46.7604447Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Respaldos",
+      "Search": "respaldo",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Respaldos",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "ProcesamientoHablaVisionInteraccionMultimodal : Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\ProcesamientoHablaVisionInteraccionMultimodal": {
+      "SelectedCount": 7,
+      "LastSelected": "2025-12-11T18:46:26.1016345Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "ProcesamientoHablaVisionInteraccionMultimodal",
+      "Search": "procesamiento",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\ProcesamientoHablaVisionInteraccionMultimodal",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Praat.exe : Everything: F:\\Otros\\Utilidades\\Praat.exe": {
+      "SelectedCount": 6,
+      "LastSelected": "2025-12-11T18:41:54.8565803Z",
+      "IconPath": "F:\\Otros\\Utilidades\\Praat.exe",
+      "Title": "Praat.exe",
+      "Search": "praat.exe",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Otros\\Utilidades\\Praat.exe",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Robotica : Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\Robotica": {
+      "SelectedCount": 12,
+      "LastSelected": "2026-02-22T21:21:46.9543337Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Robotica",
+      "Search": "robotica",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\Robotica",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Acceso por voz : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-10-28T20:48:12.8218188Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Accessibility\\VoiceAccess.lnk",
+      "Title": "Acceso por voz",
+      "Search": "voz",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Steam : Aplicaci\u00F3n": {
+      "SelectedCount": 3,
+      "LastSelected": "2026-06-25T18:24:18.2328005Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Steam\\Steam.lnk",
+      "Title": "Steam",
+      "Search": "ste",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Database.kdbx : Everything: A:\\Respaldos\\DANIEL\\Otros\\Database.kdbx": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-03T13:19:38.1408328Z",
+      "IconPath": "A:\\Respaldos\\DANIEL\\Otros\\Database.kdbx",
+      "Title": "Database.kdbx",
+      "Search": "database.k",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Respaldos\\DANIEL\\Otros\\Database.kdbx",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Claude : Aplicaci\u00F3n": {
+      "SelectedCount": 2,
+      "LastSelected": "2025-11-06T11:45:32.2529469Z",
+      "IconPath": "C:\\Users\\Daniel\\Desktop\\Claude.lnk",
+      "Title": "Claude",
+      "Search": "cl",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "IntegracionInformacionAplicaciones : Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\IntegracionInformacionAplicaciones": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-06T11:58:13.553347Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "IntegracionInformacionAplicaciones",
+      "Search": "integracion",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\IntegracionInformacionAplicaciones",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "PowerPoint : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-07T22:18:56.4544147Z",
+      "IconPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PowerPoint.lnk",
+      "Title": "PowerPoint",
+      "Search": "calida",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "CalidadMedicionEstimacionProductosProcesosSoftware : Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\CalidadMedicionEstimacionProductosProcesosSoftware": {
+      "SelectedCount": 7,
+      "LastSelected": "2026-04-02T12:15:15.0650178Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "CalidadMedicionEstimacionProductosProcesosSoftware",
+      "Search": "calidad",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\CalidadMedicionEstimacionProductosProcesosSoftware",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Ros_Aulas : Everything: C:\\Users\\Daniel\\VirtualBox VMs\\Ros_Aulas": {
+      "SelectedCount": 2,
+      "LastSelected": "2025-11-13T15:49:00.6180049Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Ros_Aulas",
+      "Search": "Ros_Aula",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Users\\Daniel\\VirtualBox VMs\\Ros_Aulas",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Ros_Aulas : Everything: A:\\VM\\Robotica\\Ros_Aulas": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-13T15:57:53.530479Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Ros_Aulas",
+      "Search": "Ros_Aula",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\VM\\Robotica\\Ros_Aulas",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "ffmpeg-full : Everything: C:\\ProgramData\\chocolatey\\lib\\ffmpeg-full": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-16T16:28:18.002201Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "ffmpeg-full",
+      "Search": "ffmp",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\ProgramData\\chocolatey\\lib\\ffmpeg-full",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "ffmpeg : Everything: A:\\Aplicaciones\\Library\\share\\ffmpeg": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-16T16:28:58.941116Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "ffmpeg",
+      "Search": "ffmp",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Aplicaciones\\Library\\share\\ffmpeg",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "ffmpeg : Everything: A:\\Aplicaciones\\pkgs\\ffmpeg-6.1.1-haa678a1_5\\Library\\share\\ffmpeg": {
+      "SelectedCount": 3,
+      "LastSelected": "2025-11-16T16:30:22.3840555Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "ffmpeg",
+      "Search": "ffmp",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Aplicaciones\\pkgs\\ffmpeg-6.1.1-haa678a1_5\\Library\\share\\ffmpeg",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "ffmpeg : Everything: A:\\Aplicaciones\\pkgs\\ffmpeg-8.0.0-gpl_he3062b8_906\\Library\\share\\ffmpeg": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-16T16:30:23.7190479Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "ffmpeg",
+      "Search": "ffmp",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Aplicaciones\\pkgs\\ffmpeg-8.0.0-gpl_he3062b8_906\\Library\\share\\ffmpeg",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "ffmpeg : Everything: C:\\ProgramData\\chocolatey\\lib\\ffmpeg-full\\tools\\ffmpeg": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-16T16:30:41.1438112Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "ffmpeg",
+      "Search": "ffmp",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\ProgramData\\chocolatey\\lib\\ffmpeg-full\\tools\\ffmpeg",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "ffmpeg : Everything: J:\\SteamLibrary\\steamapps\\common\\Blender\\4.5\\scripts\\presets\\ffmpeg": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-16T16:30:42.708863Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "ffmpeg",
+      "Search": "ffmp",
+      "Score": 0,
+      "SubTitle": "Everything: J:\\SteamLibrary\\steamapps\\common\\Blender\\4.5\\scripts\\presets\\ffmpeg",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "dsl-framework : Everything: A:\\Proyectos\\dsl-framework": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-20T22:12:30.1413107Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "dsl-framework",
+      "Search": "dsl-frame",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Proyectos\\dsl-framework",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Oracle VirtualBox : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-23T10:11:14.9800138Z",
+      "IconPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Oracle VirtualBox\\Oracle VirtualBox.lnk",
+      "Title": "Oracle VirtualBox",
+      "Search": "virtual",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Practica_Vulkan : Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\AnimacionOrdenador\\Practicas\\Practica_Vulkan": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-25T12:28:14.4937679Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Practica_Vulkan",
+      "Search": "vulkan",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\AnimacionOrdenador\\Practicas\\Practica_Vulkan",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Librerias : Everything: A:\\Librerias": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-25T13:01:38.5080434Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Librerias",
+      "Search": "librerias",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Librerias",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "AnimacionOrdenador : Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\AnimacionOrdenador": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-11-25T13:46:08.1737278Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "AnimacionOrdenador",
+      "Search": "animacion",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\AnimacionOrdenador",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Antigravity : Everything: C:\\Users\\Daniel\\AppData\\Local\\Programs\\Antigravity": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-12-07T11:02:09.2191632Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Antigravity",
+      "Search": "antigra",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Users\\Daniel\\AppData\\Local\\Programs\\Antigravity",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Antigravity.exe : Everything: C:\\Users\\Daniel\\AppData\\Local\\Programs\\Antigravity\\_\\Antigravity.exe": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-12-07T11:03:21.7329239Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Programs\\Antigravity\\_\\Antigravity.exe",
+      "Title": "Antigravity.exe",
+      "Search": "Antigravity.exe",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Users\\Daniel\\AppData\\Local\\Programs\\Antigravity\\_\\Antigravity.exe",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "SeedLauncher : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-12-13T12:30:39.5312024Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Klang Games\\SeedLauncher.lnk",
+      "Title": "SeedLauncher",
+      "Search": "seed",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "$RECYCLE.BIN : Everything: A:\\$RECYCLE.BIN": {
+      "SelectedCount": 1,
+      "LastSelected": "2025-12-15T12:48:16.0910956Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "$RECYCLE.BIN",
+      "Search": "recycl",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\$RECYCLE.BIN",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "$Recycle.Bin : Everything: C:\\$Recycle.Bin": {
+      "SelectedCount": 2,
+      "LastSelected": "2026-02-07T21:57:36.2930315Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "$Recycle.Bin",
+      "Search": "bin",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\$Recycle.Bin",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Database Compare : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-01-02T13:23:48.0155253Z",
+      "IconPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Herramientas de Microsoft Office\\Database Compare.lnk",
+      "Title": "Database Compare",
+      "Search": "database.k",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "android_ndk : Everything: A:\\Librerias\\flutter\\engine\\src\\flutter\\build\\secondary\\third_party\\android_ndk": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-01-03T00:46:10.4627051Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "android_ndk",
+      "Search": "ndk",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Librerias\\flutter\\engine\\src\\flutter\\build\\secondary\\third_party\\android_ndk",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "cmdline-tools : Everything: C:\\Program Files (x86)\\Android\\android-sdk\\cmdline-tools": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-01-03T01:00:17.886702Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "cmdline-tools",
+      "Search": "cmdline-t",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Program Files (x86)\\Android\\android-sdk\\cmdline-tools",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "jdk-21 : Everything: C:\\Program Files\\Java\\jdk-21": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-01-03T01:16:02.2330272Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "jdk-21",
+      "Search": "jdk-",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Program Files\\Java\\jdk-21",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "pspdash.jar : Everything: A:\\Aplicaciones\\Process Dashboard\\pspdash.jar": {
+      "SelectedCount": 2,
+      "LastSelected": "2026-01-03T16:10:07.0644016Z",
+      "IconPath": "A:\\Aplicaciones\\Process Dashboard\\pspdash.jar",
+      "Title": "pspdash.jar",
+      "Search": "pdash",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Aplicaciones\\Process Dashboard\\pspdash.jar",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "PlantillasWord : Everything: F:\\Otros\\PlantillasWord": {
+      "SelectedCount": 2,
+      "LastSelected": "2026-01-15T22:40:55.5603483Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "PlantillasWord",
+      "Search": "plantillasw",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Otros\\PlantillasWord",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "memoria_robotica.pdf : Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\Robotica\\Documentacion\\memoria_robotica.pdf": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-01-18T10:44:34.0476335Z",
+      "IconPath": "F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\Robotica\\Documentacion\\memoria_robotica.pdf",
+      "Title": "memoria_robotica.pdf",
+      "Search": "memoria_robotica.pdf",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\Robotica\\Documentacion\\memoria_robotica.pdf",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "memoria_robotica_Daniel_Marchena_Jimenez.pdf : Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\Robotica\\Documentacion\\memoria_robotica_Daniel_Marchena_Jimenez.pdf": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-01-18T15:23:20.1626503Z",
+      "IconPath": "F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\Robotica\\Documentacion\\memoria_robotica_Daniel_Marchena_Jimenez.pdf",
+      "Title": "memoria_robotica_Daniel_Marchena_Jimenez.pdf",
+      "Search": "memoria_robotica_dani*.pdf",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\4 ING INF\\PrimerCuatrimestre\\Robotica\\Documentacion\\memoria_robotica_Daniel_Marchena_Jimenez.pdf",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "tfg-ingenieria-informatica : Everything: A:\\Proyectos\\tfg-ingenieria-informatica": {
+      "SelectedCount": 3,
+      "LastSelected": "2026-04-03T12:02:03.4296339Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "tfg-ingenieria-informatica",
+      "Search": "tfg",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Proyectos\\tfg-ingenieria-informatica",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Curriculum : Everything: F:\\Otros\\Cosas\\Curriculum": {
+      "SelectedCount": 3,
+      "LastSelected": "2026-05-07T20:03:05.2968761Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Curriculum",
+      "Search": "curriculum",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Otros\\Cosas\\Curriculum",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "CrystalMark 3D25 : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-02-01T18:23:13.1227702Z",
+      "IconPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\CrystalMark 3D25\\CrystalMark 3D25.lnk",
+      "Title": "CrystalMark 3D25",
+      "Search": "crystal",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Empresa : Everything: A:\\Empresa": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-02-02T12:54:47.2896571Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Empresa",
+      "Search": "empresa",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Empresa",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Playnite : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-02-07T17:35:37.8726886Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Playnite\\Playnite.lnk",
+      "Title": "Playnite",
+      "Search": "playni",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "MSYS2 MSYS : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-02-07T22:49:56.8839306Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\MSYS2\\MSYS2 MSYS.lnk",
+      "Title": "MSYS2 MSYS",
+      "Search": "ms",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Edit CPU-Z Config File : Archivo": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-02-07T23:10:29.3359945Z",
+      "IconPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\CPUID\\CPU-Z\\Edit CPU-Z Config File.lnk",
+      "Title": "Edit CPU-Z Config File",
+      "Search": "cpuz",
+      "Score": 0,
+      "SubTitle": "Archivo",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "CPU-Z : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-02-07T23:10:33.8978767Z",
+      "IconPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\CPUID\\CPU-Z\\CPU-Z.lnk",
+      "Title": "CPU-Z",
+      "Search": "cpuz",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Ciberseguridad : Everything: A:\\VM\\Ciberseguridad": {
+      "SelectedCount": 2,
+      "LastSelected": "2026-02-09T21:20:43.6492458Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Ciberseguridad",
+      "Search": "Ciberse",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\VM\\Ciberseguridad",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Gesti\u00F3n de Riesgos : Everything: F:\\Cursos\\1 DCHESO\\Gesti\u00F3n de Riesgos": {
+      "SelectedCount": 2,
+      "LastSelected": "2026-03-10T17:53:24.2764407Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Gesti\u00F3n de Riesgos",
+      "Search": "GESTION DE RIE",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\1 DCHESO\\Gesti\u00F3n de Riesgos",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "MiniTool Partition Wizard | Best partition magic alternative for Windows PC and Server - Brave : En ejecuci\u00F3n: brave.exe - Escritorio: Desktop 1": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-03-16T16:36:49.5311318Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\PowerToys\\RunPlugins\\WindowWalker\\Images/windowwalker.dark.png",
+      "Title": "MiniTool Partition Wizard | Best partition magic alternative for Windows PC and Server - Brave",
+      "Search": "partition wiza",
+      "Score": 0,
+      "SubTitle": "En ejecuci\u00F3n: brave.exe - Escritorio: Desktop 1",
+      "PluginID": "F737A9223560B3C6833B5FFB8CDF78E5"
+    },
+    "Ollama : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-03-24T09:07:57.8091566Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Ollama\\Ollama.lnk",
+      "Title": "Ollama",
+      "Search": "ollama",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Unity Hub : Aplicaci\u00F3n": {
+      "SelectedCount": 2,
+      "LastSelected": "2026-04-13T07:19:58.7255823Z",
+      "IconPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Unity Hub.lnk",
+      "Title": "Unity Hub",
+      "Search": "unity hu",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Windows PowerShell : Aplicaci\u00F3n": {
+      "SelectedCount": 5,
+      "LastSelected": "2026-04-27T23:38:47.502521Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Windows PowerShell\\Windows PowerShell.lnk",
+      "Title": "Windows PowerShell",
+      "Search": "power",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    ".openclaw : Everything: C:\\Users\\Daniel\\.openclaw": {
+      "SelectedCount": 4,
+      "LastSelected": "2026-04-03T08:33:39.0347995Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": ".openclaw",
+      "Search": "openclaw",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Users\\Daniel\\.openclaw",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Ollama : Everything: A:\\Aplicaciones\\Ollama": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-04-02T16:19:31.5857189Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Ollama",
+      "Search": "ollama",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Aplicaciones\\Ollama",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "openclaw : Everything: C:\\Users\\Daniel\\AppData\\Roaming\\npm\\node_modules\\openclaw": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-04-03T07:32:19.4729044Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "openclaw",
+      "Search": "openclaw",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Users\\Daniel\\AppData\\Roaming\\npm\\node_modules\\openclaw",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Diagramas_IR-CU05- Reservar para mantenimiento.drawio.png : Everything: F:\\Cursos\\3 ING INF\\SegundoCuatrimestre\\IngenieriaRequisitos\\Practicas\\Practica 3\\Diagramas_IR-CU05- Reservar para mantenimiento.drawio.png": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-04-04T16:13:30.2474743Z",
+      "IconPath": "F:\\Cursos\\3 ING INF\\SegundoCuatrimestre\\IngenieriaRequisitos\\Practicas\\Practica 3\\Diagramas_IR-CU05- Reservar para mantenimiento.drawio.png",
+      "Title": "Diagramas_IR-CU05- Reservar para mantenimiento.drawio.png",
+      "Search": "mantenimiento",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\3 ING INF\\SegundoCuatrimestre\\IngenieriaRequisitos\\Practicas\\Practica 3\\Diagramas_IR-CU05- Reservar para mantenimiento.drawio.png",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Estrategia para una Marca Personal de \u00C9xito : Everything: F:\\Cursos\\1 DCHESO\\Estrategia para una Marca Personal de \u00C9xito": {
+      "SelectedCount": 2,
+      "LastSelected": "2026-04-08T12:35:56.0034779Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Estrategia para una Marca Personal de \u00C9xito",
+      "Search": "estrategia para",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\1 DCHESO\\Estrategia para una Marca Personal de \u00C9xito",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "MantenimientoGestionCambioSistemasSoftware : Everything: F:\\Cursos\\4 ING INF\\SegundoCuatrimestre\\MantenimientoGestionCambioSistemasSoftware": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-04-08T14:06:04.0071607Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "MantenimientoGestionCambioSistemasSoftware",
+      "Search": "mantenimientoges",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\4 ING INF\\SegundoCuatrimestre\\MantenimientoGestionCambioSistemasSoftware",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Unity : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-04-13T07:19:39.9452613Z",
+      "IconPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Unity 6000.4.0f1\\Unity.lnk",
+      "Title": "Unity",
+      "Search": "uni",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    ".astro : Everything: A:\\Proyectos\\tfg-ingenieria-informatica\\landing-page\\.astro": {
+      "SelectedCount": 2,
+      "LastSelected": "2026-05-01T07:47:48.8119872Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": ".astro",
+      "Search": "tfg-ingenieria",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Proyectos\\tfg-ingenieria-informatica\\landing-page\\.astro",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    ".clawhub : Everything: C:\\Users\\Daniel\\.openclaw\\workspace\\.clawhub": {
+      "SelectedCount": 3,
+      "LastSelected": "2026-05-20T08:06:12.098882Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": ".clawhub",
+      "Search": "openclaw",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Users\\Daniel\\.openclaw\\workspace\\.clawhub",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "bin : Everything: C:\\Users\\Daniel\\AppData\\Roaming\\npm\\node_modules\\opencode-ai\\bin": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-04-27T14:35:17.8690896Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "bin",
+      "Search": "opencode",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Users\\Daniel\\AppData\\Roaming\\npm\\node_modules\\opencode-ai\\bin",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    ".chocolatey : Everything: C:\\Users\\Daniel\\.chocolatey": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-04-27T14:35:36.1345329Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": ".chocolatey",
+      "Search": "chocola",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Users\\Daniel\\.chocolatey",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "wslservice - 4944 : wslservice": {
+      "SelectedCount": 3,
+      "LastSelected": "2026-04-27T23:14:57.6306794Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\ProcessKiller\\Images/Process.dark.png",
+      "Title": "wslservice - 4944",
+      "Search": "ws",
+      "Score": 0,
+      "SubTitle": "wslservice",
+      "PluginID": "78844AE082E24C0C8AC9DB222FF67317"
+    },
+    "wslrelay - 7380 : C:\\Program Files\\WSL\\wslrelay.exe": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-04-27T23:14:51.1612676Z",
+      "IconPath": "C:\\Program Files\\WSL\\wslrelay.exe",
+      "Title": "wslrelay - 7380",
+      "Search": "ws",
+      "Score": 0,
+      "SubTitle": "C:\\Program Files\\WSL\\wslrelay.exe",
+      "PluginID": "78844AE082E24C0C8AC9DB222FF67317"
+    },
+    "WindowsPackageManagerServer - 20572 : C:\\Program Files\\WindowsApps\\Microsoft.DesktopAppInstaller_1.28.240.0_x64__8wekyb3d8bbwe\\WindowsPackageManagerServer.exe": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-04-27T23:14:53.7996394Z",
+      "IconPath": "C:\\Program Files\\WindowsApps\\Microsoft.DesktopAppInstaller_1.28.240.0_x64__8wekyb3d8bbwe\\WindowsPackageManagerServer.exe",
+      "Title": "WindowsPackageManagerServer - 20572",
+      "Search": "ws",
+      "Score": 0,
+      "SubTitle": "C:\\Program Files\\WindowsApps\\Microsoft.DesktopAppInstaller_1.28.240.0_x64__8wekyb3d8bbwe\\WindowsPackageManagerServer.exe",
+      "PluginID": "78844AE082E24C0C8AC9DB222FF67317"
+    },
+    "vmmemWSL - 9536 : vmmemWSL": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-04-27T23:14:59.0798798Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\ProcessKiller\\Images/Process.dark.png",
+      "Title": "vmmemWSL - 9536",
+      "Search": "ws",
+      "Score": 0,
+      "SubTitle": "vmmemWSL",
+      "PluginID": "78844AE082E24C0C8AC9DB222FF67317"
+    },
+    "Windhawk : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-04-28T18:44:50.7004762Z",
+      "IconPath": "C:\\Users\\Public\\Desktop\\Windhawk.lnk",
+      "Title": "Windhawk",
+      "Search": "wind",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Actividad 1 : Everything: F:\\Cursos\\1 DCHESO\\Normativa y Legislaci\u00F3n en Materia de Ciberseguridad\\Actividades\\Actividad 1": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-05-12T08:52:16.6239082Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Actividad 1",
+      "Search": "1 dcheso se",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\1 DCHESO\\Normativa y Legislaci\u00F3n en Materia de Ciberseguridad\\Actividades\\Actividad 1",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    ".bin : Everything: C:\\Users\\Daniel\\AppData\\Roaming\\npm\\node_modules\\openclaw\\node_modules\\@azure\\msal-node\\node_modules\\.bin": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-05-20T08:06:07.2578967Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": ".bin",
+      "Search": "openclaw",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Users\\Daniel\\AppData\\Roaming\\npm\\node_modules\\openclaw\\node_modules\\@azure\\msal-node\\node_modules\\.bin",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "# : Everything: C:\\$Recycle.Bin\\S-1-5-21-1728729953-397501887-565034290-1001\\$R4JU42A\\resources\\app\\node_modules\\es5-ext\\array\\#": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-05-20T08:10:31.5092972Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "#",
+      "Search": "recycle",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\$Recycle.Bin\\S-1-5-21-1728729953-397501887-565034290-1001\\$R4JU42A\\resources\\app\\node_modules\\es5-ext\\array\\#",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Discord : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-06-01T17:55:15.1043071Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Discord Inc\\Discord.lnk",
+      "Title": "Discord",
+      "Search": "dis",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Autodesk Fusion : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-06-21T07:05:36.1269701Z",
+      "IconPath": "C:\\Users\\Daniel\\Desktop\\Autodesk Fusion.lnk",
+      "Title": "Autodesk Fusion",
+      "Search": "fusion",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "1.0 : Everything: J:\\SteamLibrary\\steamapps\\common\\wallpaper_engine\\projects\\defaultprojects\\sheep\\sheep_Data\\Mono\\etc\\mono\\1.0": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-06-21T17:01:09.5899933Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "1.0",
+      "Search": "wallpaper",
+      "Score": 0,
+      "SubTitle": "Everything: J:\\SteamLibrary\\steamapps\\common\\wallpaper_engine\\projects\\defaultprojects\\sheep\\sheep_Data\\Mono\\etc\\mono\\1.0",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "Gesti\u00F3n y Equipos de Respuesta ante Ciberincidentes (Blue Team) : Everything: F:\\Cursos\\1 DCHESO\\M\u00F3dulo de Seguridad Defensiva\\Gesti\u00F3n y Equipos de Respuesta ante Ciberincidentes (Blue Team)": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-06-23T09:24:40.3909573Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "Gesti\u00F3n y Equipos de Respuesta ante Ciberincidentes (Blue Team)",
+      "Search": "Gesti\u00F3n y Equipos de Respuesta ante Ciberincidentes (Blue Team)",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Cursos\\1 DCHESO\\M\u00F3dulo de Seguridad Defensiva\\Gesti\u00F3n y Equipos de Respuesta ante Ciberincidentes (Blue Team)",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "CV_DanielMarchenaJimenez_2026-2.pdf : Everything: F:\\Otros\\Cosas\\Curriculum\\CV_DanielMarchenaJimenez_2026-2.pdf": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-07-15T10:54:37.7319571Z",
+      "IconPath": "F:\\Otros\\Cosas\\Curriculum\\CV_DanielMarchenaJimenez_2026-2.pdf",
+      "Title": "CV_DanielMarchenaJimenez_2026-2.pdf",
+      "Search": "CV_DanielMarchenaJimenez_2026-2",
+      "Score": 0,
+      "SubTitle": "Everything: F:\\Otros\\Cosas\\Curriculum\\CV_DanielMarchenaJimenez_2026-2.pdf",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    ".bin : Everything: A:\\Proyectos\\real-estate\\real-state\\node_modules\\.pnpm\\@aws-sdk\u002Bxml-builder@3.972.22\\node_modules\\@aws-sdk\\xml-builder\\node_modules\\.bin": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-07-17T13:52:20.7599308Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": ".bin",
+      "Search": "pnpm",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Proyectos\\real-estate\\real-state\\node_modules\\.pnpm\\@aws-sdk\u002Bxml-builder@3.972.22\\node_modules\\@aws-sdk\\xml-builder\\node_modules\\.bin",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "$jobId : Everything: A:\\Proyectos\\real-estate\\real-state\\apps\\dashboard\\src\\routes\\_authed\\dashboard\\(settings)\\cron-jobs\\$jobId": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-07-17T13:52:57.8065433Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": "$jobId",
+      "Search": "real-state",
+      "Score": 0,
+      "SubTitle": "Everything: A:\\Proyectos\\real-estate\\real-state\\apps\\dashboard\\src\\routes\\_authed\\dashboard\\(settings)\\cron-jobs\\$jobId",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    "opencode.exe : Ejecutar comando": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-07-19T14:58:00.6881523Z",
+      "IconPath": "C:\\ProgramData\\chocolatey\\bin\\opencode.exe",
+      "Title": "opencode.exe",
+      "Search": "opencode",
+      "Score": 0,
+      "SubTitle": "Ejecutar comando",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "wt.exe : Ejecutar comando": {
+      "SelectedCount": 11,
+      "LastSelected": "2026-07-20T16:01:31.161314Z",
+      "IconPath": "C:\\Program Files\\WindowsApps\\Microsoft.WindowsTerminal_1.24.11911.0_x64__8wekyb3d8bbwe\\wt.exe",
+      "Title": "wt.exe",
+      "Search": "wt",
+      "Score": 0,
+      "SubTitle": "Ejecutar comando",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Everything : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-07-20T12:58:17.2036156Z",
+      "IconPath": "C:\\Users\\Public\\Desktop\\Everything.lnk",
+      "Title": "Everything",
+      "Search": "eve",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Rainmeter : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-07-20T15:14:56.3811536Z",
+      "IconPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Rainmeter.lnk",
+      "Title": "Rainmeter",
+      "Search": "rainme",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Rainmeter - 22136 : C:\\Program Files\\Rainmeter\\Rainmeter.exe": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-07-20T15:15:30.0471659Z",
+      "IconPath": "C:\\Program Files\\Rainmeter\\Rainmeter.exe",
+      "Title": "Rainmeter - 22136",
+      "Search": "rain",
+      "Score": 0,
+      "SubTitle": "C:\\Program Files\\Rainmeter\\Rainmeter.exe",
+      "PluginID": "78844AE082E24C0C8AC9DB222FF67317"
+    },
+    "Quick Share : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-07-20T15:15:58.119063Z",
+      "IconPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Quick Share.lnk",
+      "Title": "Quick Share",
+      "Search": "sh",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "YASB : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-07-20T15:24:53.0172841Z",
+      "IconPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\YASB.lnk",
+      "Title": "YASB",
+      "Search": "ya",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "Antigravity : Aplicaci\u00F3n": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-07-20T20:03:36.8631069Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Antigravity\\Antigravity.lnk",
+      "Title": "Antigravity",
+      "Search": "ant",
+      "Score": 0,
+      "SubTitle": "Aplicaci\u00F3n",
+      "PluginID": "791FC278BA414111B8D1886DFE447410"
+    },
+    "ollama - 9764 : A:\\Aplicaciones\\Ollama\\ollama.exe": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-07-22T15:40:40.0348388Z",
+      "IconPath": "A:\\Aplicaciones\\Ollama\\ollama.exe",
+      "Title": "ollama - 9764",
+      "Search": "o",
+      "Score": 0,
+      "SubTitle": "A:\\Aplicaciones\\Ollama\\ollama.exe",
+      "PluginID": "78844AE082E24C0C8AC9DB222FF67317"
+    },
+    "ollama app - 21788 : A:\\Aplicaciones\\Ollama\\ollama app.exe": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-07-22T15:40:45.9923294Z",
+      "IconPath": "A:\\Aplicaciones\\Ollama\\ollama app.exe",
+      "Title": "ollama app - 21788",
+      "Search": "o",
+      "Score": 0,
+      "SubTitle": "A:\\Aplicaciones\\Ollama\\ollama app.exe",
+      "PluginID": "78844AE082E24C0C8AC9DB222FF67317"
+    },
+    ".bin : Everything: C:\\Users\\Daniel\\AppData\\Roaming\\npm\\node_modules\\omniroute\\node_modules\\.bin": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-08-07T10:59:37.9434235Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": ".bin",
+      "Search": "omni",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Users\\Daniel\\AppData\\Roaming\\npm\\node_modules\\omniroute\\node_modules\\.bin",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    },
+    ".bin : Everything: C:\\Users\\Daniel\\AppData\\Local\\hermes\\hermes-agent\\apps\\desktop\\node_modules\\.bin": {
+      "SelectedCount": 1,
+      "LastSelected": "2026-08-19T15:30:41.9787592Z",
+      "IconPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\Everything\\Images/folder.png",
+      "Title": ".bin",
+      "Search": "hermes",
+      "Score": 0,
+      "SubTitle": "Everything: C:\\Users\\Daniel\\AppData\\Local\\hermes\\hermes-agent\\apps\\desktop\\node_modules\\.bin",
+      "PluginID": "A86867E2D932459CBD77D176373DD657"
+    }
+  }
+}

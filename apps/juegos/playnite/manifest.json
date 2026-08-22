@@ -19,8 +19,14 @@
     "RequireAdmin": false
   },
   "config": {
-    "has_direct_config": false,
-    "files": [],
+    "has_direct_config": true,
+    "files": [
+      {
+        "source": "config.json",
+        "destination": "$env:APPDATA/Playnite/config.json",
+        "create_backup": true
+      }
+    ],
     "commands": [],
     "environment_vars": {}
   }

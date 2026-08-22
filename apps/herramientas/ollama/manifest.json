@@ -23,7 +23,8 @@
     "files": [],
     "commands": [],
     "environment_vars": {
-      "OLLAMA_HOST": "127.0.0.1:11434"
+      "OLLAMA_HOST": "127.0.0.1:11434",
+      "OLLAMA_MODELS": "A:\\LLM"
     }
   }
 }

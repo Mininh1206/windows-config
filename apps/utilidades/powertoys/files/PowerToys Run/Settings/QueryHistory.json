@@ -1,0 +1,736 @@
+{
+  "Items": [
+    {
+      "Query": "mini-pla",
+      "ExecutedDateTime": "2025-10-13T13:31:24.3011964+02:00"
+    },
+    {
+      "Query": "splitly",
+      "ExecutedDateTime": "2025-10-13T13:32:56.9910109+02:00"
+    },
+    {
+      "Query": "andro",
+      "ExecutedDateTime": "2025-10-13T13:40:13.6706117+02:00"
+    },
+    {
+      "Query": "github",
+      "ExecutedDateTime": "2025-10-13T16:16:19.3492954+02:00"
+    },
+    {
+      "Query": "lm s",
+      "ExecutedDateTime": "2025-10-13T16:29:51.0925864+02:00"
+    },
+    {
+      "Query": "splitl",
+      "ExecutedDateTime": "2025-10-13T16:56:26.0698244+02:00"
+    },
+    {
+      "Query": "splitly",
+      "ExecutedDateTime": "2025-10-13T22:22:42.8756853+02:00"
+    },
+    {
+      "Query": "mini-pla",
+      "ExecutedDateTime": "2025-10-13T22:27:19.7042759+02:00"
+    },
+    {
+      "Query": "splitly",
+      "ExecutedDateTime": "2025-10-14T22:49:53.9804934+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2025-10-15T21:28:16.261677+02:00"
+    },
+    {
+      "Query": "rufus",
+      "ExecutedDateTime": "2025-10-16T12:18:13.429311+02:00"
+    },
+    {
+      "Query": "office",
+      "ExecutedDateTime": "2025-10-16T14:35:27.2054653+02:00"
+    },
+    {
+      "Query": "respaldo",
+      "ExecutedDateTime": "2025-10-16T14:35:46.7604504+02:00"
+    },
+    {
+      "Query": "procesamientohabla",
+      "ExecutedDateTime": "2025-10-17T18:04:22.6521756+02:00"
+    },
+    {
+      "Query": "praat.exe",
+      "ExecutedDateTime": "2025-10-18T12:51:13.3515643+02:00"
+    },
+    {
+      "Query": "procesamientoh",
+      "ExecutedDateTime": "2025-10-18T12:51:29.6795495+02:00"
+    },
+    {
+      "Query": "praat.exe",
+      "ExecutedDateTime": "2025-10-18T16:09:51.4129973+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2025-10-18T16:18:42.0220911+02:00"
+    },
+    {
+      "Query": "procesamiento",
+      "ExecutedDateTime": "2025-10-18T16:45:46.3412046+02:00"
+    },
+    {
+      "Query": "database.kd",
+      "ExecutedDateTime": "2025-10-19T09:13:32.8476612+02:00"
+    },
+    {
+      "Query": "robotica",
+      "ExecutedDateTime": "2025-10-19T17:15:59.5011166+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2025-10-22T20:30:10.1331915+02:00"
+    },
+    {
+      "Query": "praat.exe",
+      "ExecutedDateTime": "2025-10-26T20:42:02.9035329+01:00"
+    },
+    {
+      "Query": "procesamiento",
+      "ExecutedDateTime": "2025-10-26T22:10:05.4595778+01:00"
+    },
+    {
+      "Query": "voz",
+      "ExecutedDateTime": "2025-10-28T21:48:12.8223847+01:00"
+    },
+    {
+      "Query": "database.kd",
+      "ExecutedDateTime": "2025-10-30T23:12:48.0590373+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2025-11-02T11:47:16.5842791+01:00"
+    },
+    {
+      "Query": "steam",
+      "ExecutedDateTime": "2025-11-03T14:16:03.3281536+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2025-11-03T14:19:38.1408382+01:00"
+    },
+    {
+      "Query": "s",
+      "ExecutedDateTime": "2025-11-03T18:46:08.6516294+01:00"
+    },
+    {
+      "Query": "praat.exe",
+      "ExecutedDateTime": "2025-11-05T18:55:58.7977556+01:00"
+    },
+    {
+      "Query": "github",
+      "ExecutedDateTime": "2025-11-05T19:09:12.3193376+01:00"
+    },
+    {
+      "Query": "cla",
+      "ExecutedDateTime": "2025-11-05T23:45:34.6122438+01:00"
+    },
+    {
+      "Query": "cl",
+      "ExecutedDateTime": "2025-11-06T12:45:32.2535971+01:00"
+    },
+    {
+      "Query": "integracion",
+      "ExecutedDateTime": "2025-11-06T12:58:13.5534234+01:00"
+    },
+    {
+      "Query": "calida",
+      "ExecutedDateTime": "2025-11-07T23:18:56.4568115+01:00"
+    },
+    {
+      "Query": "calidad",
+      "ExecutedDateTime": "2025-11-07T23:19:05.4806913+01:00"
+    },
+    {
+      "Query": "Database.k",
+      "ExecutedDateTime": "2025-11-08T11:03:14.8981014+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2025-11-08T23:08:28.2339652+01:00"
+    },
+    {
+      "Query": "Ros_Aula",
+      "ExecutedDateTime": "2025-11-13T16:57:53.5304849+01:00"
+    },
+    {
+      "Query": "robotica",
+      "ExecutedDateTime": "2025-11-13T17:28:08.4734524+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2025-11-14T10:56:39.3822527+01:00"
+    },
+    {
+      "Query": "ffmp",
+      "ExecutedDateTime": "2025-11-16T17:30:42.7088678+01:00"
+    },
+    {
+      "Query": "dsl-frame",
+      "ExecutedDateTime": "2025-11-20T23:12:30.1421843+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2025-11-21T21:52:11.8095731+01:00"
+    },
+    {
+      "Query": "DATABASE.K",
+      "ExecutedDateTime": "2025-11-22T17:08:38.4246473+01:00"
+    },
+    {
+      "Query": "windows.iso",
+      "ExecutedDateTime": "2025-11-23T11:08:03.4645377+01:00"
+    },
+    {
+      "Query": "virtual",
+      "ExecutedDateTime": "2025-11-23T11:11:14.9801278+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2025-11-24T18:59:31.4274193+01:00"
+    },
+    {
+      "Query": "vulkan",
+      "ExecutedDateTime": "2025-11-25T13:28:14.4942152+01:00"
+    },
+    {
+      "Query": "librerias",
+      "ExecutedDateTime": "2025-11-25T14:01:38.5080537+01:00"
+    },
+    {
+      "Query": "animacion",
+      "ExecutedDateTime": "2025-11-25T14:46:08.1737358+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2025-11-30T20:25:47.8499798+01:00"
+    },
+    {
+      "Query": "Calidadme",
+      "ExecutedDateTime": "2025-12-03T19:16:16.6088076+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2025-12-05T19:09:23.9589419+01:00"
+    },
+    {
+      "Query": "antigra",
+      "ExecutedDateTime": "2025-12-07T12:02:09.2196418+01:00"
+    },
+    {
+      "Query": "Antigravity.exe",
+      "ExecutedDateTime": "2025-12-07T12:03:21.7329581+01:00"
+    },
+    {
+      "Query": "githubdes",
+      "ExecutedDateTime": "2025-12-08T09:38:59.4883655+01:00"
+    },
+    {
+      "Query": "praat.exe",
+      "ExecutedDateTime": "2025-12-11T19:41:54.8565954+01:00"
+    },
+    {
+      "Query": "procesamiento",
+      "ExecutedDateTime": "2025-12-11T19:46:26.1016431+01:00"
+    },
+    {
+      "Query": "seed",
+      "ExecutedDateTime": "2025-12-13T13:30:39.5317717+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2025-12-13T13:31:20.6403558+01:00"
+    },
+    {
+      "Query": "recycl",
+      "ExecutedDateTime": "2025-12-15T13:48:20.2711591+01:00"
+    },
+    {
+      "Query": "calidad",
+      "ExecutedDateTime": "2025-12-16T19:47:31.74564+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-01-02T14:23:51.3540644+01:00"
+    },
+    {
+      "Query": "ndk",
+      "ExecutedDateTime": "2026-01-03T01:46:10.4632181+01:00"
+    },
+    {
+      "Query": "cmdline-t",
+      "ExecutedDateTime": "2026-01-03T02:00:17.8867264+01:00"
+    },
+    {
+      "Query": "jdk-",
+      "ExecutedDateTime": "2026-01-03T02:16:02.2330322+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-01-03T02:45:34.5521631+01:00"
+    },
+    {
+      "Query": "calidad",
+      "ExecutedDateTime": "2026-01-03T16:56:05.7425642+01:00"
+    },
+    {
+      "Query": "pdash",
+      "ExecutedDateTime": "2026-01-03T17:10:07.0644112+01:00"
+    },
+    {
+      "Query": "Plantilla",
+      "ExecutedDateTime": "2026-01-03T17:52:15.9596117+01:00"
+    },
+    {
+      "Query": "robotica",
+      "ExecutedDateTime": "2026-01-04T13:19:57.5795953+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-01-07T17:44:30.9079655+01:00"
+    },
+    {
+      "Query": "calidad",
+      "ExecutedDateTime": "2026-01-09T13:09:51.3183866+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-01-14T10:59:58.5636614+01:00"
+    },
+    {
+      "Query": "calidadme",
+      "ExecutedDateTime": "2026-01-15T13:02:16.1295435+01:00"
+    },
+    {
+      "Query": "plantillasw",
+      "ExecutedDateTime": "2026-01-15T23:40:55.5606679+01:00"
+    },
+    {
+      "Query": "robotica",
+      "ExecutedDateTime": "2026-01-17T10:22:42.1356879+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-01-17T20:54:58.4589862+01:00"
+    },
+    {
+      "Query": "memoria_robotica.pdf",
+      "ExecutedDateTime": "2026-01-18T11:44:34.0480832+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-01-18T16:22:00.9498725+01:00"
+    },
+    {
+      "Query": "memoria_robotica_dani*.pdf",
+      "ExecutedDateTime": "2026-01-18T16:23:20.1626587+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-01-18T19:06:43.2962274+01:00"
+    },
+    {
+      "Query": "tfg-",
+      "ExecutedDateTime": "2026-01-20T16:42:15.531437+01:00"
+    },
+    {
+      "Query": "robot",
+      "ExecutedDateTime": "2026-01-24T19:16:03.1835776+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-01-26T11:44:50.3406092+01:00"
+    },
+    {
+      "Query": "curricul",
+      "ExecutedDateTime": "2026-01-29T12:38:59.2883142+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-01-29T12:41:01.8859802+01:00"
+    },
+    {
+      "Query": "crystal",
+      "ExecutedDateTime": "2026-02-01T19:23:13.1230738+01:00"
+    },
+    {
+      "Query": "empresa",
+      "ExecutedDateTime": "2026-02-02T13:54:47.2900457+01:00"
+    },
+    {
+      "Query": "playni",
+      "ExecutedDateTime": "2026-02-07T18:35:37.873001+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-02-07T22:37:10.9856969+01:00"
+    },
+    {
+      "Query": "bin",
+      "ExecutedDateTime": "2026-02-07T22:57:36.2931045+01:00"
+    },
+    {
+      "Query": "ms",
+      "ExecutedDateTime": "2026-02-07T23:49:56.8843171+01:00"
+    },
+    {
+      "Query": "cpuz",
+      "ExecutedDateTime": "2026-02-08T00:10:33.8978836+01:00"
+    },
+    {
+      "Query": "Ciberseguridad",
+      "ExecutedDateTime": "2026-02-09T00:19:41.9234426+01:00"
+    },
+    {
+      "Query": "Ciberse",
+      "ExecutedDateTime": "2026-02-09T22:20:43.6495915+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-02-18T21:53:06.1884745+01:00"
+    },
+    {
+      "Query": "robotica",
+      "ExecutedDateTime": "2026-02-22T22:21:46.9546828+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-02-25T17:32:32.192485+01:00"
+    },
+    {
+      "Query": "tfg-",
+      "ExecutedDateTime": "2026-02-25T17:56:37.1497771+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-03-04T19:59:21.9830364+01:00"
+    },
+    {
+      "Query": "Gesti\u00F3n de riesgos",
+      "ExecutedDateTime": "2026-03-08T18:27:59.2046074+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-03-09T17:49:10.7500269+01:00"
+    },
+    {
+      "Query": "GESTION DE RIE",
+      "ExecutedDateTime": "2026-03-10T18:53:24.2767909+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-03-15T17:55:36.7675159+01:00"
+    },
+    {
+      "Query": "partition",
+      "ExecutedDateTime": "2026-03-16T17:33:59.9780374+01:00"
+    },
+    {
+      "Query": "partition wiza",
+      "ExecutedDateTime": "2026-03-16T17:36:49.5312125+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-03-23T11:29:32.4269978+01:00"
+    },
+    {
+      "Query": "ollama",
+      "ExecutedDateTime": "2026-03-24T10:07:57.8095802+01:00"
+    },
+    {
+      "Query": "unity",
+      "ExecutedDateTime": "2026-03-25T13:07:17.2253539+01:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-03-28T10:11:08.9166999+01:00"
+    },
+    {
+      "Query": "calidad",
+      "ExecutedDateTime": "2026-04-02T14:15:15.0654095+02:00"
+    },
+    {
+      "Query": "powers",
+      "ExecutedDateTime": "2026-04-02T17:28:29.5783028+02:00"
+    },
+    {
+      "Query": "openclaw",
+      "ExecutedDateTime": "2026-04-02T18:10:53.2328002+02:00"
+    },
+    {
+      "Query": "ollama",
+      "ExecutedDateTime": "2026-04-02T18:19:31.5857244+02:00"
+    },
+    {
+      "Query": "openclaw",
+      "ExecutedDateTime": "2026-04-03T10:33:39.034804+02:00"
+    },
+    {
+      "Query": "tfg",
+      "ExecutedDateTime": "2026-04-03T14:02:03.4297457+02:00"
+    },
+    {
+      "Query": "mantenimiento",
+      "ExecutedDateTime": "2026-04-04T18:13:30.2477948+02:00"
+    },
+    {
+      "Query": "estrategia para",
+      "ExecutedDateTime": "2026-04-08T14:35:56.0038083+02:00"
+    },
+    {
+      "Query": "curricu",
+      "ExecutedDateTime": "2026-04-08T15:47:33.0859649+02:00"
+    },
+    {
+      "Query": "mantenimientoges",
+      "ExecutedDateTime": "2026-04-08T16:06:04.0074873+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-04-11T22:37:28.7839763+02:00"
+    },
+    {
+      "Query": "uni",
+      "ExecutedDateTime": "2026-04-13T09:19:39.9456153+02:00"
+    },
+    {
+      "Query": "unity hu",
+      "ExecutedDateTime": "2026-04-13T09:19:58.7256729+02:00"
+    },
+    {
+      "Query": "tfg-ingenieria-informatica",
+      "ExecutedDateTime": "2026-04-15T12:46:42.7458149+02:00"
+    },
+    {
+      "Query": "powersh",
+      "ExecutedDateTime": "2026-04-15T20:25:49.1038049+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-04-17T19:16:38.0729766+02:00"
+    },
+    {
+      "Query": "openclaw",
+      "ExecutedDateTime": "2026-04-21T12:47:33.1033029+02:00"
+    },
+    {
+      "Query": "opencode",
+      "ExecutedDateTime": "2026-04-27T16:35:17.869392+02:00"
+    },
+    {
+      "Query": "chocola",
+      "ExecutedDateTime": "2026-04-27T16:35:36.1345429+02:00"
+    },
+    {
+      "Query": "poweshe",
+      "ExecutedDateTime": "2026-04-28T00:33:16.4419733+02:00"
+    },
+    {
+      "Query": "kl ws",
+      "ExecutedDateTime": "2026-04-28T01:14:59.0798842+02:00"
+    },
+    {
+      "Query": "powe",
+      "ExecutedDateTime": "2026-04-28T01:16:03.7973705+02:00"
+    },
+    {
+      "Query": "power",
+      "ExecutedDateTime": "2026-04-28T01:38:47.5025316+02:00"
+    },
+    {
+      "Query": "openclaw",
+      "ExecutedDateTime": "2026-04-28T01:41:21.6222662+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-04-28T13:50:02.7558772+02:00"
+    },
+    {
+      "Query": "wind",
+      "ExecutedDateTime": "2026-04-28T20:44:50.7005761+02:00"
+    },
+    {
+      "Query": "tfg-ingenieria",
+      "ExecutedDateTime": "2026-05-01T09:47:48.8122958+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-05-05T18:46:50.6157925+02:00"
+    },
+    {
+      "Query": "curriculum",
+      "ExecutedDateTime": "2026-05-07T22:03:05.2972277+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-05-11T13:04:34.0682992+02:00"
+    },
+    {
+      "Query": "1 dcheso se",
+      "ExecutedDateTime": "2026-05-12T10:52:16.6242658+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-05-18T21:15:09.8562615+02:00"
+    },
+    {
+      "Query": "openclaw",
+      "ExecutedDateTime": "2026-05-20T10:06:39.5970876+02:00"
+    },
+    {
+      "Query": "recycle",
+      "ExecutedDateTime": "2026-05-20T10:10:31.5093031+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-05-29T19:01:13.255187+02:00"
+    },
+    {
+      "Query": "dis",
+      "ExecutedDateTime": "2026-06-01T19:55:15.1046753+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-06-19T22:20:56.0824906+02:00"
+    },
+    {
+      "Query": "fusion",
+      "ExecutedDateTime": "2026-06-21T09:05:36.1272713+02:00"
+    },
+    {
+      "Query": "wallpaper",
+      "ExecutedDateTime": "2026-06-21T19:01:09.5900078+02:00"
+    },
+    {
+      "Query": "Gesti\u00F3n y Equipos de Respuesta ante Ciberincidentes (Blue Team)",
+      "ExecutedDateTime": "2026-06-23T11:24:40.3912857+02:00"
+    },
+    {
+      "Query": "ste",
+      "ExecutedDateTime": "2026-06-25T20:24:18.2331907+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-06-26T09:02:25.3899404+02:00"
+    },
+    {
+      "Query": "TFG",
+      "ExecutedDateTime": "2026-06-30T21:24:00.1110484+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-07-08T20:30:06.8079234+02:00"
+    },
+    {
+      "Query": "DATABASE.K",
+      "ExecutedDateTime": "2026-07-09T18:54:33.4107021+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-07-12T21:37:05.6099603+02:00"
+    },
+    {
+      "Query": "CV_DanielMarchenaJimenez_2026-2",
+      "ExecutedDateTime": "2026-07-15T12:54:37.7323133+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-07-16T17:37:51.7088699+02:00"
+    },
+    {
+      "Query": "pnpm",
+      "ExecutedDateTime": "2026-07-17T15:52:20.7602837+02:00"
+    },
+    {
+      "Query": "real-state",
+      "ExecutedDateTime": "2026-07-17T15:52:57.8065537+02:00"
+    },
+    {
+      "Query": "database.k",
+      "ExecutedDateTime": "2026-07-19T00:13:49.8865555+02:00"
+    },
+    {
+      "Query": "opencode",
+      "ExecutedDateTime": "2026-07-19T16:58:00.688726+02:00"
+    },
+    {
+      "Query": "wt",
+      "ExecutedDateTime": "2026-07-20T14:47:14.097656+02:00"
+    },
+    {
+      "Query": "eve",
+      "ExecutedDateTime": "2026-07-20T14:58:17.20362+02:00"
+    },
+    {
+      "Query": "wt",
+      "ExecutedDateTime": "2026-07-20T15:47:28.555761+02:00"
+    },
+    {
+      "Query": "\u003Cminitroopers",
+      "ExecutedDateTime": "2026-07-20T16:52:01.0861479+02:00"
+    },
+    {
+      "Query": "rainme",
+      "ExecutedDateTime": "2026-07-20T17:14:56.3811601+02:00"
+    },
+    {
+      "Query": "kl rain",
+      "ExecutedDateTime": "2026-07-20T17:15:30.0471716+02:00"
+    },
+    {
+      "Query": "sh",
+      "ExecutedDateTime": "2026-07-20T17:15:58.1190703+02:00"
+    },
+    {
+      "Query": "ya",
+      "ExecutedDateTime": "2026-07-20T17:24:53.0172907+02:00"
+    },
+    {
+      "Query": "wt",
+      "ExecutedDateTime": "2026-07-20T18:01:31.1618055+02:00"
+    },
+    {
+      "Query": "ant",
+      "ExecutedDateTime": "2026-07-20T22:03:36.8636389+02:00"
+    },
+    {
+      "Query": "\u003Cdatabase.k",
+      "ExecutedDateTime": "2026-07-22T12:45:27.5446742+02:00"
+    },
+    {
+      "Query": "\u003C.hermes",
+      "ExecutedDateTime": "2026-07-22T13:04:11.574284+02:00"
+    },
+    {
+      "Query": "\u003Cdatabase.k",
+      "ExecutedDateTime": "2026-07-22T14:13:35.0980823+02:00"
+    },
+    {
+      "Query": "kl o",
+      "ExecutedDateTime": "2026-07-22T17:40:45.9923367+02:00"
+    },
+    {
+      "Query": "\u003Cdatabase.k",
+      "ExecutedDateTime": "2026-07-27T22:36:02.6259432+02:00"
+    },
+    {
+      "Query": "\u003Comni",
+      "ExecutedDateTime": "2026-08-07T12:59:37.9443344+02:00"
+    },
+    {
+      "Query": "\u003Cdatabase.k",
+      "ExecutedDateTime": "2026-08-15T19:01:06.4877256+02:00"
+    },
+    {
+      "Query": "\u003Chermes",
+      "ExecutedDateTime": "2026-08-19T17:30:41.979565+02:00"
+    }
+  ]
+}

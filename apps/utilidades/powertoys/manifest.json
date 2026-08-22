@@ -20,7 +20,13 @@
   },
   "config": {
     "has_direct_config": true,
-    "files": [],
+    "files": [
+      {
+        "source": "settings.json",
+        "destination": "$env:LOCALAPPDATA/Microsoft/PowerToys/settings.json",
+        "create_backup": true
+      }
+    ],
     "commands": [],
     "environment_vars": {}
   }

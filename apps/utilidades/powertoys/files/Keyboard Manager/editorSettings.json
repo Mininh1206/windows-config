@@ -1,0 +1,92 @@
+{
+  "ShortcutSettingsDictionary": {
+    "6d0b9be6-4688-4343-861d-15253356b5f6": {
+      "Id": "6d0b9be6-4688-4343-861d-15253356b5f6",
+      "Shortcut": {
+        "OriginalKeys": "260;160;84",
+        "TargetKeys": "260;160;84",
+        "TargetApp": "",
+        "OperationType": 1,
+        "TargetText": "",
+        "ProgramPath": "C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe",
+        "ProgramArgs": "",
+        "StartInDirectory": "",
+        "Elevation": 0,
+        "IfRunningAction": 0,
+        "Visibility": 0,
+        "UriToOpen": ""
+      },
+      "Profiles": [],
+      "IsActive": true
+    },
+    "2a67e963-1339-40ca-8e6b-7524143f7d70": {
+      "Id": "2a67e963-1339-40ca-8e6b-7524143f7d70",
+      "Shortcut": {
+        "OriginalKeys": "162;160;77",
+        "TargetKeys": "",
+        "TargetApp": "",
+        "OperationType": 1,
+        "TargetText": "",
+        "ProgramPath": "%windir%\\system32\\taskmgr.exe",
+        "ProgramArgs": "/7",
+        "StartInDirectory": "",
+        "Elevation": 0,
+        "IfRunningAction": 0,
+        "Visibility": 0,
+        "UriToOpen": ""
+      },
+      "Profiles": [],
+      "IsActive": true
+    },
+    "1769989c-182a-466c-9f65-ce2b35831277": {
+      "Id": "1769989c-182a-466c-9f65-ce2b35831277",
+      "Shortcut": {
+        "OriginalKeys": "33",
+        "TargetKeys": "36",
+        "TargetApp": "",
+        "OperationType": 0,
+        "TargetText": "",
+        "ProgramPath": "",
+        "ProgramArgs": "",
+        "StartInDirectory": "",
+        "Elevation": 0,
+        "IfRunningAction": 0,
+        "Visibility": 0,
+        "UriToOpen": ""
+      },
+      "Profiles": [],
+      "IsActive": true
+    },
+    "30d1a61f-8240-4e5a-9b73-320f7c84a9b0": {
+      "Id": "30d1a61f-8240-4e5a-9b73-320f7c84a9b0",
+      "Shortcut": {
+        "OriginalKeys": "34",
+        "TargetKeys": "35",
+        "TargetApp": "",
+        "OperationType": 0,
+        "TargetText": "",
+        "ProgramPath": "",
+        "ProgramArgs": "",
+        "StartInDirectory": "",
+        "Elevation": 0,
+        "IfRunningAction": 0,
+        "Visibility": 0,
+        "UriToOpen": ""
+      },
+      "Profiles": [],
+      "IsActive": true
+    }
+  },
+  "ProfileDictionary": {},
+  "ShortcutsByOperationType": {
+    "RunProgram": [
+      "2a67e963-1339-40ca-8e6b-7524143f7d70",
+      "6d0b9be6-4688-4343-861d-15253356b5f6"
+    ],
+    "RemapShortcut": [
+      "1769989c-182a-466c-9f65-ce2b35831277",
+      "30d1a61f-8240-4e5a-9b73-320f7c84a9b0"
+    ]
+  },
+  "ActiveProfile": ""
+}

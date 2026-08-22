@@ -1,0 +1,8 @@
+arch = "x64"
+pt_path = 'C:\Users\Daniel\AppData\Local\PowerToys\PowerToys.exe'
+admin = true
+no_restart = false
+
+[plugins.ProcessKiller]
+repo = "8LWXpg/PowerToysRun-ProcessKiller"
+version = "v1.13.0"

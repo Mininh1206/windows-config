@@ -50,10 +50,10 @@ Este documento sirve como inventario maestro y lista de control (checklist) de t
 | `[x]` | **Eclipse** | `Winget` | Sí | No | N/A | Eclipse IDE for Java Developers (DAG: depende de Java). |
 | `[x]` | **NetBeans** | `Winget` | Sí | No | N/A | Apache NetBeans IDE (DAG: depende de Java). |
 | `[x]` | **Arduino IDE** | `Winget` | Sí | No | N/A | Entorno de desarrollo para microcontroladores Arduino IDE 2. |
-| `[x]` | **Unity Hub** | `Winget` | Sí | No | N/A | Gestor de versiones y proyectos de Unity. |
+| `[x]` | **Unity Hub** | `Winget` | Sí | **Sí** | Comandos | Configuración de ruta en `A:\Aplicaciones\Unity` y preparación asíncrona de Unity Editor LTS en background. |
 | `[x]` | **Visual Studio Community** | `Winget` | Sí | **Sí** | Comandos | Instalación silenciosa con workloads de `.NET Desktop`, `Unity Game Dev` y `Mobile .NET MAUI`. |
 | `[x]` | **JetBrains Toolbox** | `Winget` | Sí | No | N/A | Gestor centralizado de IDEs y herramientas de JetBrains. |
-| `[x]` | **DBeaver Community** | `Winget` | Sí | No | N/A | Gestor universal de bases de datos. |
+| `[x]` | **DBeaver Community** | `Winget` | Sí | **Sí** | Comandos | Pre-descarga asíncrona de drivers JDBC (PostgreSQL, MySQL, SQLite, Oracle, SQL Server) en `%APPDATA%\DBeaverData\drivers`. |
 | `[x]` | **Android Studio** | `Winget` | Sí | **Sí** | Variables | Configuración de variable `ANDROID_HOME` y soporte de emulador (DAG: depende de Java). |
 
 ---
@@ -86,11 +86,12 @@ Este documento sirve como inventario maestro y lista de control (checklist) de t
 | `[x]` | **Docker Desktop** | `Winget` | Sí | **Sí** | Comandos | Habilitación de backend WSL2. |
 | `[x]` | **Claude Code** | `Winget` | No | Sí | Comandos | CLI de Claude para desarrollo asistido (DAG: depende de Node.js). |
 | `[x]` | **OpenCode** | `Winget` | Sí | No | N/A | CLI asistido por IA para terminal (DAG: depende de Node.js). |
-| `[x]` | **Hermes Agent** | `Script` | Sí | **Sí** | Archivos + Comandos | Despliegue de `SOUL.md` y `config.yaml` en `%LOCALAPPDATA%\hermes`. |
+| `[x]` | **Hermes Agent** | `Script` | Sí | **Sí** | Archivos + Comandos | Despliegue de `SOUL.md`, `config.yaml` y biblioteca completa de `skills/` en `%LOCALAPPDATA%\hermes`. |
 | `[x]` | **LM Studio** | `Winget` | Sí | No | N/A | Plataforma local de modelos LLM. |
-| `[x]` | **Ollama** | `Winget` | Sí | **Sí** | Variables | Definición de variable `OLLAMA_HOST` para servicio local de LLMs. |
+| `[x]` | **Ollama** | `Winget` | Sí | **Sí** | Variables + Comandos | Configuración de `OLLAMA_MODELS = A:\LLM` y descarga en segundo plano de `qwen3.8:27b` y `gemma4:e4b`. |
 | `[x]` | **XAMPP** | `Winget` | Sí | No | N/A | Entorno de desarrollo local Apache + MariaDB + PHP. |
 | `[x]` | **Postman** | `Winget` | Sí | No | N/A | Plataforma de diseño y testing de APIs. |
+
 
 
 ---
@@ -152,6 +153,7 @@ Este documento sirve como inventario maestro y lista de control (checklist) de t
 | `[x]` | **Microsoft Teams** | `Winget` | Sí | No | N/A | Cliente corporativo y de videollamadas Microsoft Teams. |
 | `[x]` | **Adobe Acrobat Reader** | `Winget` | Sí | No | N/A | Lector PDF oficial de Adobe (64-bit). |
 | `[x]` | **Quick Share** | `Winget` | Sí | No | N/A | Compartición rápida de archivos de Google para Windows. |
+| `[x]` | **Google Drive Desktop** | `Winget` | Sí | **Sí** | Comandos | Sincronización automática de `A:\Daniel\Documents\Obsidian` como buffer en la nube para sincronización multi-dispositivo. |
 
 ---
 
@@ -159,8 +161,8 @@ Este documento sirve como inventario maestro y lista de control (checklist) de t
 
 | Estado | Aplicación | Tipo Empaquetado | Disco Alt. | Config. Directa | Modalidad Config. | Detalles de Configuración Directa |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| `[x]` | **Playnite** | `Winget` | Sí | No | N/A | Launcher unificado de videojuegos de todas las plataformas. |
-| `[x]` | **Steam** | `Winget` | Sí | No | N/A | Plataforma líder de juegos digitales. |
+| `[x]` | **Playnite** | `Winget` | Sí | **Sí** | Archivos + Comandos | Configuración de vistas e integraciones de plataformas (Steam, Epic, GOG, Ubisoft, EA, Xbox) en `%APPDATA%\Playnite`. |
+| `[x]` | **Steam** | `Winget` | Sí | **Sí** | Archivos + Comandos | Vinculación automática de la biblioteca de juegos secundaria en `J:\SteamLibrary` vía `libraryfolders.vdf`. |
 | `[x]` | **Ubisoft Connect** | `Winget` | Sí | No | N/A | Plataforma y launcher oficial de Ubisoft. |
 | `[x]` | **EA App** | `Winget` | Sí | No | N/A | Plataforma y launcher oficial de Electronic Arts. |
 | `[x]` | **Xbox App** | `Winget` | Sí | No | N/A | Aplicación oficial de Xbox y PC Game Pass. |
@@ -168,4 +170,5 @@ Este documento sirve como inventario maestro y lista de control (checklist) de t
 | `[x]` | **GOG Galaxy** | `Winget` | Sí | No | N/A | Launcher unificado y tienda DRM-free de GOG. |
 | `[x]` | **CurseForge** | `Winget` | Sí | No | N/A | Gestor de mods para videojuegos. |
 | `[x]` | **PPSSPP** | `Winget` | Sí | No | N/A | Emulador de PlayStation Portable de alta compatibilidad. |
+
 

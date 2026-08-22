@@ -20,10 +20,17 @@ VALID_INSTALL_TYPES = ["winget", "exe", "msi", "zip", "portable", "script", "cho
 class TestManifestIntegrity(unittest.TestCase):
     def get_all_manifest_paths(self):
         paths = []
-        for root, _, files in os.walk(APPS_DIR):
-            if "manifest.json" in files:
-                paths.append(os.path.join(root, "manifest.json"))
+        for cat in os.listdir(APPS_DIR):
+            cat_dir = os.path.join(APPS_DIR, cat)
+            if not os.path.isdir(cat_dir) or cat not in VALID_CATEGORIES:
+                continue
+            for app in os.listdir(cat_dir):
+                app_dir = os.path.join(cat_dir, app)
+                m_path = os.path.join(app_dir, "manifest.json")
+                if os.path.isdir(app_dir) and os.path.exists(m_path):
+                    paths.append(m_path)
         return paths
+
 
     def test_manifests_exist(self):
         manifests = self.get_all_manifest_paths()

@@ -1,0 +1,14 @@
+{
+  "CloseRiotClient": true,
+  "RiotClientPath": "J:\\Riot Games\\Riot Client",
+  "LeaguePath": "J:\\Riot Games\\League of Legends",
+  "LeaguePBE": false,
+  "ValorantPath": "No instalado",
+  "LORPath": "No instalado",
+  "TwoXKOPath": "No instalado",
+  "LeagueCompanions": [],
+  "ValorantCompanions": [],
+  "LeagueUseShortCompName": true,
+  "ValUseShortCompName": true,
+  "VersionNum": 4
+}

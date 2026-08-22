@@ -169,20 +169,25 @@ def validate_catalog(apps_base_dir: str = APPS_DIR, specific_apps: Optional[List
         return results
 
     app_folders = []
-    for root, _, files in os.walk(apps_base_dir):
-        if "manifest.json" in files:
-            app_id = os.path.basename(root)
-            if specific_apps:
-                if app_id in specific_apps or any(spec.lower() in app_id.lower() for spec in specific_apps):
-                    app_folders.append(root)
-            else:
-                app_folders.append(root)
+    for cat in os.listdir(apps_base_dir):
+        cat_dir = os.path.join(apps_base_dir, cat)
+        if not os.path.isdir(cat_dir) or cat not in VALID_CATEGORIES:
+            continue
+        for app in os.listdir(cat_dir):
+            app_dir = os.path.join(cat_dir, app)
+            if os.path.isdir(app_dir) and os.path.exists(os.path.join(app_dir, "manifest.json")):
+                if specific_apps:
+                    if app in specific_apps or any(spec.lower() in app.lower() for spec in specific_apps):
+                        app_folders.append(app_dir)
+                else:
+                    app_folders.append(app_dir)
 
     for folder in sorted(app_folders):
         res = validate_app_manifest(folder, check_online=check_online)
         results.append(res)
 
     return results
+
 
 def print_validation_report(results: List[Dict]):
     total = len(results)
