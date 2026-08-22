@@ -14,9 +14,10 @@ Este documento constituye la **guía maestra de instrucciones, arquitectura, met
 - **Regla Obligatoria:** **SIEMPRE** que surja una decisión de diseño, una nueva funcionalidad (feature), una alternativa de arquitectura, una ambigüedad o un cambio de comportamiento importante, el agente **NO debe asumir ni imponer una solución unilateral**.
 - **Acción:** Debe plantear **preguntas abiertas** al usuario, exponiendo opciones, ventajas, desventajas y consideraciones técnicas para que el usuario decida el rumbo deseado.
 
-### 3. Protocolo de Publicación Dual ("Súbelo")
-- Cuando el usuario indique *"súbelo"*, se debe realizar la publicación completa en GitHub Releases y en Microsoft Winget (`microsoft/winget-pkgs`).
-- **Presentación Previa Obligatoria:** SIEMPRE se debe presentar al usuario un resumen detallado de cambios, mejoras y estado de las pruebas antes de enviar el PR oficial a Winget.
+### 3. Protocolo de Publicación y Visto Bueno Obligatorio ("Súbelo")
+- **Regla Estricta:** NUNCA publicar, crear release ni subir una versión estable a GitHub ni a Microsoft Winget sin el **visto bueno explícito y definitivo** del usuario.
+- **Flujo de Trabajo:** Se debe realizar primero commit/push a `main` para que el usuario pueda probar los cambios en su entorno/VM.
+- **Presentación Previa Obligatoria:** Cuando el usuario pida publicar o diga *"súbelo"*, SIEMPRE se debe presentar previamente un resumen detallado de cambios, mejoras y estado de las pruebas, y esperar su confirmación expresa antes de enviar el Release o el PR oficial a Winget.
 
 ---
 
@@ -192,3 +193,7 @@ python -m unittest discover -s tests
 - `hermes_agent` & `antigravity`: Sincronización de soul, reglas (`GEMINI.md`) y agentes.
 - `nilesoft_shell`: Menú contextual optimizado mediante `shell.nss`.
 - `windows_tweaks`: Plan de energía Ultimate/High Performance, Game Mode y HAGS protegidos contra errores de hipervisor.
+
+### 9.4 Flujo de Trabajo y Publicación
+- **Commit para Pruebas:** Los cambios se suben mediante commit/push a `main` para validación en entornos de prueba (VMs).
+- **Visto Bueno Obligatorio para Versión Estable:** Se requiere siempre la confirmación expresa del usuario antes de disparar la publicación formal de una nueva versión o release en GitHub y Winget.
