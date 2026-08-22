@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Google.Chrome",
-    "local_installer": null,
-    "silent_args": "/silent /install",
+    "package_id": "Google.Chrome",
+    "args": "/silent /install",
     "check_command": "chrome",
     "target_drive_supported": true,
     "refresh_env_after": false

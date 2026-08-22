@@ -6,12 +6,6 @@
   "depends_on": [],
   "install": {
     "type": "script",
-    "winget_id": null,
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": null,
-    "check_command": null,
     "target_drive_supported": true,
     "refresh_env_after": true
   },

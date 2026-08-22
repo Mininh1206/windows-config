@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Microsoft.WSL",
-    "local_installer": null,
-    "silent_args": "--web-download --no-launch",
+    "package_id": "Microsoft.WSL",
+    "args": "--web-download --no-launch",
     "check_command": "wsl",
     "target_drive_supported": true,
     "refresh_env_after": true

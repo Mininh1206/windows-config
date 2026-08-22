@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Logitech.GHUB",
-    "local_installer": null,
-    "silent_args": "--silent",
+    "package_id": "Logitech.GHUB",
+    "args": "--silent",
     "check_command": "lghub",
     "target_drive_supported": true,
     "refresh_env_after": false

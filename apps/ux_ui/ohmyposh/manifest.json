@@ -6,9 +6,7 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "JanDeDobbeleer.OhMyPosh",
-    "local_installer": null,
-    "silent_args": null,
+    "package_id": "JanDeDobbeleer.OhMyPosh",
     "check_command": "oh-my-posh",
     "target_drive_supported": false,
     "refresh_env_after": true

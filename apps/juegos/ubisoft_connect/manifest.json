@@ -6,11 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Ubisoft.Connect",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": "/S",
+    "package_id": "Ubisoft.Connect",
+    "args": "/S",
     "check_command": "UbisoftConnect",
     "target_drive_supported": true,
     "refresh_env_after": false

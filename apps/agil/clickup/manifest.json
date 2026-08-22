@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "ClickUp.ClickUp",
-    "local_installer": null,
-    "silent_args": "/S",
+    "package_id": "ClickUp.ClickUp",
+    "args": "/S",
     "check_command": "clickup",
     "target_drive_supported": true,
     "refresh_env_after": false

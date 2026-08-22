@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Docker.DockerDesktop",
-    "local_installer": null,
-    "silent_args": "install --quiet --accept-license --backend=wsl-2",
+    "package_id": "Docker.DockerDesktop",
+    "args": "install --quiet --accept-license --backend=wsl-2",
     "check_command": "docker",
     "target_drive_supported": true,
     "refresh_env_after": true

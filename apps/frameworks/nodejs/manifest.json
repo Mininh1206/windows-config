@@ -6,9 +6,7 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "OpenJS.NodeJS.LTS",
-    "local_installer": null,
-    "silent_args": null,
+    "package_id": "OpenJS.NodeJS.LTS",
     "check_command": "node",
     "target_drive_supported": true,
     "refresh_env_after": true

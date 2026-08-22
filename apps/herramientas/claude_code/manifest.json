@@ -8,11 +8,7 @@
   ],
   "install": {
     "type": "winget",
-    "winget_id": "Anthropic.ClaudeCode",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": null,
+    "package_id": "Anthropic.ClaudeCode",
     "check_command": "claude",
     "target_drive_supported": true,
     "refresh_env_after": true

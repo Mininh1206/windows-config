@@ -6,11 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "ApacheFriends.Xampp.8.2",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": "--mode unattended",
+    "package_id": "ApacheFriends.Xampp.8.2",
+    "args": "--mode unattended",
     "check_command": "xampp-control",
     "target_drive_supported": true,
     "refresh_env_after": false

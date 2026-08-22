@@ -6,11 +6,6 @@
   "depends_on": [],
   "install": {
     "type": "script",
-    "winget_id": null,
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": null,
     "check_command": "WindowsSandbox",
     "target_drive_supported": false,
     "refresh_env_after": true

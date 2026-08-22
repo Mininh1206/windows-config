@@ -6,9 +6,7 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "EclipseAdoptium.Temurin.21.JDK",
-    "local_installer": null,
-    "silent_args": null,
+    "package_id": "EclipseAdoptium.Temurin.21.JDK",
     "check_command": "java",
     "target_drive_supported": true,
     "refresh_env_after": true

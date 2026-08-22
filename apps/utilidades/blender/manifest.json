@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "BlenderFoundation.Blender",
-    "local_installer": null,
-    "silent_args": "/qn",
+    "package_id": "BlenderFoundation.Blender",
+    "args": "/qn",
     "check_command": "blender",
     "target_drive_supported": true,
     "refresh_env_after": false

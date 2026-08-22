@@ -6,11 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "PHP.PHP.8.4",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": "/quiet",
+    "package_id": "PHP.PHP.8.4",
+    "args": "/quiet",
     "check_command": "php",
     "target_drive_supported": true,
     "refresh_env_after": true

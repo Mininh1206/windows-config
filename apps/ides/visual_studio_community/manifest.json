@@ -6,11 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Microsoft.VisualStudio.2022.Community",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": "--add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.VisualStudio.Workload.ManagedGame --add Microsoft.VisualStudio.Workload.NetCrossPlat --includeRecommended --passive --norestart",
+    "package_id": "Microsoft.VisualStudio.2022.Community",
+    "args": "--add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.VisualStudio.Workload.ManagedGame --add Microsoft.VisualStudio.Workload.NetCrossPlat --add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive --norestart",
     "check_command": "devenv",
     "target_drive_supported": true,
     "refresh_env_after": true

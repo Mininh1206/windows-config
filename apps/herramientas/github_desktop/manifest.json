@@ -8,9 +8,8 @@
   ],
   "install": {
     "type": "winget",
-    "winget_id": "GitHub.GitHubDesktop",
-    "local_installer": null,
-    "silent_args": "/s",
+    "package_id": "GitHub.GitHubDesktop",
+    "args": "/s",
     "check_command": "github",
     "target_drive_supported": true,
     "refresh_env_after": false

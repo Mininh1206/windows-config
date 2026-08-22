@@ -8,11 +8,8 @@
   "depends_on": [],
   "install": {
     "type": "exe",
-    "winget_id": null,
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": "RK_Keyboard_Setup.exe",
-    "silent_args": "/S",
+    "package_id": "RK_Keyboard_Setup.exe",
+    "args": "/S",
     "check_command": "RK_Keyboard",
     "target_drive_supported": true,
     "refresh_env_after": false

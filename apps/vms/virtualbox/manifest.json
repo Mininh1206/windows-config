@@ -6,11 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Oracle.VirtualBox",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": "--silent",
+    "package_id": "Oracle.VirtualBox",
+    "args": "--silent",
     "check_command": "VirtualBox",
     "target_drive_supported": true,
     "refresh_env_after": false

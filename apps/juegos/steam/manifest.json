@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Valve.Steam",
-    "local_installer": null,
-    "silent_args": "/S",
+    "package_id": "Valve.Steam",
+    "args": "/S",
     "check_command": "steam",
     "target_drive_supported": true,
     "refresh_env_after": false
@@ -20,7 +19,9 @@
   },
   "config": {
     "has_direct_config": true,
-    "restart_process": ["steam"],
+    "restart_process": [
+      "steam"
+    ],
     "files": [],
     "commands": [],
     "environment_vars": {}

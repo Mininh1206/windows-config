@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Rustlang.Rustup",
-    "local_installer": null,
-    "silent_args": "-y --default-toolchain stable",
+    "package_id": "Rustlang.Rustup",
+    "args": "-y --default-toolchain stable",
     "check_command": "rustc",
     "target_drive_supported": true,
     "refresh_env_after": true

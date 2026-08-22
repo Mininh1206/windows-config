@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "7zip.7zip",
-    "local_installer": null,
-    "silent_args": "/S",
+    "package_id": "7zip.7zip",
+    "args": "/S",
     "check_command": "7z",
     "target_drive_supported": true,
     "refresh_env_after": true

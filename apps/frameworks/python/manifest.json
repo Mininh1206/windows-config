@@ -6,9 +6,7 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Python.Python.3.13",
-    "local_installer": null,
-    "silent_args": null,
+    "package_id": "Python.Python.3.13",
     "check_command": "python",
     "target_drive_supported": true,
     "refresh_env_after": true

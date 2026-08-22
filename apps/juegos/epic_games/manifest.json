@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "EpicGames.EpicGamesLauncher",
-    "local_installer": null,
-    "silent_args": "/quiet",
+    "package_id": "EpicGames.EpicGamesLauncher",
+    "args": "/quiet",
     "check_command": "EpicGamesLauncher",
     "target_drive_supported": true,
     "refresh_env_after": false

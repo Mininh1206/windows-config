@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Playnite.Playnite",
-    "local_installer": null,
-    "silent_args": "/VERYSILENT",
+    "package_id": "Playnite.Playnite",
+    "args": "/VERYSILENT",
     "check_command": "playnite",
     "target_drive_supported": true,
     "refresh_env_after": false

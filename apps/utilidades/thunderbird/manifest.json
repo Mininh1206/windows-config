@@ -6,11 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Mozilla.Thunderbird",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": "/S",
+    "package_id": "Mozilla.Thunderbird",
+    "args": "/S",
     "check_command": "thunderbird",
     "target_drive_supported": true,
     "refresh_env_after": false

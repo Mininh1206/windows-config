@@ -6,11 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "GOG.Galaxy",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": "/VERYSILENT",
+    "package_id": "GOG.Galaxy",
+    "args": "/VERYSILENT",
     "check_command": "GalaxyClient",
     "target_drive_supported": true,
     "refresh_env_after": false

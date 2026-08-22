@@ -8,11 +8,8 @@
   "depends_on": [],
   "install": {
     "type": "exe",
-    "winget_id": null,
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": "AutodeskFusion.exe",
-    "silent_args": "--quiet",
+    "package_id": "AutodeskFusion.exe",
+    "args": "--quiet",
     "check_command": "Fusion360",
     "target_drive_supported": true,
     "refresh_env_after": false

@@ -6,11 +6,7 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Obsidian.Obsidian",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": "",
+    "package_id": "Obsidian.Obsidian",
     "check_command": "obsidian",
     "target_drive_supported": true,
     "refresh_env_after": false

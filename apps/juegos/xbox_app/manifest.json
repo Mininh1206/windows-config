@@ -6,11 +6,7 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "9MV0B5HZVK9Z",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": null,
+    "package_id": "9MV0B5HZVK9Z",
     "check_command": "XboxApp",
     "target_drive_supported": false,
     "refresh_env_after": false

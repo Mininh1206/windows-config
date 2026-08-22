@@ -6,11 +6,7 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "OpenRGB.OpenRGB",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": null,
+    "package_id": "OpenRGB.OpenRGB",
     "check_command": "openrgb",
     "target_drive_supported": true,
     "refresh_env_after": false
@@ -22,7 +18,9 @@
   },
   "config": {
     "has_direct_config": true,
-    "restart_process": ["OpenRGB"],
+    "restart_process": [
+      "OpenRGB"
+    ],
     "files": [
       {
         "source": "Azul.orp",

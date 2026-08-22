@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "voidtools.Everything",
-    "local_installer": null,
-    "silent_args": "/S",
+    "package_id": "voidtools.Everything",
+    "args": "/S",
     "check_command": "Everything",
     "target_drive_supported": true,
     "refresh_env_after": true
@@ -20,7 +19,9 @@
   },
   "config": {
     "has_direct_config": true,
-    "restart_process": ["Everything"],
+    "restart_process": [
+      "Everything"
+    ],
     "files": [],
     "commands": [
       "if (Test-Path '$env:ProgramFiles/Everything/Everything.exe') { Start-Process -FilePath '$env:ProgramFiles/Everything/Everything.exe' -ArgumentList '-install-service' -Verb RunAs -Wait -ErrorAction SilentlyContinue }"

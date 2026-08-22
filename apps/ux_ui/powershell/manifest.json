@@ -9,9 +9,7 @@
   ],
   "install": {
     "type": "winget",
-    "winget_id": "Microsoft.PowerShell",
-    "local_installer": null,
-    "silent_args": null,
+    "package_id": "Microsoft.PowerShell",
     "check_command": "pwsh",
     "target_drive_supported": true,
     "refresh_env_after": true
@@ -35,9 +33,7 @@
         "create_backup": true
       }
     ],
-    "commands": [
-      "pwsh -NoProfile -Command \"if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) { Install-Module -Name Terminal-Icons -Scope CurrentUser -Force -SkipPublisherCheck }\""
-    ],
+    "commands": [],
     "environment_vars": {}
   }
 }

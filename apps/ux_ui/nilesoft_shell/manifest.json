@@ -6,11 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Nilesoft.Shell",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": "/VERYSILENT",
+    "package_id": "Nilesoft.Shell",
+    "args": "/VERYSILENT",
     "check_command": "shell",
     "target_drive_supported": true,
     "refresh_env_after": false

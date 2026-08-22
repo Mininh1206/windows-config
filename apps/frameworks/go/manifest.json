@@ -6,9 +6,7 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "GoLang.Go",
-    "local_installer": null,
-    "silent_args": null,
+    "package_id": "GoLang.Go",
     "check_command": "go",
     "target_drive_supported": true,
     "refresh_env_after": true

@@ -3,14 +3,13 @@
   "name": "Eclipse IDE for Java Developers",
   "category": "ides",
   "priority": 2,
-  "depends_on": ["java"],
+  "depends_on": [
+    "java"
+  ],
   "install": {
     "type": "winget",
-    "winget_id": "EclipseFoundation.Eclipse.Java",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": "-nosplash",
+    "package_id": "EclipseFoundation.Eclipse.Java",
+    "args": "-nosplash",
     "check_command": "eclipse",
     "target_drive_supported": true,
     "refresh_env_after": false

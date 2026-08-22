@@ -6,9 +6,7 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "DBeaver.DBeaver.Community",
-    "local_installer": null,
-    "silent_args": null,
+    "package_id": "DBeaver.DBeaver.Community",
     "check_command": "dbeaver",
     "target_drive_supported": true,
     "refresh_env_after": false

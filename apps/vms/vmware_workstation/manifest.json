@@ -8,11 +8,8 @@
   "depends_on": [],
   "install": {
     "type": "exe",
-    "winget_id": null,
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": "VMware-workstation-full.exe",
-    "silent_args": "/s /v\"/qn EULAS_AGREED=1 AUTODEPLOY=1\"",
+    "package_id": "VMware-workstation-full.exe",
+    "args": "/s /v\"/qn EULAS_AGREED=1 AUTODEPLOY=1\"",
     "check_command": "vmware",
     "target_drive_supported": true,
     "refresh_env_after": false

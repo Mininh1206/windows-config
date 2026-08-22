@@ -6,9 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Discord.Discord",
-    "local_installer": null,
-    "silent_args": "-s",
+    "package_id": "Discord.Discord",
+    "args": "-s",
     "check_command": "discord",
     "target_drive_supported": true,
     "refresh_env_after": false

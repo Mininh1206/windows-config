@@ -7,9 +7,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "Ollama.Ollama",
-    "local_installer": null,
-    "silent_args": "/VERYSILENT",
+    "package_id": "Ollama.Ollama",
+    "args": "/VERYSILENT",
     "check_command": "ollama",
     "target_drive_supported": true,
     "refresh_env_after": true
@@ -21,7 +20,10 @@
   },
   "config": {
     "has_direct_config": true,
-    "restart_process": ["ollama", "ollama_app"],
+    "restart_process": [
+      "ollama",
+      "ollama_app"
+    ],
     "files": [],
     "commands": [],
     "environment_vars": {

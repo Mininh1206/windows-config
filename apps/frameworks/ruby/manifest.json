@@ -6,11 +6,8 @@
   "depends_on": [],
   "install": {
     "type": "winget",
-    "winget_id": "RubyInstallerTeam.RubyWithDevKit.3.3",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": "/verysilent /tasks=\"assocfiles,modpath\"",
+    "package_id": "RubyInstallerTeam.RubyWithDevKit.3.3",
+    "args": "/verysilent /tasks=\"assocfiles,modpath\"",
     "check_command": "ruby",
     "target_drive_supported": true,
     "refresh_env_after": true

@@ -8,9 +8,8 @@
   ],
   "install": {
     "type": "winget",
-    "winget_id": "Microsoft.VisualStudioCode",
-    "local_installer": null,
-    "silent_args": "/verysilent /mergetasks=\"!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath\"",
+    "package_id": "Microsoft.VisualStudioCode",
+    "args": "/verysilent /mergetasks=\"!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath\"",
     "check_command": "code",
     "target_drive_supported": true,
     "refresh_env_after": true
