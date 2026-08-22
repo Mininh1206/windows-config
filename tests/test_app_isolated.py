@@ -89,8 +89,13 @@ class TestIsolatedAppDeploy(unittest.TestCase):
                                 self.assertNotIn("$HOME", dest_resolved)
                                 self.assertNotIn("$env:", dest_resolved)
 
-                            # 3. Probar despliegue real en sandbox con subprocess mockeado
-                            with patch("src.core.configurer.subprocess.run") as mock_subproc:
+                            # 3. Probar despliegue real en sandbox con subprocesos y lanzadores totalmente mockeados
+                            with patch("src.core.configurer.subprocess.run") as mock_subproc, \
+                                 patch("src.core.configurer.is_process_running", return_value=False), \
+                                 patch("src.core.configurer.stop_processes", return_value=[]), \
+                                 patch("src.core.configurer.restart_processes") as mock_restart, \
+                                 patch("src.core.configurer.launch_detached_process") as mock_launch, \
+                                 patch("os.startfile", create=True) as mock_startfile:
                                 mock_subproc.return_value = MagicMock(returncode=0, stdout="", stderr="")
                                 success_live = apply_direct_configuration(folder, sandbox_paths, dry_run=False)
                                 self.assertTrue(success_live, f"Fallo despliegue real en sandbox para {app_id}")

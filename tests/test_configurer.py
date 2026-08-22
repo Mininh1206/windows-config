@@ -148,9 +148,10 @@ class TestConfigurer(unittest.TestCase):
             self.assertTrue(any(ps1_file in arg for arg in call_cmd))
             self.assertEqual(mock_subproc.call_args[1]["cwd"], app_dir)
 
+    @patch("src.core.configurer.launch_detached_process")
     @patch("src.core.configurer.is_process_running")
     @patch("src.core.configurer.subprocess.run")
-    def test_process_lifecycle_stop_and_restart(self, mock_subproc, mock_is_running):
+    def test_process_lifecycle_stop_and_restart(self, mock_subproc, mock_is_running, mock_launch):
         """Verifica la parada y reinicio de procesos declarados en manifest."""
         mock_is_running.side_effect = lambda name: name.lower() in ["powertoys", "everything"]
         mock_subproc.return_value = MagicMock(returncode=0, stdout="", stderr="")
@@ -161,7 +162,7 @@ class TestConfigurer(unittest.TestCase):
 
         # Probar restart_processes
         restart_processes(["PowerToys", "Everything"], active_processes=["PowerToys"])
-        self.assertTrue(mock_subproc.called)
+        self.assertTrue(mock_launch.called or mock_subproc.called)
 
     def test_apply_direct_configuration_nonexistent_manifest(self):
         """Verifica que carpetas sin manifest.json retornen False limpiamente."""

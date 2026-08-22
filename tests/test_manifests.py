@@ -15,21 +15,16 @@ VALID_CATEGORIES = [
     "ux_ui", "ides", "frameworks", "herramientas",
     "vms", "agil", "navegadores", "utilidades", "juegos"
 ]
-VALID_INSTALL_TYPES = ["winget", "exe", "msi", "zip", "portable", "script", "choco", "scoop"]
+VALID_INSTALL_TYPES = ["winget", "exe", "msi", "zip", "portable", "script", "choco", "scoop", "cargo", "ptr", "none"]
 
 class TestManifestIntegrity(unittest.TestCase):
     def get_all_manifest_paths(self):
         paths = []
-        for cat in os.listdir(APPS_DIR):
-            cat_dir = os.path.join(APPS_DIR, cat)
-            if not os.path.isdir(cat_dir) or cat not in VALID_CATEGORIES:
-                continue
-            for app in os.listdir(cat_dir):
-                app_dir = os.path.join(cat_dir, app)
-                m_path = os.path.join(app_dir, "manifest.json")
-                if os.path.isdir(app_dir) and os.path.exists(m_path):
-                    paths.append(m_path)
+        for root, _, files in os.walk(APPS_DIR):
+            if "manifest.json" in files:
+                paths.append(os.path.join(root, "manifest.json"))
         return paths
+
 
 
     def test_manifests_exist(self):
@@ -70,8 +65,9 @@ class TestManifestIntegrity(unittest.TestCase):
                 # Check disabled / disabled_reason if present
                 if "disabled" in data:
                     self.assertIsInstance(data["disabled"], bool)
-                if "disabled_reason" in data:
+                if "disabled_reason" in data and data["disabled_reason"] is not None:
                     self.assertIsInstance(data["disabled_reason"], str)
+
 
                 # Check depends_on if present
                 if "depends_on" in data:

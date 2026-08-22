@@ -158,11 +158,11 @@ class TestInstaller(unittest.TestCase):
             stderr=""
         )
         manifest = {
-            "id": "test_reboot_app",
-            "name": "Test Reboot App",
+            "id": "test_pkg",
+            "name": "Test Package",
             "install": {
                 "type": "winget",
-                "winget_id": "Test.Reboot.App",
+                "package_id": "Test.Package.Id",
                 "refresh_env_after": False
             }
         }
@@ -172,9 +172,100 @@ class TestInstaller(unittest.TestCase):
 
     @patch("src.core.installer.subprocess.run")
     @patch("src.core.installer.is_app_installed_advanced", return_value=False)
-    def test_install_app_winget_failure_without_fallback(self, mock_is_installed, mock_subproc):
-        """Verifica el manejo de error cuando Winget falla y no hay instalador local."""
-        mock_subproc.return_value = MagicMock(returncode=1, stdout="", stderr="Installation error")
+    def test_install_app_cargo_success(self, mock_is_installed, mock_subproc):
+        """Verifica la ejecución de instalación vía cargo-binstall."""
+        mock_subproc.return_value = MagicMock(returncode=0, stdout="Installed", stderr="")
+        manifest = {
+            "id": "ripgrep",
+            "name": "ripgrep",
+            "install": {
+                "type": "cargo",
+                "package_id": "ripgrep",
+                "args": "--version 14.1.0",
+                "refresh_env_after": False
+            }
+        }
+        success, already_installed = install_app(manifest, installers_dir="dummy", dry_run=False)
+        self.assertTrue(success)
+        self.assertFalse(already_installed)
+        mock_subproc.assert_called_once()
+        cmd_called = mock_subproc.call_args[0][0]
+        self.assertIn("cargo-binstall", cmd_called[0])
+        self.assertIn("ripgrep", cmd_called)
+        self.assertIn("--version", cmd_called)
+
+    @patch("src.core.installer.subprocess.run")
+    @patch("src.core.installer.is_app_installed_advanced", return_value=False)
+    def test_install_app_ptr_success(self, mock_is_installed, mock_subproc):
+        """Verifica la ejecución de instalación de plugins vía ptr."""
+        mock_subproc.return_value = MagicMock(returncode=0, stdout="Plugin installed", stderr="")
+        manifest = {
+            "id": "powertoys_process_killer",
+            "name": "Process Killer Plugin",
+            "install": {
+                "type": "ptr",
+                "package_id": "ProcessKiller",
+                "args": "8LWXpg/PowerToysRun-ProcessKiller --force",
+                "refresh_env_after": False
+            }
+        }
+        success, already_installed = install_app(manifest, installers_dir="dummy", dry_run=False)
+        self.assertTrue(success)
+        self.assertFalse(already_installed)
+        mock_subproc.assert_called_once()
+        cmd_called = mock_subproc.call_args[0][0]
+        self.assertIn("ptr", cmd_called[0])
+        self.assertIn("add", cmd_called)
+        self.assertIn("ProcessKiller", cmd_called)
+        self.assertIn("8LWXpg/PowerToysRun-ProcessKiller", cmd_called)
+
+    @patch("src.core.installer.subprocess.run")
+    @patch("src.core.installer.is_app_installed_advanced", return_value=False)
+    def test_install_app_choco_universal_schema(self, mock_is_installed, mock_subproc):
+        """Verifica la instalación de paquetes con Chocolatey usando package_id."""
+        mock_subproc.return_value = MagicMock(returncode=0, stdout="Chocolatey installed 1/1 packages.", stderr="")
+        manifest = {
+            "id": "everythingpowertoys",
+            "name": "Everything PowerToys",
+            "install": {
+                "type": "choco",
+                "package_id": "everythingpowertoys",
+                "refresh_env_after": False
+            }
+        }
+        success, already_installed = install_app(manifest, installers_dir="dummy", dry_run=False)
+        self.assertTrue(success)
+        self.assertFalse(already_installed)
+        cmd_called = mock_subproc.call_args[0][0]
+        self.assertIn("choco", cmd_called[0])
+        self.assertIn("everythingpowertoys", cmd_called)
+
+    @patch("src.core.installer.subprocess.run")
+    @patch("src.core.installer.is_app_installed_advanced", return_value=False)
+    def test_install_app_scoop_universal_schema(self, mock_is_installed, mock_subproc):
+        """Verifica la instalación de paquetes con Scoop usando package_id."""
+        mock_subproc.return_value = MagicMock(returncode=0, stdout="'curl' was installed successfully!", stderr="")
+        manifest = {
+            "id": "curl",
+            "name": "cURL",
+            "install": {
+                "type": "scoop",
+                "package_id": "curl",
+                "refresh_env_after": False
+            }
+        }
+        success, already_installed = install_app(manifest, installers_dir="dummy", dry_run=False)
+        self.assertTrue(success)
+        self.assertFalse(already_installed)
+        cmd_called = mock_subproc.call_args[0][0]
+        self.assertIn("scoop", cmd_called[0])
+        self.assertIn("curl", cmd_called)
+
+    @patch("src.core.installer.subprocess.run")
+    @patch("src.core.installer.is_app_installed_advanced", return_value=False)
+    def test_install_app_winget_failure_fallback(self, mock_is_installed, mock_subproc):
+        """Verifica el manejo de error de Winget cuando no hay instalador local."""
+        mock_subproc.return_value = MagicMock(returncode=1, stdout="Failed", stderr="Installation error")
         manifest = {
             "id": "test_winget_fail",
             "name": "Test Winget Fail App",

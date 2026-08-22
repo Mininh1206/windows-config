@@ -35,7 +35,7 @@ class TestAppBuilder(unittest.TestCase):
             self.assertEqual(data["category"], "navegadores")
             self.assertEqual(data["priority"], 3)
             self.assertEqual(data["install"]["type"], "winget")
-            self.assertEqual(data["install"]["winget_id"], "Brave.Brave")
+            self.assertEqual(data["install"]["package_id"], "Brave.Brave")
 
             # Check that files were created
             created_file = os.path.join(out_dir, "files", "bookmarks.html")
@@ -50,8 +50,8 @@ class TestAppBuilder(unittest.TestCase):
                 name="Local Tool",
                 category="utilidades",
                 install_type="exe",
-                local_installer="tool_setup.exe",
-                silent_args="/S",
+                package_id="tool_setup.exe",
+                args="/S",
                 priority=3,
                 depends_on=["powershell"],
                 has_direct_config=False,
@@ -65,8 +65,9 @@ class TestAppBuilder(unittest.TestCase):
 
             self.assertEqual(data["id"], "local_tool")
             self.assertEqual(data["install"]["type"], "exe")
-            self.assertEqual(data["install"]["local_installer"], "tool_setup.exe")
+            self.assertEqual(data["install"]["package_id"], "tool_setup.exe")
             self.assertEqual(data["depends_on"], ["powershell"])
+
 
 if __name__ == "__main__":
     unittest.main()
