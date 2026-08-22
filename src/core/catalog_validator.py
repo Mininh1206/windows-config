@@ -46,12 +46,14 @@ def check_winget_id_online(winget_id: str, timeout_sec: int = 6) -> bool:
     except Exception:
         return False
 
-def validate_app_manifest(app_folder: str, check_online: bool = False) -> Dict:
+def validate_app_manifest(app_folder: str, check_online: bool = False, is_extra: bool = False, parent_app_id: Optional[str] = None) -> Dict:
     manifest_path = os.path.join(app_folder, "manifest.json")
     result = {
         "folder": app_folder,
         "app_id": os.path.basename(app_folder),
         "name": os.path.basename(app_folder),
+        "is_extra": is_extra,
+        "parent_app_id": parent_app_id,
         "valid": True,
         "errors": [],
         "warnings": [],
@@ -95,17 +97,31 @@ def validate_app_manifest(app_folder: str, check_online: bool = False) -> Dict:
         result["valid"] = False
         result["errors"].append(f"Prioridad inválida '{priority}'. Debe ser entero de 0 a 4")
 
+    # 1.5 Regla Estricta de Extras: Un extra NO puede tener carpeta extras anidada
+    extras_dir = os.path.join(app_folder, "extras")
+    if is_extra and os.path.exists(extras_dir):
+        result["valid"] = False
+        result["errors"].append("Estructura inválida: un extra no puede contener una carpeta 'extras/' anidada (máximo 1 nivel)")
+
     # 2. Validación de tipo de instalación y fuentes
+    package_id = (
+        install_meta.get("package_id")
+        or install_meta.get("winget_id")
+        or install_meta.get("choco_id")
+        or install_meta.get("scoop_id")
+        or install_meta.get("local_installer")
+    )
+    url_inst = install_meta.get("url")
+
     if install_type == "winget":
-        winget_id = install_meta.get("winget_id")
-        if not winget_id:
+        if not package_id:
             result["valid"] = False
-            result["errors"].append("Tipo 'winget' requiere 'install.winget_id'")
+            result["errors"].append("Tipo 'winget' requiere 'install.package_id' (o 'winget_id')")
         elif check_online:
-            is_valid_online = check_winget_id_online(winget_id)
+            is_valid_online = check_winget_id_online(package_id)
             if not is_valid_online:
                 result["valid"] = False
-                result["errors"].append(f"Winget ID '{winget_id}' no encontrado en repositorios online")
+                result["errors"].append(f"Winget ID '{package_id}' no encontrado en repositorios online")
                 # Búsqueda automática de sugerencias
                 candidates = search_winget(app_name)
                 if candidates:
@@ -113,30 +129,38 @@ def validate_app_manifest(app_folder: str, check_online: bool = False) -> Dict:
                     result["suggestions"].append(f"IDs válidos sugeridos por Winget: {', '.join(sugg_ids)}")
 
     elif install_type in ["exe", "msi", "zip", "portable"]:
-        local_inst = install_meta.get("local_installer")
-        if not local_inst:
+        if not package_id and not url_inst:
             result["valid"] = False
-            result["errors"].append(f"Tipo '{install_type}' requiere 'install.local_installer'")
-        else:
-            inst_path = os.path.join(INSTALLERS_DIR, local_inst)
+            result["errors"].append(f"Tipo '{install_type}' requiere 'install.package_id' o 'install.url'")
+        elif package_id and not url_inst:
+            inst_path = os.path.join(INSTALLERS_DIR, package_id)
             if not os.path.exists(inst_path):
-                result["warnings"].append(f"Archivo instalador '{local_inst}' no presente aún en /instaladores")
+                result["warnings"].append(f"Archivo instalador '{package_id}' no presente aún en /instaladores")
 
     elif install_type == "choco":
-        choco_id = install_meta.get("choco_id")
-        if not choco_id:
+        if not package_id:
             result["valid"] = False
-            result["errors"].append("Tipo 'choco' requiere 'install.choco_id'")
+            result["errors"].append("Tipo 'choco' requiere 'install.package_id' (o 'choco_id')")
 
     elif install_type == "scoop":
-        scoop_id = install_meta.get("scoop_id")
-        if not scoop_id:
+        if not package_id:
             result["valid"] = False
-            result["errors"].append("Tipo 'scoop' requiere 'install.scoop_id'")
+            result["errors"].append("Tipo 'scoop' requiere 'install.package_id' (o 'scoop_id')")
+
+    elif install_type == "cargo":
+        if not package_id:
+            result["valid"] = False
+            result["errors"].append("Tipo 'cargo' requiere 'install.package_id'")
+
+    elif install_type == "ptr":
+        if not package_id:
+            result["valid"] = False
+            result["errors"].append("Tipo 'ptr' requiere 'install.package_id'")
 
     elif install_type in ["script", "none", "manual"]:
         # Los tipos script/none se gestionan mediante hooks configure.ps1 o configure.py
         pass
+
 
     # 2.5 Validación de comandos post-instalación
     commands = manifest.get("config", {}).get("commands", [])
@@ -178,13 +202,24 @@ def validate_catalog(apps_base_dir: str = APPS_DIR, specific_apps: Optional[List
             if os.path.isdir(app_dir) and os.path.exists(os.path.join(app_dir, "manifest.json")):
                 if specific_apps:
                     if app in specific_apps or any(spec.lower() in app.lower() for spec in specific_apps):
-                        app_folders.append(app_dir)
+                        app_folders.append((app_dir, False, None))
                 else:
-                    app_folders.append(app_dir)
+                    app_folders.append((app_dir, False, None))
 
-    for folder in sorted(app_folders):
-        res = validate_app_manifest(folder, check_online=check_online)
+    for folder_tuple in sorted(app_folders, key=lambda x: x[0]):
+        folder, is_extra, parent_id = folder_tuple
+        res = validate_app_manifest(folder, check_online=check_online, is_extra=is_extra, parent_app_id=parent_id)
         results.append(res)
+
+        # Si la app contiene extras, validar cada uno
+        extras_dir = os.path.join(folder, "extras")
+        if os.path.exists(extras_dir) and os.path.isdir(extras_dir):
+            for extra_item in sorted(os.listdir(extras_dir)):
+                extra_path = os.path.join(extras_dir, extra_item)
+                if os.path.isdir(extra_path) and os.path.exists(os.path.join(extra_path, "manifest.json")):
+                    parent_app_id = res.get("app_id", os.path.basename(folder))
+                    res_extra = validate_app_manifest(extra_path, check_online=check_online, is_extra=True, parent_app_id=parent_app_id)
+                    results.append(res_extra)
 
     return results
 
@@ -205,7 +240,10 @@ def print_validation_report(results: List[Dict]):
     print(f"{C_BOLD}{C_BLUE}╠═{'═'*32}═╬═{'═'*16}═╬═{'═'*32}═╣{C_RESET}")
 
     for r in results:
-        app_label = f"{r['name']} ({r['app_id']})"[:32]
+        if r.get("is_extra"):
+            app_label = f"  └─ {r['name']} ({r['app_id']})"[:32]
+        else:
+            app_label = f"{r['name']} ({r['app_id']})"[:32]
         if not r["valid"] or r["errors"]:
             status_badge = f"{C_RED}{C_BOLD}[  ERROR  ]{C_RESET}"
             detail = "; ".join(r["errors"])

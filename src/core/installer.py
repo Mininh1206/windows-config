@@ -3,7 +3,7 @@ import shutil
 import subprocess
 import winreg
 import zipfile
-from typing import Callable, Optional
+from typing import Callable, Optional, Tuple, List
 from src.core.logger import get_logger
 
 logger = get_logger()
@@ -51,87 +51,66 @@ def check_registry_uninstall(app_name: str, winget_id: str = None) -> bool:
 
     return False
 
-def check_standard_paths(app_id: str, check_command: str) -> bool:
+def resolve_env_path(path_str: str) -> str:
+    """Expande variables de entorno $env:VAR, ${env:VAR} y %VAR% en una ruta."""
+    if not path_str:
+        return ""
+    import re
+    res = re.sub(r'\$env:(\w+)', lambda m: os.environ.get(m.group(1), ''), path_str, flags=re.IGNORECASE)
+    res = re.sub(r'\$\{env:(\w+)\}', lambda m: os.environ.get(m.group(1), ''), res, flags=re.IGNORECASE)
+    return os.path.expandvars(res)
+
+def check_standard_paths(check_command: str = None, check_paths: list = None, app_id: str = None) -> bool:
+    """
+    Comprueba si una aplicación está presente en el sistema mediante:
+    1. Ejecutable en PATH (shutil.which)
+    2. Rutas explícitas declaradas en el manifiesto (check_paths)
+    3. Búsqueda genérica desacoplada en directorios estándar de programas.
+    """
     # 1. Comprobación rápida por ejecutable en PATH
     if check_command and shutil.which(check_command):
         return True
 
-    if not app_id:
-        return False
+    # 2. Comprobación por rutas explícitas del manifiesto
+    if check_paths:
+        for p in check_paths:
+            resolved = resolve_env_path(p)
+            if resolved and os.path.exists(resolved):
+                return True
 
-    user_profile = os.environ.get("USERPROFILE", os.path.expanduser("~"))
-    local_app_data = os.environ.get("LOCALAPPDATA", os.path.join(user_profile, "AppData", "Local"))
-    program_files = os.environ.get("ProgramFiles", r"C:\Program Files")
-    program_files_x86 = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
+    # 3. Búsqueda genérica desacoplada en carpetas estándar de Windows
+    candidate_names = []
+    if check_command:
+        cmd_clean = check_command.strip()
+        candidate_names.append(cmd_clean if cmd_clean.lower().endswith(".exe") else f"{cmd_clean}.exe")
 
-    # 2. Mapeo explícito y exclusivo por ID de aplicación
-    app_specific_paths = {
-        "powertoys": [
-            os.path.join(local_app_data, "Microsoft", "PowerToys", "PowerToys.exe"),
-            os.path.join(program_files, "PowerToys", "PowerToys.exe")
-        ],
-        "vscode": [
-            os.path.join(local_app_data, "Programs", "Microsoft VS Code", "Code.exe"),
-            os.path.join(program_files, "Microsoft VS Code", "Code.exe")
-        ],
-        "git": [
-            os.path.join(program_files, "Git", "cmd", "git.exe"),
-            os.path.join(program_files, "Git", "bin", "git.exe")
-        ],
-        "7zip": [
-            os.path.join(program_files, "7-Zip", "7z.exe"),
-            os.path.join(program_files_x86, "7-Zip", "7z.exe")
-        ],
-        "windhawk": [
-            os.path.join(program_files, "Windhawk", "windhawk.exe")
-        ],
-        "everything": [
-            os.path.join(program_files, "Everything", "Everything.exe"),
-            os.path.join(program_files_x86, "Everything", "Everything.exe")
-        ],
-        "brave": [
-            os.path.join(program_files, "BraveSoftware", "Brave-Browser", "Application", "brave.exe"),
-            os.path.join(local_app_data, "BraveSoftware", "Brave-Browser", "Application", "brave.exe")
-        ],
-        "chrome": [
-            os.path.join(program_files, "Google", "Chrome", "Application", "chrome.exe"),
-            os.path.join(program_files_x86, "Google", "Chrome", "Application", "chrome.exe"),
-            os.path.join(local_app_data, "Google", "Chrome", "Application", "chrome.exe")
-        ],
-        "discord": [
-            os.path.join(local_app_data, "Discord", "Update.exe")
-        ],
-        "steam": [
-            os.path.join(program_files_x86, "Steam", "steam.exe"),
-            os.path.join(program_files, "Steam", "steam.exe")
-        ],
-        "obsidian": [
-            os.path.join(local_app_data, "Obsidian", "Obsidian.exe"),
-            os.path.join(program_files, "Obsidian", "Obsidian.exe")
-        ],
-        "notepadplusplus": [
-            os.path.join(program_files, "Notepad++", "notepad++.exe"),
-            os.path.join(program_files_x86, "Notepad++", "notepad++.exe")
+    if candidate_names:
+        user_profile = os.environ.get("USERPROFILE", os.path.expanduser("~"))
+        local_app_data = os.environ.get("LOCALAPPDATA", os.path.join(user_profile, "AppData", "Local"))
+        program_files = os.environ.get("ProgramFiles", r"C:\Program Files")
+        program_files_x86 = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
+
+        standard_roots = [
+            program_files,
+            program_files_x86,
+            os.path.join(local_app_data, "Programs"),
+            local_app_data
         ]
-    }
 
-    # Búsqueda dinámica para aplicaciones con versiones en la ruta de instalación (ej. UltiMaker Cura 5.x)
-    if app_id.lower() == "ultimaker_cura":
-        try:
-            for d in [program_files, program_files_x86]:
-                if os.path.exists(d):
-                    for item in os.listdir(d):
-                        if item.lower().startswith("ultimaker cura"):
-                            candidate = os.path.join(d, item, "UltiMaker-Cura.exe")
-                            if os.path.exists(candidate):
-                                return True
-        except Exception:
-            pass
-
-    candidate_paths = app_specific_paths.get(app_id.lower(), [])
-    for p in candidate_paths:
-        if os.path.exists(p):
-            return True
+        for root in standard_roots:
+            if not os.path.exists(root):
+                continue
+            for name in candidate_names:
+                direct_file = os.path.join(root, name)
+                if os.path.exists(direct_file):
+                    return True
+                try:
+                    for entry in os.listdir(root):
+                        sub_dir = os.path.join(root, entry)
+                        if os.path.isdir(sub_dir) and os.path.exists(os.path.join(sub_dir, name)):
+                            return True
+                except (OSError, PermissionError):
+                    continue
 
     return False
 
@@ -153,28 +132,36 @@ def is_app_installed_advanced(manifest: dict) -> bool:
     app_id = manifest.get("id", "")
     app_name = manifest.get("name", "")
     install_meta = manifest.get("install", {})
-    winget_id = install_meta.get("winget_id") or manifest.get("winget_id")
-    check_command = install_meta.get("check_command") or manifest.get("check_command")
+    install_type = install_meta.get("type", "winget").lower()
 
     # Si es tipo script o none, la app no se considera instalada previamente de forma estática
-    install_type = install_meta.get("type", "winget")
     if install_type in ["script", "none", "manual"]:
         return False
 
-    if check_standard_paths(app_id, check_command):
+    package_id = (
+        install_meta.get("package_id")
+        or install_meta.get("winget_id")
+        or install_meta.get("choco_id")
+        or install_meta.get("scoop_id")
+        or install_meta.get("local_installer")
+        or manifest.get("winget_id")
+    )
+    check_command = install_meta.get("check_command") or manifest.get("check_command")
+
+    check_paths = list(install_meta.get("check_paths", []))
+    if install_meta.get("check_path"):
+        check_paths.append(install_meta.get("check_path"))
+
+    if check_standard_paths(check_command=check_command, check_paths=check_paths, app_id=app_id):
         return True
-    if check_registry_uninstall(app_name, winget_id):
+    if check_registry_uninstall(app_name, package_id):
         return True
-    if winget_id and check_winget_list(winget_id):
+    if install_type == "winget" and package_id and check_winget_list(package_id):
         return True
 
     return False
 
 def refresh_environment():
-    """
-    Refresca las variables de entorno del sistema y de usuario directamente desde el Registro de Windows
-    expandiendo correctamente variables como %SystemRoot% y %USERPROFILE% para evitar romper PATH y ComSpec.
-    """
     try:
         system_path = ""
         try:
@@ -208,56 +195,72 @@ def refresh_environment():
 
         # Asegurar que ComSpec sea valido y apunte a cmd.exe real
         if "COMSPEC" not in os.environ or "%" in os.environ["COMSPEC"] or not os.path.exists(os.environ["COMSPEC"]):
-            sys_root = os.environ.get("SystemRoot", r"C:\Windows")
-            candidate_cmd = os.path.join(sys_root, "system32", "cmd.exe")
-            if os.path.exists(candidate_cmd):
-                os.environ["ComSpec"] = candidate_cmd
+            system_root = os.environ.get("SystemRoot", os.environ.get("windir", r"C:\Windows"))
+            real_cmd = os.path.join(system_root, "System32", "cmd.exe")
+            if os.path.exists(real_cmd):
+                os.environ["COMSPEC"] = real_cmd
 
-        # Combinar y limpiar PATH expandiendo todas las variables
-        current_path = os.environ.get("PATH", "")
-        raw_combined = ";".join(filter(None, [system_path, user_path, current_path]))
+        # Reconstruir PATH combinando Sistema + Usuario + Rust/Cargo/Go/Apps
+        combined_parts = []
         seen = set()
-        cleaned_paths = []
-        for p in raw_combined.split(";"):
-            p_strip = p.strip()
-            if not p_strip:
+        user_profile = os.environ.get("USERPROFILE", "")
+
+        for raw in [system_path, user_path]:
+            if not raw:
                 continue
-            p_expanded = os.path.expandvars(p_strip)
-            if p_expanded and p_expanded.lower() not in seen:
-                seen.add(p_expanded.lower())
-                cleaned_paths.append(p_expanded)
+            for seg in raw.split(";"):
+                seg = seg.strip()
+                if not seg:
+                    continue
+                expanded_seg = os.path.expandvars(seg)
+                if expanded_seg.lower() not in seen:
+                    seen.add(expanded_seg.lower())
+                    combined_parts.append(expanded_seg)
 
-        # Garantizar que las rutas esenciales de Windows estén siempre presentes en PATH
-        sys_root = os.environ.get("SystemRoot", r"C:\Windows")
-        essential_paths = [
-            os.path.join(sys_root, "system32"),
-            sys_root,
-            os.path.join(sys_root, "System32", "Wbem"),
-            os.path.join(sys_root, "System32", "WindowsPowerShell", "v1.0")
+        # Inyectar rutas comunes de runtimes si existen físicamente en disco
+        extra_runtime_paths = [
+            os.path.join(user_profile, ".cargo", "bin"),
+            os.path.join(user_profile, "go", "bin"),
+            os.path.join(os.environ.get("ProgramFiles", r"C:\Program Files"), "Git", "cmd"),
+            os.path.join(os.environ.get("ProgramFiles", r"C:\Program Files"), "PowerShell", "7"),
+            os.path.join(os.environ.get("LOCALAPPDATA", ""), "Programs", "oh-my-posh", "bin"),
         ]
-        for ep in essential_paths:
-            if ep.lower() not in seen and os.path.exists(ep):
+        for ep in extra_runtime_paths:
+            if os.path.exists(ep) and ep.lower() not in seen:
                 seen.add(ep.lower())
-                cleaned_paths.append(ep)
+                combined_parts.append(ep)
 
-        os.environ["PATH"] = ";".join(cleaned_paths)
-        logger.log("Variables de entorno y PATH refrescados en caliente desde el Registro.", "DEBUG")
+        if combined_parts:
+            os.environ["PATH"] = ";".join(combined_parts)
+
     except Exception as e:
         logger.log(f"Aviso al refrescar variables de entorno: {e}", "DEBUG")
 
 def install_app(
     manifest: dict,
-    installers_dir: str,
+    installers_dir: str = "",
     target_drive: str = "C:",
     dry_run: bool = False,
     progress_callback: Optional[Callable[[str], None]] = None
-) -> tuple[bool, bool]:
-    app_name = manifest.get("name", "Unknown")
+) -> Tuple[bool, bool]:
+    """
+    Instala una aplicación utilizando su tipo de instalador (winget, choco, scoop, cargo, ptr, exe, msi, zip, script).
+    Retorna (éxito, ya_instalada).
+    """
+    app_id = manifest.get("id", "")
+    app_name = manifest.get("name", app_id)
     install_meta = manifest.get("install", {})
-    install_type = install_meta.get("type", "winget")
-    winget_id = install_meta.get("winget_id") or manifest.get("winget_id")
-    local_installer = install_meta.get("local_installer") or manifest.get("local_installer")
-    silent_args = install_meta.get("silent_args", "")
+    install_type = install_meta.get("type", "winget").lower()
+
+    package_id = (
+        install_meta.get("package_id")
+        or install_meta.get("winget_id")
+        or install_meta.get("choco_id")
+        or install_meta.get("scoop_id")
+        or install_meta.get("local_installer")
+        or manifest.get("winget_id")
+    )
+    args = install_meta.get("args") or install_meta.get("silent_args") or ""
     should_refresh_env = install_meta.get("refresh_env_after", True)
 
     def _notify(msg: str):
@@ -278,20 +281,19 @@ def install_app(
             return True, True
 
         if dry_run:
-            logger.log(f"[SIMULACIÓN] Se instalaria '{app_name}' (Tipo: {install_type}, ID: {winget_id}, Local: {local_installer}).", "INFO")
+            logger.log(f"[SIMULACIÓN] Se instalaria '{app_name}' (Tipo: {install_type}, ID: {package_id}).", "INFO")
             _notify("Simulación de instalación...")
             return True, False
 
         # 1. Type: Winget (Silenced Output)
-        if install_type == "winget" and winget_id:
-            logger.log(f"Ejecutando instalacion de '{app_name}' via Winget (ID: {winget_id})...", "INFO")
+        if install_type == "winget" and package_id:
+            logger.log(f"Ejecutando instalacion de '{app_name}' via Winget (ID: {package_id})...", "INFO")
             _notify("Instalando vía Winget...")
 
-            cmd = ["winget", "install", "--id", winget_id, "--silent", "--accept-package-agreements", "--accept-source-agreements"]
-            # Si hay silent_args / override_args específicos y no genéricos (ej. workloads de Visual Studio o mergetasks de VSCode), pasarlos como --override
+            cmd = ["winget", "install", "--id", package_id, "--silent", "--accept-package-agreements", "--accept-source-agreements"]
             generic_silent_switches = {"/s", "/verysilent", "/quiet", "/silent", "--silent", "--quiet", "/qn", "/qb", "-s"}
-            if silent_args and silent_args.strip():
-                clean_s = silent_args.strip()
+            if args and args.strip():
+                clean_s = args.strip()
                 if clean_s.lower() not in generic_silent_switches:
                     cmd.extend(["--override", clean_s])
 
@@ -315,14 +317,15 @@ def install_app(
                 _notify("Ya instalada y actualizada.")
                 return True, True
             else:
-                logger.log(f"Winget devolvio el codigo de error {res.returncode}. Evaluando fallback local...", "WARNING")
+                logger.log(f"Winget devolvio el codigo de error {res.returncode}. Evaluando fallback...", "WARNING")
 
         # 2. Type: Chocolatey
-        choco_id = install_meta.get("choco_id") or (winget_id if install_type == "choco" else None)
-        if install_type == "choco" and choco_id:
-            logger.log(f"Ejecutando instalacion de '{app_name}' via Chocolatey (Pkg: {choco_id})...", "INFO")
+        if install_type == "choco" and package_id:
+            logger.log(f"Ejecutando instalacion de '{app_name}' via Chocolatey (Pkg: {package_id})...", "INFO")
             _notify("Instalando vía Chocolatey...")
-            cmd = ["choco", "install", choco_id, "-y", "--no-progress"]
+            cmd = ["choco", "install", package_id, "-y", "--no-progress"]
+            if args and args.strip():
+                cmd.extend(args.strip().split())
             res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
             logger.log_raw(res.stdout)
             logger.log_raw(res.stderr)
@@ -337,11 +340,12 @@ def install_app(
                 logger.log(f"Chocolatey devolvio el codigo de error {res.returncode}.", "WARNING")
 
         # 3. Type: Scoop
-        scoop_id = install_meta.get("scoop_id") or (winget_id if install_type == "scoop" else None)
-        if install_type == "scoop" and scoop_id:
-            logger.log(f"Ejecutando instalacion de '{app_name}' via Scoop (App: {scoop_id})...", "INFO")
+        if install_type == "scoop" and package_id:
+            logger.log(f"Ejecutando instalacion de '{app_name}' via Scoop (App: {package_id})...", "INFO")
             _notify("Instalando vía Scoop...")
-            cmd = ["scoop", "install", scoop_id]
+            cmd = ["scoop", "install", package_id]
+            if args and args.strip():
+                cmd.extend(args.strip().split())
             res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
             logger.log_raw(res.stdout)
             logger.log_raw(res.stderr)
@@ -355,8 +359,49 @@ def install_app(
             else:
                 logger.log(f"Scoop devolvio el codigo de error {res.returncode}.", "WARNING")
 
-        # Fallback / Local Installers (Silenced Output)
-        if local_installer:
+        # 4. Type: Cargo (cargo-binstall)
+        if install_type == "cargo" and package_id:
+            logger.log(f"Ejecutando instalacion de '{app_name}' via Cargo (Pkg: {package_id})...", "INFO")
+            _notify("Instalando vía Cargo Binstall...")
+            cmd = ["cargo-binstall", "--no-confirm", package_id]
+            if args and args.strip():
+                cmd.extend(args.strip().split())
+            res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
+            logger.log_raw(res.stdout)
+            logger.log_raw(res.stderr)
+
+            if res.returncode == 0:
+                logger.log(f"Instalacion de '{app_name}' completada con exito via Cargo.", "SUCCESS")
+                if should_refresh_env:
+                    _notify("Refrescando variables de entorno...")
+                    refresh_environment()
+                return True, False
+            else:
+                logger.log(f"Cargo Binstall devolvio el codigo de error {res.returncode}.", "WARNING")
+
+        # 5. Type: PTR (PowerToys Run Plugin Manager)
+        if install_type == "ptr" and package_id:
+            logger.log(f"Ejecutando instalacion de plugin '{app_name}' via PTR (Plugin: {package_id})...", "INFO")
+            _notify("Instalando plugin vía PTR...")
+            cmd = ["ptr", "add", package_id]
+            if args and args.strip():
+                cmd.extend(args.strip().split())
+            res = subprocess.run(cmd, capture_output=True, text=True, errors="ignore")
+            logger.log_raw(res.stdout)
+            logger.log_raw(res.stderr)
+
+            if res.returncode == 0:
+                logger.log(f"Instalacion de plugin '{app_name}' completada con exito via PTR.", "SUCCESS")
+                if should_refresh_env:
+                    _notify("Refrescando variables de entorno...")
+                    refresh_environment()
+                return True, False
+            else:
+                logger.log(f"PTR devolvio el codigo de error {res.returncode}.", "WARNING")
+
+        # 6. Fallback / Local Installers (EXE / MSI / ZIP)
+        local_installer = package_id if install_type in ["exe", "msi", "zip"] else install_meta.get("local_installer")
+        if local_installer and installers_dir:
             local_path = os.path.join(installers_dir, local_installer)
             if not os.path.exists(local_path):
                 logger.log(f"ERROR: No se encontro el instalador local en '{local_path}'.", "ERROR")
@@ -365,8 +410,8 @@ def install_app(
             if install_type == "exe" or (install_type == "winget" and local_installer.endswith(".exe")):
                 logger.log(f"Ejecutando instalador local '{local_installer}'...", "INFO")
                 _notify(f"Ejecutando {local_installer}...")
-                args = silent_args if silent_args else "/S /silent /quiet"
-                res = subprocess.run(f'"{local_path}" {args}', shell=True, capture_output=True, text=True, errors="ignore")
+                silent_switches = args if args else "/S /silent /quiet"
+                res = subprocess.run(f'"{local_path}" {silent_switches}', shell=True, capture_output=True, text=True, errors="ignore")
                 logger.log_raw(res.stdout)
                 logger.log_raw(res.stderr)
 
@@ -415,7 +460,7 @@ def install_app(
                     logger.log(f"Error al descomprimir archivo zip: {e}", "ERROR")
                     return False, False
 
-        logger.log(f"Fallo la instalacion de '{app_name}'. Ningun instalador o paquete Winget pudo completarse.", "ERROR")
+        logger.log(f"Fallo la instalacion de '{app_name}'. Ningun instalador o paquete pudo completarse.", "ERROR")
         return False, False
     except Exception as ex:
         logger.log(f"Excepcion inesperada al instalar '{app_name}': {ex}", "ERROR")

@@ -81,6 +81,24 @@ def stop_processes(process_names: List[str]) -> List[str]:
 
     return active_procs
 
+def launch_detached_process(executable_path: str, cwd: Optional[str] = None) -> bool:
+    """Lanza un ejecutable de forma desasociada y no bloqueante en Windows."""
+    if not executable_path:
+        return False
+    try:
+        if hasattr(os, "startfile") and os.path.exists(executable_path):
+            os.startfile(executable_path)
+            return True
+        cmd = [
+            "powershell", "-NoProfile", "-NonInteractive", "-Command",
+            f"$p = Start-Process -FilePath '{executable_path}' -WindowStyle Normal -PassThru -ErrorAction SilentlyContinue"
+        ]
+        subprocess.run(cmd, cwd=cwd or os.path.dirname(executable_path), capture_output=True, timeout=3)
+        return True
+    except Exception as e:
+        logger.log(f"Aviso al lanzar proceso desasociado '{executable_path}': {e}", "DEBUG")
+        return False
+
 def restart_processes(
     process_names: List[str],
     launch_executable: Optional[str] = None,
@@ -101,45 +119,77 @@ def restart_processes(
         if os.path.exists(resolved_exe):
             target_exe = resolved_exe
         else:
-            # Comprobar ubicaciones alternativas comunes si la ruta no existió
+            # Comprobar ubicaciones alternativas estándar si la ruta exacta no existió
             exe_basename = os.path.basename(resolved_exe)
             prog_files = os.environ.get("ProgramFiles", r"C:\Program Files")
+            prog_files_x86 = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
             local_app = os.environ.get("LOCALAPPDATA", "")
-            candidates = [
-                os.path.join(prog_files, "PowerToys", exe_basename),
-                os.path.join(local_app, "Microsoft", "PowerToys", exe_basename),
-                os.path.join(local_app, "Programs", exe_basename),
-                shutil.which(exe_basename) or ""
-            ]
-            for cand in candidates:
-                if cand and os.path.exists(cand):
-                    target_exe = cand
-                    break
+
+            # 1. Comprobación rápida por PATH
+            which_cand = shutil.which(exe_basename)
+            if which_cand and os.path.exists(which_cand):
+                target_exe = which_cand
+
+            # 2. Búsqueda genérica desacoplada en raíces estándar
+            if not target_exe:
+                search_roots = [
+                    prog_files,
+                    prog_files_x86,
+                    os.path.join(local_app, "Programs"),
+                    local_app
+                ]
+                for sroot in search_roots:
+                    if not os.path.exists(sroot):
+                        continue
+                    direct_c = os.path.join(sroot, exe_basename)
+                    if os.path.exists(direct_c):
+                        target_exe = direct_c
+                        break
+                    try:
+                        for entry in os.listdir(sroot):
+                            sub = os.path.join(sroot, entry)
+                            if os.path.isdir(sub):
+                                sub_cand = os.path.join(sub, exe_basename)
+                                if os.path.exists(sub_cand):
+                                    target_exe = sub_cand
+                                    break
+                                # 2 niveles de profundidad para carpetas como Microsoft\App
+                                try:
+                                    for sub_entry in os.listdir(sub):
+                                        sub2 = os.path.join(sub, sub_entry)
+                                        if os.path.isdir(sub2):
+                                            sub2_cand = os.path.join(sub2, exe_basename)
+                                            if os.path.exists(sub2_cand):
+                                                target_exe = sub2_cand
+                                                break
+                                except (OSError, PermissionError):
+                                    pass
+                        if target_exe:
+                            break
+                    except (OSError, PermissionError):
+                        continue
 
         if target_exe:
             logger.log(f"Relanzando aplicacion mediante '{target_exe}'...", "INFO")
-            try:
-                cmd = [
-                    "powershell", "-NoProfile", "-NonInteractive", "-Command",
-                    f"Start-Process -FilePath '{target_exe}' -WindowStyle Normal -ErrorAction SilentlyContinue"
-                ]
-                subprocess.run(cmd, cwd=cwd or os.path.dirname(target_exe), capture_output=True, timeout=5)
-                return
-            except Exception as e:
-                logger.log(f"Aviso al relanzar ejecutable '{target_exe}': {e}", "WARNING")
+            launch_detached_process(target_exe, cwd=cwd or os.path.dirname(target_exe))
+            return
 
     # 2. Relanzar por nombre de proceso si estaba activo
     for proc in to_restart:
         clean_name = proc[:-4] if proc.lower().endswith(".exe") else proc
         logger.log(f"Relanzando proceso '{clean_name}' tras aplicar configuracion...", "INFO")
-        try:
-            cmd = [
-                "powershell", "-NoProfile", "-NonInteractive", "-Command",
-                f"Start-Process -FilePath '{clean_name}' -WindowStyle Normal -ErrorAction SilentlyContinue"
-            ]
-            subprocess.run(cmd, cwd=cwd, capture_output=True, timeout=5)
-        except Exception as e:
-            logger.log(f"Aviso al relanzar proceso '{clean_name}': {e}", "DEBUG")
+        exe_path = shutil.which(f"{clean_name}.exe") or shutil.which(clean_name)
+        if exe_path and os.path.exists(exe_path):
+            launch_detached_process(exe_path, cwd=cwd or os.path.dirname(exe_path))
+        else:
+            try:
+                cmd = [
+                    "powershell", "-NoProfile", "-NonInteractive", "-Command",
+                    f"$p = Start-Process -FilePath '{clean_name}' -WindowStyle Normal -PassThru -ErrorAction SilentlyContinue"
+                ]
+                subprocess.run(cmd, cwd=cwd, capture_output=True, timeout=3)
+            except Exception as e:
+                logger.log(f"Aviso al relanzar proceso '{clean_name}': {e}", "DEBUG")
 
 def apply_direct_configuration(
     app_folder_path: str,

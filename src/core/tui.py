@@ -458,8 +458,8 @@ def tui_confirm(title: str, question: str, default_yes: bool = True) -> bool:
 def run_tui_app_selector(discovered_apps: list) -> list:
     """
     Renderiza el árbol TUI interactivo del Configurador con soporte de viewport dinámico,
-    scroll inteligente según la dimensión de la consola, navegación extendida y soporte
-    para aplicaciones deshabilitadas/bloqueadas.
+    scroll inteligente según la dimensión de la consola, visualización de módulos extras,
+    toggling jerárquico y adaptación responsive al ancho de la terminal.
     """
     categories_map = {}
     for item in discovered_apps:
@@ -469,12 +469,30 @@ def run_tui_app_selector(discovered_apps: list) -> list:
             categories_map[cat] = []
 
         is_disabled = bool(manifest.get("disabled", False) or (manifest.get("enabled") is False))
+
+        # Extras de la aplicación
+        extras_state = []
+        for extra_item in item.get("extras", []):
+            e_manifest = extra_item["manifest"]
+            e_disabled = bool(e_manifest.get("disabled", False) or (e_manifest.get("enabled") is False))
+            extras_state.append({
+                "manifest": e_manifest,
+                "folder_path": extra_item["folder_path"],
+                "parent_app_id": manifest.get("id"),
+                "is_extra": True,
+                "selected": False if (is_disabled or e_disabled) else True,
+                "disabled": e_disabled,
+                "disabled_reason": e_manifest.get("disabled_reason", "Requiere instalador manual")
+            })
+
         categories_map[cat].append({
             "manifest": manifest,
             "folder_path": item["folder_path"],
             "selected": False if is_disabled else True,
             "disabled": is_disabled,
-            "disabled_reason": manifest.get("disabled_reason", "Requiere instalador manual / cuenta")
+            "disabled_reason": manifest.get("disabled_reason", "Requiere instalador manual / cuenta"),
+            "extras": extras_state,
+            "is_extra": False
         })
 
     flat_items = []
@@ -492,6 +510,13 @@ def run_tui_app_selector(discovered_apps: list) -> list:
                     "category_key": cat_key,
                     "app_data": app
                 })
+                for extra in app.get("extras", []):
+                    flat_items.append({
+                        "type": "EXTRA",
+                        "category_key": cat_key,
+                        "extra_data": extra,
+                        "parent_app": app
+                    })
 
     current_idx = 0
     total_nodes = len(flat_items)
@@ -500,16 +525,19 @@ def run_tui_app_selector(discovered_apps: list) -> list:
     while True:
         clear_screen()
         total_apps_count = sum(len(v) for v in categories_map.values())
-        total_active_count = sum(sum(1 for a in v if not a["disabled"]) for v in categories_map.values())
-        selected_count = sum(sum(1 for a in v if a["selected"] and not a["disabled"]) for v in categories_map.values())
+        total_extras_count = sum(sum(len(a.get("extras", [])) for a in v) for v in categories_map.values())
+        selected_apps_count = sum(sum(1 for a in v if a["selected"] and not a["disabled"]) for v in categories_map.values())
+        selected_extras_count = sum(sum(sum(1 for e in a.get("extras", []) if e["selected"] and not e["disabled"]) for a in v) for v in categories_map.values())
 
         tui_header(
-            "MENÚ INTERACTIVO DE SELECCIÓN DE APLICACIONES",
-            f"Seleccionadas: {selected_count}/{total_active_count} aplicaciones activas ({total_apps_count} en catálogo)"
+            "MENÚ INTERACTIVO DE SELECCIÓN DE APLICACIONES Y EXTRAS",
+            f"Seleccionadas: {selected_apps_count}/{total_apps_count} apps ({selected_extras_count}/{total_extras_count} extras activos)"
         )
 
-        _, term_lines = get_terminal_dimensions()
-        # Reservamos espacio para header (7 líneas), footer (5 líneas) y márgenes (2 líneas)
+        term_cols, term_lines = get_terminal_dimensions()
+        # Ancho responsive para nombres
+        name_w = max(24, min(38, term_cols - 46))
+        # Reservamos espacio para header (7 líneas), footer (5 líneas) y márgenes
         visible_height = max(6, term_lines - 12)
         start_idx, end_idx = calculate_viewport(current_idx, total_nodes, visible_height, scroll_start)
         scroll_start = start_idx
@@ -538,9 +566,11 @@ def run_tui_app_selector(discovered_apps: list) -> list:
                 if is_cursor:
                     header_style = f"{C_BOLD}{C_INV}{C_CYAN}"
 
-                print(f" {cursor_mark} {header_style}{check_icon} ─── {node['label']} ───────────────────────────────────────{C_RESET}")
+                line_len = max(20, term_cols - len(node['label']) - 18)
+                sep_line = "─" * min(line_len, 40)
+                print(f" {cursor_mark} {header_style}{check_icon} ─── {node['label']} {sep_line}{C_RESET}")
 
-            else:
+            elif node["type"] == "APP":
                 app = node["app_data"]
                 manifest = app["manifest"]
                 app_name = manifest.get("name", "Unknown")
@@ -554,14 +584,35 @@ def run_tui_app_selector(discovered_apps: list) -> list:
                     item_style = f"{C_GRAY}"
                     if is_cursor:
                         item_style = f"{C_BOLD}{C_INV}{C_GRAY}"
-                    print(f" {cursor_mark}    {chk} {prio_badge} {item_style}{app_name:<28}{C_RESET} {disabled_tag} {reason}")
+                    print(f" {cursor_mark}    {chk} {prio_badge} {item_style}{app_name:<{name_w}}{C_RESET} {disabled_tag} {reason}")
                 else:
                     has_cfg = f"{C_GREEN}[+Config]{C_RESET}" if manifest.get("config", {}).get("has_direct_config") or manifest.get("has_direct_config") else ""
                     chk = f"{C_GREEN}{C_BOLD}[x]{C_RESET}" if app["selected"] else f"{C_GRAY}[ ]{C_RESET}"
                     item_style = f"{C_WHITE}"
                     if is_cursor:
                         item_style = f"{C_BOLD}{C_INV}{C_WHITE}"
-                    print(f" {cursor_mark}    {chk} {prio_badge} {item_style}{app_name:<34}{C_RESET} {has_cfg}")
+                    print(f" {cursor_mark}    {chk} {prio_badge} {item_style}{app_name:<{name_w}}{C_RESET} {has_cfg}")
+
+            elif node["type"] == "EXTRA":
+                extra = node["extra_data"]
+                parent = node["parent_app"]
+                e_manifest = extra["manifest"]
+                extra_name = e_manifest.get("name", "Extra")
+
+                if extra.get("disabled") or parent.get("disabled"):
+                    chk = f"{C_RED}[-]{C_RESET}"
+                    tag = f"{C_RED}[EXTRA DESHABILITADO]{C_RESET}"
+                    item_style = f"{C_GRAY}"
+                    if is_cursor:
+                        item_style = f"{C_BOLD}{C_INV}{C_GRAY}"
+                    print(f" {cursor_mark}       {chk} {item_style}└─ [EXTRA] {extra_name:<{name_w - 6}}{C_RESET} {tag}")
+                else:
+                    chk = f"{C_CYAN}{C_BOLD}[x]{C_RESET}" if extra["selected"] else f"{C_GRAY}[ ]{C_RESET}"
+                    has_cfg = f"{C_GREEN}[+Config]{C_RESET}" if e_manifest.get("config", {}).get("has_direct_config") else ""
+                    item_style = f"{C_CYAN}"
+                    if is_cursor:
+                        item_style = f"{C_BOLD}{C_INV}{C_CYAN}"
+                    print(f" {cursor_mark}       {chk} {item_style}└─ [EXTRA] {extra_name:<{name_w - 6}}{C_RESET} {has_cfg}")
 
         # Indicador inferior de scroll
         if end_idx < total_nodes:
@@ -569,7 +620,7 @@ def run_tui_app_selector(discovered_apps: list) -> list:
         else:
             print(f"  {C_GRAY}╚═ Fin del Catálogo ════════════════════════════════════════════════════════╝{C_RESET}")
 
-        print(f"\n{C_GRAY}{'─' * 86}{C_RESET}")
+        print(f"\n{C_GRAY}{'─' * min(term_cols - 2, 86)}{C_RESET}")
         print(f"  {C_YELLOW}Controles:{C_RESET} {C_BOLD}↑/↓{C_RESET}=Navegar | {C_BOLD}RePág/AvPág{C_RESET}=Pág | {C_BOLD}ESPACIO{C_RESET}=Marcar | {C_BOLD}A{C_RESET}=Todas | {C_BOLD}N{C_RESET}=Ninguna | {C_BOLD}ENTER{C_RESET}=Iniciar")
 
         key = read_key()
@@ -589,23 +640,47 @@ def run_tui_app_selector(discovered_apps: list) -> list:
             node = flat_items[current_idx]
             if node["type"] == "HEADER":
                 cat_key = node["category_key"]
-                active_in_cat = [a for a in categories_map[cat_key] if not a["disabled"]]
+                apps_in_cat = categories_map[cat_key]
+                active_in_cat = [a for a in apps_in_cat if not a["disabled"]]
                 if active_in_cat:
                     target_state = not all(a["selected"] for a in active_in_cat)
                     for a in active_in_cat:
                         a["selected"] = target_state
-            else:
-                if not node["app_data"].get("disabled"):
-                    node["app_data"]["selected"] = not node["app_data"]["selected"]
+                        for e in a.get("extras", []):
+                            if not e.get("disabled"):
+                                e["selected"] = target_state
+
+            elif node["type"] == "APP":
+                app = node["app_data"]
+                if not app.get("disabled"):
+                    app["selected"] = not app["selected"]
+                    # Sincronizar extras con el padre
+                    for e in app.get("extras", []):
+                        if not e.get("disabled"):
+                            e["selected"] = app["selected"]
+
+            elif node["type"] == "EXTRA":
+                extra = node["extra_data"]
+                parent = node["parent_app"]
+                if not extra.get("disabled") and not parent.get("disabled"):
+                    extra["selected"] = not extra["selected"]
+                    if extra["selected"]:
+                        parent["selected"] = True
+
         elif key == "A":
             for cat in categories_map.values():
                 for a in cat:
                     if not a.get("disabled"):
                         a["selected"] = True
+                        for e in a.get("extras", []):
+                            if not e.get("disabled"):
+                                e["selected"] = True
         elif key == "N":
             for cat in categories_map.values():
                 for a in cat:
                     a["selected"] = False
+                    for e in a.get("extras", []):
+                        e["selected"] = False
         elif key == "ENTER":
             clear_screen()
             selected_final = []
@@ -614,8 +689,17 @@ def run_tui_app_selector(discovered_apps: list) -> list:
                     if a["selected"] and not a.get("disabled"):
                         selected_final.append({
                             "folder_path": a["folder_path"],
-                            "manifest": a["manifest"]
+                            "manifest": a["manifest"],
+                            "is_extra": False
                         })
+                    for e in a.get("extras", []):
+                        if e["selected"] and not e.get("disabled") and a["selected"]:
+                            selected_final.append({
+                                "folder_path": e["folder_path"],
+                                "manifest": e["manifest"],
+                                "parent_app_id": e.get("parent_app_id"),
+                                "is_extra": True
+                            })
             return selected_final
         elif key in ("ESC", "QUIT"):
             clear_screen()

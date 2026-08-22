@@ -82,22 +82,62 @@ def get_system_diagnostics(drives_map: dict = None):
 def discover_applications(script_root):
     apps_base_dir = os.path.abspath(os.path.join(script_root, "..", "apps"))
     discovered = []
+    valid_cats = {"ux_ui", "ides", "frameworks", "herramientas", "vms", "agil", "navegadores", "utilidades", "juegos"}
 
-    for root, dirs, files in os.walk(apps_base_dir):
-        if "manifest.json" in files:
-            manifest_path = os.path.join(root, "manifest.json")
-            try:
-                with open(manifest_path, "r", encoding="utf-8") as f:
-                    manifest = json.load(f)
-                discovered.append({
-                    "folder_path": root,
-                    "manifest": manifest
-                })
-            except Exception as e:
-                logger.log(f"Error al leer manifiesto en {manifest_path}: {e}", "WARNING")
+    if not os.path.exists(apps_base_dir):
+        return discovered
+
+    for cat in os.listdir(apps_base_dir):
+        cat_dir = os.path.join(apps_base_dir, cat)
+        if not os.path.isdir(cat_dir) or cat not in valid_cats:
+            continue
+        for app in os.listdir(cat_dir):
+            app_dir = os.path.join(cat_dir, app)
+            manifest_path = os.path.join(app_dir, "manifest.json")
+            if os.path.isdir(app_dir) and os.path.exists(manifest_path):
+                try:
+                    with open(manifest_path, "r", encoding="utf-8") as f:
+                        manifest = json.load(f)
+
+                    app_id = manifest.get("id", app)
+                    extras = []
+                    extras_dir = os.path.join(app_dir, "extras")
+                    if os.path.exists(extras_dir) and os.path.isdir(extras_dir):
+                        for extra_name in sorted(os.listdir(extras_dir)):
+                            extra_folder = os.path.join(extras_dir, extra_name)
+                            extra_manifest_path = os.path.join(extra_folder, "manifest.json")
+                            if os.path.isdir(extra_folder) and os.path.exists(extra_manifest_path):
+                                try:
+                                    with open(extra_manifest_path, "r", encoding="utf-8") as ef:
+                                        extra_manifest = json.load(ef)
+                                    extras.append({
+                                        "folder_path": extra_folder,
+                                        "manifest": extra_manifest,
+                                        "parent_app_id": app_id,
+                                        "is_extra": True
+                                    })
+                                except Exception as e_err:
+                                    logger.log(f"Error al leer manifiesto de extra en {extra_manifest_path}: {e_err}", "WARNING")
+
+                    discovered.append({
+                        "folder_path": app_dir,
+                        "manifest": manifest,
+                        "extras": extras,
+                        "is_extra": False
+                    })
+                except Exception as e:
+                    logger.log(f"Error al leer manifiesto en {manifest_path}: {e}", "WARNING")
 
     discovered.sort(key=lambda x: x["manifest"].get("name", "").lower())
     return discovered
+
+def flatten_all_catalog_items(discovered):
+    flat = []
+    for item in discovered:
+        flat.append(item)
+        for extra in item.get("extras", []):
+            flat.append(extra)
+    return flat
 
 def main():
     parser = argparse.ArgumentParser(description="Configurador de Windows 11 — Motor Unificado")
@@ -105,7 +145,7 @@ def main():
     parser.add_argument("--drive-apps", default=None, help="Unidad de disco para aplicaciones y entornos")
     parser.add_argument("--drive-games", default=None, help="Unidad de disco para juegos y bibliotecas")
     parser.add_argument("--drive-data", default=None, help="Unidad de disco para archivos, datos y modelos")
-    parser.add_argument("--drive", action="append", help="Sobrescribir unidad específica (formato: id=letra, ej: vms=D:)")
+    parser.add_argument("--drive", action="append", help="Sobrescribir unidad específica (formato: id=letra, ej: apps=D:)")
     parser.add_argument("--dry-run", action="store_true", help="Modo simulación (no modifica el sistema)")
     parser.add_argument("--test-mode", action="store_true", help="Modo prueba desatendido con todas las apps")
     parser.add_argument("--app", default=None, help="Instalar una aplicación específica por su ID")
@@ -153,35 +193,38 @@ def main():
     sys_info = get_system_diagnostics(selected_drives)
     print_diagnostics_card(sys_info)
 
-    # 3. Descubrir aplicaciones
+    # 3. Descubrir aplicaciones y extras
     discovered = discover_applications(script_root)
-    logger.log(f"Se detectaron {len(discovered)} aplicaciones modulares en 'apps/'.", "INFO")
+    total_extras_count = sum(len(x.get("extras", [])) for x in discovered)
+    logger.log(f"Se detectaron {len(discovered)} aplicaciones modulares ({total_extras_count} extras) en 'apps/'.", "INFO")
 
     if not discovered:
         logger.log("No se encontraron aplicaciones para procesar.", "ERROR")
         return
+
+    all_flat_catalog = flatten_all_catalog_items(discovered)
 
     # 4. Seleccionar aplicaciones (TUI Interactivo vs CLI)
     selected = []
 
     if args.app:
         target_id = args.app.lower()
-        selected = [item for item in discovered if item["manifest"].get("id", "").lower() == target_id]
+        selected = [item for item in all_flat_catalog if item["manifest"].get("id", "").lower() == target_id]
         if not selected:
-            logger.log(f"No se encontro ninguna aplicacion con la ID '{args.app}'.", "ERROR")
+            logger.log(f"No se encontro ninguna aplicacion ni extra con la ID '{args.app}'.", "ERROR")
             return
         app_item = selected[0]
         if app_item["manifest"].get("disabled", False) or app_item["manifest"].get("enabled") is False:
             reason = app_item["manifest"].get("disabled_reason", "Requiere instalador manual / cuenta")
-            logger.log(f"Aviso: La aplicacion '{app_item['manifest'].get('name')}' esta marcada como deshabilitada ({reason}).", "WARNING")
-        logger.log(f"Seleccionada aplicacion especifica: '{app_item['manifest'].get('name')}'", "INFO")
+            logger.log(f"Aviso: El elemento '{app_item['manifest'].get('name')}' esta marcado como deshabilitado ({reason}).", "WARNING")
+        logger.log(f"Seleccionado elemento especifico: '{app_item['manifest'].get('name')}'", "INFO")
 
     elif args.test_mode:
-        selected = [item for item in discovered if not item["manifest"].get("disabled", False) and item["manifest"].get("enabled") is not False]
-        logger.log(f"[MODO PRUEBA DESATENDIDO] Seleccionando {len(selected)} aplicaciones activas disponibles...", "INFO")
+        selected = [item for item in all_flat_catalog if not item["manifest"].get("disabled", False) and item["manifest"].get("enabled") is not False]
+        logger.log(f"[MODO PRUEBA DESATENDIDO] Seleccionando {len(selected)} aplicaciones y extras activos disponibles...", "INFO")
 
     else:
-        # Lanzar Selector TUI con Viewport y navegación por teclado
+        # Lanzar Selector TUI con Viewport, extras y navegación por teclado
         selected = run_tui_app_selector(discovered)
         if not selected:
             logger.log("Ejecucion cancelada por el usuario o seleccion vacia.", "INFO")
@@ -190,7 +233,7 @@ def main():
     from src.core.dag import resolve_app_dependencies_and_order
 
     # 4.5. Resolver grafo de dependencias (DAG) y orden por prioridades
-    ordered_selected = resolve_app_dependencies_and_order(selected, discovered)
+    ordered_selected = resolve_app_dependencies_and_order(selected, all_flat_catalog)
     if len(ordered_selected) > len(selected):
         auto_added = len(ordered_selected) - len(selected)
         logger.log(f"Se incluyeron automaticamente {auto_added} prerrequisitos requeridos por dependencias.", "INFO")
@@ -212,17 +255,28 @@ def main():
         "DocumentsPath": os.path.join(os.environ.get("USERPROFILE", os.path.expanduser("~")), "Documents")
     }
 
+    # Detectar qué apps padre tienen extras pendientes en la selección
+    parent_pending_extras = {}
+    for item in ordered_selected:
+        parent_id = item.get("parent_app_id") or item["manifest"].get("parent_app")
+        if parent_id:
+            parent_pending_extras.setdefault(parent_id, set()).add(item["manifest"]["id"])
+
+    deferred_parent_data = {}
+
     # Activamos el modo Keep-Awake para que el sistema y la pantalla no se suspendan durante el proceso
     with keep_awake():
         for idx, item in enumerate(ordered_selected, 1):
             manifest = item["manifest"]
             folder = item["folder_path"]
+            app_id = manifest.get("id", "")
             app_name = manifest.get("name", "Unknown")
             cat_key = manifest.get("category", "utilidades")
             phase_name = CATEGORY_NAMES.get(cat_key, cat_key.upper())
 
             logger.log(f"--- Procesando: {app_name} ---", "INFO")
             install_success = False
+            config_success = False
             config_meta = manifest.get("config", {})
             has_direct_config = (
                 config_meta.get("has_direct_config", False)
@@ -235,6 +289,7 @@ def main():
                 or os.path.exists(os.path.join(folder, "configure.py"))
             )
 
+            has_pending_extras = bool(parent_pending_extras.get(app_id))
             total_local_steps = 3 if has_direct_config else 2
 
             def progress_cb(step_desc, step_num=1):
@@ -259,9 +314,20 @@ def main():
                     progress_callback=lambda msg: progress_cb(msg, 1)
                 )
 
-                # Paso 2: Configuración Directa (se aplica siempre, esté recién instalada o ya existiera)
+                # Paso 2: Configuración Directa
                 if install_success:
-                    if has_direct_config:
+                    if has_pending_extras:
+                        # Si tiene extras pendientes, diferir configuración final del padre hasta que los extras se hayan instalado
+                        logger.log(f"Configuracion de '{app_name}' diferida hasta finalizar sus extras asociados...", "INFO")
+                        progress_cb("Instalado. Configuración diferida tras instalación de extras...", 2)
+                        deferred_parent_data[app_id] = {
+                            "item": item,
+                            "has_direct_config": has_direct_config,
+                            "already_installed": already_installed,
+                            "install_success": install_success
+                        }
+                        config_success = True
+                    elif has_direct_config:
                         progress_cb("Inyectando dotfiles y configuración...", 2)
                         config_success = apply_direct_configuration(
                             folder,
@@ -273,6 +339,24 @@ def main():
                         config_success = True
 
                 progress_cb("Finalizando componente...", total_local_steps)
+
+                # Si es un extra, actualizar la cuenta del padre y aplicar configuración del padre si era el último
+                parent_id = item.get("parent_app_id") or manifest.get("parent_app")
+                if parent_id and parent_id in parent_pending_extras:
+                    parent_pending_extras[parent_id].discard(app_id)
+                    if not parent_pending_extras[parent_id]:
+                        # Todos los extras del padre completados: ejecutar ahora la configuración del padre
+                        if parent_id in deferred_parent_data:
+                            p_info = deferred_parent_data[parent_id]
+                            p_item = p_info["item"]
+                            p_name = p_item["manifest"].get("name", parent_id)
+                            logger.log(f"Ejecutando configuracion final y despliegue del padre '{p_name}' tras completar todos sus extras...", "INFO")
+                            if p_info["has_direct_config"]:
+                                apply_direct_configuration(
+                                    p_item["folder_path"],
+                                    target_paths,
+                                    dry_run=args.dry_run
+                                )
 
             except Exception as err:
                 logger.log(f"Error critico no controlado al procesar '{app_name}': {err}", "ERROR")
@@ -313,6 +397,7 @@ def main():
                 "Configured": configured_text,
                 "Status": status_text
             })
+
 
     # 6. Tabla Resumen Final
     print_summary_table(summary_results)

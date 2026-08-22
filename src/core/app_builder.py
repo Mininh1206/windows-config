@@ -68,12 +68,15 @@ def create_app_package(
     name: str,
     category: str,
     install_type: str = "winget",
+    package_id: Optional[str] = None,
     winget_id: Optional[str] = None,
     choco_id: Optional[str] = None,
     scoop_id: Optional[str] = None,
     local_installer: Optional[str] = None,
+    args: Optional[str] = None,
     silent_args: Optional[str] = None,
     check_command: Optional[str] = None,
+    check_paths: Optional[List[str]] = None,
     priority: int = 3,
     depends_on: Optional[List[str]] = None,
     target_location: str = "apps",
@@ -85,34 +88,44 @@ def create_app_package(
     environment_vars: Optional[Dict[str, str]] = None,
     files_to_copy: Optional[Dict[str, str]] = None,
     imported_files_map: Optional[Dict[str, str]] = None,
-    apps_base_dir: Optional[str] = None
+    apps_base_dir: Optional[str] = None,
+    is_extra: bool = False,
+    parent_app_id: Optional[str] = None
 ) -> str:
     if apps_base_dir is None:
         apps_base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "apps"))
 
-    app_dir = os.path.join(apps_base_dir, category, app_id)
+    if is_extra and parent_app_id:
+        app_dir = os.path.join(apps_base_dir, category, parent_app_id, "extras", app_id)
+    else:
+        app_dir = os.path.join(apps_base_dir, category, app_id)
+
     files_dir = os.path.join(app_dir, "files")
     os.makedirs(files_dir, exist_ok=True)
 
+    resolved_pkg_id = package_id or winget_id or choco_id or scoop_id or local_installer
+    resolved_args = args or silent_args
+
     install_block = {
         "type": install_type,
-        "winget_id": winget_id if install_type == "winget" else None,
-        "choco_id": choco_id if install_type == "choco" else None,
-        "scoop_id": scoop_id if install_type == "scoop" else None,
-        "local_installer": local_installer if install_type in ["exe", "msi", "zip", "portable"] else None,
-        "silent_args": silent_args,
-        "check_command": check_command or app_id,
+        "package_id": resolved_pkg_id if install_type not in ["script", "none", "manual"] else None,
+        "args": resolved_args,
+        "check_command": check_command or (app_id if install_type not in ["script", "none", "manual"] else None),
+        "check_paths": check_paths or [],
         "target_drive_supported": True,
         "refresh_env_after": True if priority <= 1 else False
     }
+    # Limpiar claves con valor None o listas vacías innecesarias
+    install_block = {k: v for k, v in install_block.items() if v is not None and (v != [] if k == "check_paths" else True)}
 
+    final_depends = list(depends_on or [])
     manifest = {
         "id": app_id,
         "name": name,
         "category": category,
         "priority": priority,
         "target_location": target_location,
-        "depends_on": depends_on or [],
+        "depends_on": final_depends,
         "install": install_block,
         "requirements": {
             "MinRAM_GB": min_ram_gb,
@@ -126,6 +139,9 @@ def create_app_package(
             "environment_vars": environment_vars or {}
         }
     }
+    if is_extra and parent_app_id:
+        manifest["parent_app"] = parent_app_id
+
 
     # Write manifest.json
     manifest_path = os.path.join(app_dir, "manifest.json")
@@ -350,10 +366,10 @@ def interactive_create_app(apps_base_dir: Optional[str] = None):
     # =========================================================================
     suggested_priority = DEFAULT_CATEGORY_PRIORITIES.get(category, 3)
     prio_options = [
-        {"label": "Fase 0: Shell, Terminal y Gestores Base", "badge": "P0", "detail": "Prioridad Crítica (PowerShell, Winget, Git)", "value": 0},
-        {"label": "Fase 1: Lenguajes, SDKs y Runtimes", "badge": "P1", "detail": "Compiladores y Entornos (Python, Node, JDK, Rust)", "value": 1},
-        {"label": "Fase 2: IDEs, Herramientas Dev y DevOps", "badge": "P2", "detail": "Editores y Herramientas (VS Code, Docker, Antigravity)", "value": 2},
-        {"label": "Fase 3: Aplicaciones de Usuario y Utilidades", "badge": "P3", "detail": "Apps finales (Navegadores, Obsidian, PowerToys, Juegos)", "value": 3}
+        {"label": "Fase 0: Shell, Terminal y Gestores Base", "badge": "P0", "detail": "Prioridad Crítica (Shells, CLI y Gestores de Paquetes)", "value": 0},
+        {"label": "Fase 1: Lenguajes, SDKs y Runtimes", "badge": "P1", "detail": "Compiladores, Intérpretes y Entornos de Ejecución", "value": 1},
+        {"label": "Fase 2: IDEs, Herramientas Dev y DevOps", "badge": "P2", "detail": "Entornos de Desarrollo, Contenedores y Editores", "value": 2},
+        {"label": "Fase 3: Aplicaciones de Usuario y Utilidades", "badge": "P3", "detail": "Herramientas de Productividad, Utilidades y Apps de Usuario", "value": 3}
     ]
 
     prio_menu = tui_radio_select(
@@ -406,7 +422,7 @@ def interactive_create_app(apps_base_dir: Optional[str] = None):
             selected_deps = tui_multi_checkbox(
                 "SELECCIÓN DE PRERREQUISITOS / DEPENDENCIAS (DAG)",
                 dep_items,
-                subtitle="Marca con ESPACIO si esta app requiere alguna previa (ej: Node, Python, PowerToys)"
+                subtitle="Marca con ESPACIO si esta app requiere alguna dependencia previa"
             )
             depends_on = [d["id"] for d in selected_deps]
 
@@ -417,8 +433,9 @@ def interactive_create_app(apps_base_dir: Optional[str] = None):
         "VERIFICACIÓN DE ESTADO",
         "Comando o ejecutable en PATH para comprobar si ya está instalada:",
         default_val=app_id,
-        subtitle="Ejemplo: 'code', 'git', 'obsidian', 'node'"
+        subtitle="Nombre del ejecutable (ej: ejecutable.exe o comando CLI)"
     )
+
 
     # =========================================================================
     # PASO 6: CONFIGURACIÓN DIRECTA / DOTFILES / HOOKS
@@ -616,3 +633,111 @@ def interactive_manage_locations():
                 print(f"  {C_CYAN}Subcarpeta     :{C_RESET} {C_WHITE}{loc.get('target_subpath', '')}{C_RESET}")
                 print(f"\n{C_GRAY}Presiona ENTER para volver a la lista...{C_RESET}")
                 read_key()
+
+def interactive_create_extra(apps_base_dir: Optional[str] = None):
+    """Asistente interactivo para registrar un extra/plugin dentro de una aplicación existente."""
+    if apps_base_dir is None:
+        apps_base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "apps"))
+
+    # 1. Obtener aplicaciones existentes
+    existing = get_existing_apps(apps_base_dir)
+    # Filtrar solo aplicaciones padre (descartar si ya están en una subcarpeta extras)
+    parent_apps = [a for a in existing if "\\extras\\" not in a["folder_path"] and "/extras/" not in a["folder_path"]]
+
+    if not parent_apps:
+        clear_screen()
+        tui_header("AÑADIR EXTRA A UNA APLICACIÓN", "No se encontraron aplicaciones padre en el catálogo")
+        print(f"  {C_RED}Primero debes tener al menos una aplicación registrada.{C_RESET}\n")
+        print(f"  Presiona ENTER para continuar...")
+        read_key()
+        return
+
+    options = []
+    for app in sorted(parent_apps, key=lambda x: (x.get("category", ""), x.get("name", ""))):
+        options.append({
+            "label": app["name"][:36],
+            "badge": app.get("category", "app").upper(),
+            "detail": f"ID: {app['id']}",
+            "value": app
+        })
+
+    sel_parent = tui_select_menu(
+        "SELECCIONA LA APLICACIÓN PADRE",
+        options,
+        subtitle="Elige la aplicación sobre la cual se registrará el nuevo extra/plugin"
+    )
+
+    if not sel_parent:
+        clear_screen()
+        return
+
+    parent_app = sel_parent["value"]
+    parent_id = parent_app["id"]
+    category = parent_app.get("category", "utilidades")
+
+    clear_screen()
+    tui_header("NUEVO EXTRA PARA " + parent_app["name"].upper(), f"Padre: {parent_id} | Categoría: {category}")
+
+    extra_name = tui_input_box(
+        "NOMBRE DEL EXTRA",
+        "Introduce el nombre visual del extra o plugin:",
+        subtitle="Introduce el nombre descriptivo del módulo o plugin"
+    )
+    if not extra_name:
+        clear_screen()
+        return
+
+    extra_id_default = extra_name.lower().replace(" ", "_").replace("-", "_")
+    extra_id = tui_input_box(
+        "IDENTIFICADOR ÚNICO (ID)",
+        "Introduce el ID del extra:",
+        default_val=extra_id_default,
+        subtitle="Identificador único en minúsculas y sin espacios"
+    ).strip().lower()
+
+    # Selección de método de instalación del extra
+    type_options = [
+        {"label": "Script / Hook de PowerShell (Descarga/Comandos/Config)", "badge": "SCRIPT", "detail": "Descargar release o ejecutar script", "value": "script"},
+        {"label": "Plugin Gestor PTR (PowerToys Run)", "badge": "PTR", "detail": "Instalar plugin con 'ptr add'", "value": "ptr"},
+        {"label": "Paquete de Chocolatey", "badge": "CHOCO", "detail": "Instalar paquete con Chocolatey", "value": "choco"},
+        {"label": "Herramienta Cargo (Rust)", "badge": "CARGO", "detail": "Instalar binario con Cargo Binstall", "value": "cargo"},
+        {"label": "Paquete Oficial de Winget", "badge": "WINGET", "detail": "Instalar paquete mediante Winget", "value": "winget"},
+        {"label": "Descarga de Archivo Comprimido (.zip / .tar)", "badge": "ZIP", "detail": "Descargar y descomprimir archivo", "value": "zip"},
+        {"label": "Sin Instalador (Solo Dotfiles / Configuración)", "badge": "CONFIG", "detail": "Solo inyección de archivos y comandos", "value": "none"}
+    ]
+
+    sel_type = tui_select_menu(
+        "MÉTODO DE INSTALACIÓN DEL EXTRA",
+        type_options,
+        subtitle="Elige cómo se desplegará o instalará este extra"
+    )
+    install_type = sel_type["value"] if sel_type else "script"
+
+    package_id = None
+    if install_type in ["winget", "choco", "scoop", "cargo", "ptr"]:
+        package_id = tui_input_box("IDENTIFICADOR DE PAQUETE / PLUGIN", f"Introduce el identificador para {install_type.upper()}:")
+
+    # Preguntar si tiene configuración directa
+    has_cfg = tui_confirm("CONFIGURACIÓN DIRECTA", "¿El extra incluye archivos de configuración o script de hook?")
+
+    app_dir = create_app_package(
+        app_id=extra_id,
+        name=extra_name,
+        category=category,
+        install_type=install_type,
+        package_id=package_id,
+        priority=3,
+        depends_on=[],
+        has_direct_config=has_cfg,
+        is_extra=True,
+        parent_app_id=parent_id,
+        apps_base_dir=apps_base_dir
+    )
+
+
+    clear_screen()
+    tui_header("¡EXTRA REGISTRADO CON ÉXITO!", f"Ubicación: apps/{category}/{parent_id}/extras/{extra_id}")
+    print(f"  {C_GREEN}{C_BOLD}✓ Extra '{extra_name}' [{extra_id}] registrado correctamente bajo '{parent_app['name']}'.{C_RESET}\n")
+    print(f"  {C_CYAN}Directorio:{C_RESET} {C_WHITE}{app_dir}{C_RESET}")
+    print(f"\n{C_GRAY}Presiona ENTER para continuar...{C_RESET}")
+    read_key()
