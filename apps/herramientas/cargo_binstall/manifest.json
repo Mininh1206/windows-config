@@ -1,0 +1,24 @@
+{
+  "id": "cargo_binstall",
+  "name": "Cargo Binstall (Binary Installer for Cargo)",
+  "category": "herramientas",
+  "priority": 1,
+  "depends_on": [],
+  "install": {
+    "type": "script",
+    "check_command": "cargo-binstall",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.5,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

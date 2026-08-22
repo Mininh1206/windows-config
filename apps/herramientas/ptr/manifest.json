@@ -1,0 +1,26 @@
+{
+  "id": "ptr",
+  "name": "PowerToys Run Plugin Manager (ptr)",
+  "category": "herramientas",
+  "priority": 2,
+  "depends_on": [
+    "cargo_binstall"
+  ],
+  "install": {
+    "type": "script",
+    "check_command": "ptr",
+    "target_drive_supported": true,
+    "refresh_env_after": true
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.2,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

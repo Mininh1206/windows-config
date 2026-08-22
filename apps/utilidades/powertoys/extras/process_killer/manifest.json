@@ -1,0 +1,35 @@
+{
+  "id": "powertoys_process_killer",
+  "name": "Process Killer Plugin (PowerToys Run)",
+  "category": "utilidades",
+  "priority": 3,
+  "parent_app": "powertoys",
+  "depends_on": [],
+  "disabled": false,
+  "disabled_reason": null,
+  "install": {
+    "type": "ptr",
+    "package_id": "ProcessKiller",
+    "args": "8LWXpg/PowerToysRun-ProcessKiller --force",
+    "check_paths": [
+      "$env:LOCALAPPDATA/Microsoft/PowerToys/PowerToys Run/Plugins/ProcessKiller/Community.PowerToys.Run.Plugin.ProcessKiller.dll"
+    ],
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.1,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "restart_process": [
+      "PowerToys",
+      "PowerToys.PowerLauncher"
+    ],
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}

@@ -1,20 +1,18 @@
-# Hook de configuracion y descarga silenciosa de fuentes para Oh My Posh
+# Hook de configuracion para PowerShell 7 y Terminal Environment
 
-Write-Host "[OH-MY-POSH] Configurando tema darkside e instalando fuentes..." -ForegroundColor Cyan
+Write-Host "[POWERSHELL] Configurando entorno, modulos y terminal..." -ForegroundColor Cyan
 
-# 1. Instalar fuente Meslo silenciando la salida de progreso masiva
+# 1. Asegurar instalacion del modulo Terminal-Icons
 try {
-    Write-Host "  -> Instalando fuente Meslo Nerd Font..." -ForegroundColor Gray
-    $tempOut = Join-Path $env:TEMP "omp_font_install.log"
-    $p = Start-Process "oh-my-posh.exe" -ArgumentList "font install Meslo --plain" -Wait -PassThru -NoNewWindow -RedirectStandardOutput $tempOut -RedirectStandardError $tempOut -ErrorAction SilentlyContinue
-    if ($p -and $p.ExitCode -eq 0) {
-        Write-Host "  -> Fuente Meslo Nerd Font instalada correctamente." -ForegroundColor Green
+    if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) {
+        Write-Host "  -> Instalando modulo Terminal-Icons..." -ForegroundColor Gray
+        Install-Module -Name Terminal-Icons -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction SilentlyContinue
     }
 } catch {
-    Write-Warning "Aviso: No se pudo completar la instalacion de la fuente Meslo: $_"
+    Write-Warning "Aviso: No se pudo instalar el modulo Terminal-Icons: $_"
 }
 
-# 2. Inyectar la fuente Meslo en el perfil de PowerShell 7 de Windows Terminal si existe
+# 2. Inyectar la fuente MesloLGM Nerd Font en el perfil de PowerShell 7 de Windows Terminal si existe
 try {
     $wtPackages = Get-ChildItem "$env:LOCALAPPDATA\Packages" -Filter "Microsoft.WindowsTerminal*" -Directory -ErrorAction SilentlyContinue
     foreach ($pkg in $wtPackages) {
@@ -45,4 +43,3 @@ try {
 } catch {
     Write-Warning "Aviso: No se pudo actualizar la configuracion de fuentes en Windows Terminal: $_"
 }
-

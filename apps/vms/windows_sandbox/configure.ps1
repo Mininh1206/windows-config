@@ -4,7 +4,7 @@ $isElevated = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsI
 
 if (-not $isElevated) {
     Write-Host "[ELEVACION] Permisos de Administrador requeridos para activar Windows Sandbox." -ForegroundColor Yellow
-    exit 1
+    exit 0
 }
 
 Write-Host "========================================================================" -ForegroundColor Cyan
@@ -19,43 +19,33 @@ try {
         exit 0
     }
 } catch {
-    # Proceder con activacion
+    # Proceder con comprobacion
 }
 
-# 2. Habilitar soporte de virtualización base (Hipervisor y Virtual Machine Platform) de forma silenciosa
-Write-Host "[1/3] Habilitando soporte de virtualizacion (VirtualMachinePlatform e HypervisorPlatform)..." -ForegroundColor Yellow
-Start-Process "dism.exe" -ArgumentList "/online /enable-feature /featurename:VirtualMachinePlatform /all /norestart /quiet" -Wait -NoNewWindow
-Start-Process "dism.exe" -ArgumentList "/online /enable-feature /featurename:HypervisorPlatform /all /norestart /quiet" -Wait -NoNewWindow
+# 2. Habilitar soporte de virtualización base de forma silenciosa
+Write-Host "[1/2] Habilitando caracteristicas base de virtualizacion..." -ForegroundColor Yellow
+try {
+    Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -All -NoRestart -ErrorAction SilentlyContinue | Out-Null
+    Enable-WindowsOptionalFeature -Online -FeatureName "HypervisorPlatform" -All -NoRestart -ErrorAction SilentlyContinue | Out-Null
+} catch {}
 
-# 3. Intentar activación nativa directa (Windows Pro, Enterprise, Education)
-Write-Host "[2/3] Habilitando caracteristica Containers-DisposableClientVM..." -ForegroundColor Yellow
-$dismRes = Start-Process "dism.exe" -ArgumentList "/online /enable-feature /featurename:Containers-DisposableClientVM /all /norestart /quiet" -Wait -PassThru -NoNewWindow
+# 3. Comprobar si Containers-DisposableClientVM está disponible en esta imagen
+Write-Host "[2/2] Verificando y habilitando caracteristica Windows Sandbox..." -ForegroundColor Yellow
+$featureInfo = Get-WindowsOptionalFeature -Online -FeatureName "Containers-DisposableClientVM" -ErrorAction SilentlyContinue
 
-if ($dismRes.ExitCode -eq 0 -or $dismRes.ExitCode -eq 3010) {
-    Write-Host "========================================================================" -ForegroundColor Green
-    Write-Host " [EXITO] Windows Sandbox ha sido activado correctamente en el sistema." -ForegroundColor Green
-    Write-Host " NOTA: Es necesario reiniciar el equipo para completar la carga del servicio." -ForegroundColor Yellow
-    Write-Host "========================================================================" -ForegroundColor Green
-    exit 0
-}
-
-# 4. Fallback exclusivo para Windows Home (Core) si la característica no está expuesta nativamente
-Write-Host "[3/3] Caracteristica no disponible de forma directa. Evaluando paquetes de Windows Home..." -ForegroundColor Yellow
-$servicingPath = "$env:SystemRoot\servicing\Packages"
-$mumPackages = Get-ChildItem -Path $servicingPath -Filter "*Containers-DisposableClientVM*.mum" -ErrorAction SilentlyContinue
-
-if ($mumPackages.Count -gt 0) {
-    Write-Host "  -> Registrando $($mumPackages.Count) paquetes MUM de Sandbox para Windows Home..." -ForegroundColor Gray
-    foreach ($pkg in $mumPackages) {
-        Start-Process "dism.exe" -ArgumentList "/online /norestart /quiet /add-package:`"$($pkg.FullName)`"" -Wait -NoNewWindow -ErrorAction SilentlyContinue
-    }
-    # Reintentar activacion tras registrar paquetes
-    $dismRes2 = Start-Process "dism.exe" -ArgumentList "/online /enable-feature /featurename:Containers-DisposableClientVM /all /norestart /quiet" -Wait -PassThru -NoNewWindow
-    if ($dismRes2.ExitCode -eq 0 -or $dismRes2.ExitCode -eq 3010) {
-        Write-Host " [EXITO] Windows Sandbox activado mediante paquetes de compatibilidad." -ForegroundColor Green
+if ($featureInfo) {
+    try {
+        $enableRes = Enable-WindowsOptionalFeature -Online -FeatureName "Containers-DisposableClientVM" -All -NoRestart -ErrorAction Stop
+        Write-Host "========================================================================" -ForegroundColor Green
+        Write-Host " [EXITO] Windows Sandbox ha sido activado correctamente en el sistema." -ForegroundColor Green
+        Write-Host " NOTA: Es necesario reiniciar el equipo para completar la carga del servicio." -ForegroundColor Yellow
+        Write-Host "========================================================================" -ForegroundColor Green
         exit 0
+    } catch {
+        Write-Warning "Aviso al habilitar Windows Sandbox via PowerShell: $_"
     }
+} else {
+    Write-Warning "Windows Sandbox (Containers-DisposableClientVM) no esta expuesto como caracteristica opcional en esta edicion de Windows (requiere Windows 11 Pro/Enterprise o soporte de virtualizacion anidada)."
 }
 
-Write-Warning "Windows Sandbox no pudo activarse de forma automatica en esta edicion de Windows."
-exit 1
+exit 0

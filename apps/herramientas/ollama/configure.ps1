@@ -1,4 +1,4 @@
-# Hook de configuración de Ollama y descarga asíncrona de modelos en disco de datos
+# Hook de configuracion de Ollama y descarga asincrona de modelos en disco de datos
 
 $dataDrive = if ($env:DRIVE_DATA -and (Test-Path "$($env:DRIVE_DATA)\")) { $env:DRIVE_DATA } elseif (Test-Path "A:\") { "A:" } else { "C:" }
 $modelsPath = "$dataDrive\LLM"
@@ -21,10 +21,37 @@ $bgLog = Join-Path $logsDir "bg_ollama_models.log"
 
 $scriptBlock = @"
 `$env:OLLAMA_MODELS = '$modelsPath'
-Add-Content -Path '$bgLog' -Value "=== Iniciando descarga de modelos Ollama: `$(Get-Date) ==="
-& ollama pull qwen3.8:27b *>> '$bgLog'
-& ollama pull gemma4:e4b *>> '$bgLog'
-Add-Content -Path '$bgLog' -Value "=== Descarga completada: `$(Get-Date) ==="
+Add-Content -Path '$bgLog' -Value "=== Iniciando verificacion y descarga de modelos Ollama: `$(Get-Date) ==="
+
+# 1. Comprobar si el servicio Ollama está activo en el puerto 11434; si no, iniciarlo
+`$isListening = `$false
+for (`$i = 0; `$i -lt 15; `$i++) {
+    try {
+        `$client = [System.Net.Sockets.TcpClient]::new()
+        `$connect = `$client.BeginConnect('127.0.0.1', 11434, `$null, `$null)
+        if (`$connect.AsyncWaitHandle.WaitOne(1000, `$false)) {
+            `$client.EndConnect(`$connect)
+            `$isListening = `$true
+            `$client.Close()
+            break
+        }
+        `$client.Close()
+    } catch {}
+    if (-not `$isListening -and `$i -eq 0) {
+        Add-Content -Path '$bgLog' -Value "Iniciando daemon 'ollama serve'..."
+        Start-Process "ollama.exe" -ArgumentList "serve" -WindowStyle Hidden
+    }
+    Start-Sleep -Seconds 2
+}
+
+if (`$isListening) {
+    Add-Content -Path '$bgLog' -Value "Servicio Ollama conectado en 127.0.0.1:11434."
+    & ollama pull qwen3.8:27b *>> '$bgLog'
+    & ollama pull gemma4:e4b *>> '$bgLog'
+    Add-Content -Path '$bgLog' -Value "=== Descarga completada: `$(Get-Date) ==="
+} else {
+    Add-Content -Path '$bgLog' -Value "ERROR: No se pudo conectar con el servidor de Ollama en 127.0.0.1:11434 tras 30s."
+}
 "@
 
 $encoded = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($scriptBlock))

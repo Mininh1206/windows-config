@@ -3,12 +3,12 @@
   "name": "Microsoft PowerToys",
   "category": "utilidades",
   "priority": 3,
-  "depends_on": [],
+  "depends_on": [
+    "everything"
+  ],
   "install": {
     "type": "winget",
-    "winget_id": "Microsoft.PowerToys",
-    "local_installer": null,
-    "silent_args": null,
+    "package_id": "Microsoft.PowerToys",
     "check_command": "PowerToys",
     "target_drive_supported": true,
     "refresh_env_after": false

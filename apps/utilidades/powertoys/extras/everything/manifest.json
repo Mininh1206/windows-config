@@ -1,0 +1,36 @@
+{
+  "id": "powertoys_everything",
+  "name": "Everything Plugin (PowerToys Run)",
+  "category": "utilidades",
+  "priority": 3,
+  "parent_app": "powertoys",
+  "depends_on": [
+    "everything"
+  ],
+  "disabled": false,
+  "disabled_reason": null,
+  "install": {
+    "type": "choco",
+    "package_id": "everythingpowertoys",
+    "check_paths": [
+      "$env:LOCALAPPDATA/Microsoft/PowerToys/PowerToys Run/Plugins/Everything/Community.PowerToys.Run.Plugin.Everything.dll"
+    ],
+    "target_drive_supported": true,
+    "refresh_env_after": false
+  },
+  "requirements": {
+    "MinRAM_GB": 2.0,
+    "MinDisk_GB": 0.1,
+    "RequireAdmin": false
+  },
+  "config": {
+    "has_direct_config": true,
+    "restart_process": [
+      "PowerToys",
+      "PowerToys.PowerLauncher"
+    ],
+    "files": [],
+    "commands": [],
+    "environment_vars": {}
+  }
+}
