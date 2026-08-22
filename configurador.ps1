@@ -13,6 +13,8 @@ param(
     [string]$App
 )
 
+$ProgressPreference = "SilentlyContinue"
+
 $isElevated = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $isElevated -and -not $DryRun) {
     Write-Host "========================================================================" -ForegroundColor Yellow
@@ -27,8 +29,10 @@ if (-not $isElevated -and -not $DryRun) {
         if ($TestMode) { $argsList += " -TestMode" }
         if ($App) { $argsList += " -App `"$App`"" }
 
-        Start-Process powershell.exe -WorkingDirectory "$env:TEMP" -ArgumentList $argsList -Verb RunAs
-        exit 0
+        $shellExe = if (Get-Command "pwsh.exe" -ErrorAction SilentlyContinue) { "pwsh.exe" } else { "powershell.exe" }
+        Start-Process $shellExe -WorkingDirectory "$env:TEMP" -ArgumentList $argsList -Verb RunAs
+        Write-Host "[OK] Proceso elevado iniciado. Esta consola permanecerá abierta." -ForegroundColor Green
+        return
     } catch {
         Write-Warning "No se pudo solicitar elevacion automatica ($($_.Exception.Message)). Continuando en modo estandar..."
     }
