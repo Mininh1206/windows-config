@@ -16,7 +16,7 @@ Esta skill proporciona las directivas centrales para operar, depurar y expandir 
   - `constructor.ps1`: Ejecuta el asistente interactivo de registro de aplicaciones (`python src/builder.py`).
 - **Motores Core (`src/core/`):**
   - `dag.py`: Motor de resolución de grafo de dependencias y orden topológico por fases/prioridades.
-  - `installer.py`: Motor de instalación desacoplado multitipo (`winget`, `exe`, `msi`, `zip`, `portable`) con refresco de variables en caliente (`refresh_environment()`).
+  - `installer.py`: Motor de instalación desacoplado multitipo (`winget`, `choco`, `scoop`, `cargo`, `ptr`, `exe`, `msi`, `zip`, `script`, `none`) con refresco de variables en caliente (`refresh_environment()`).
   - `configurer.py`: Motor de inyección de dotfiles, plantillas y hooks post-instalación con soporte de variables de entorno.
   - `tui.py`: Motor de navegación de consola con flechas `↑`/`↓` y selección por casillas con **Espacio**.
   - `ui.py`: Barra de progreso animada, tarjetas de diagnóstico HW y tablas formateadas con colores ANSI.

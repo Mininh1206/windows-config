@@ -79,6 +79,8 @@ Este documento sirve como inventario maestro y lista de control (checklist) de t
 
 | Estado | Aplicación | Tipo Empaquetado | Disco Alt. | Config. Directa | Modalidad Config. | Detalles de Configuración Directa |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
+| `[x]` | **Cargo Binstall** | `Script` | Sí | **Sí** | Comandos | Instalador ultrarrápido de binarios precompilados de Rust (`cargo-binstall`). |
+| `[x]` | **PTR CLI** | `Script` | Sí | **Sí** | Comandos | Gestor de plugins para PowerToys Run desde terminal (`ptr`), depende de `cargo_binstall`. |
 | `[x]` | **Chocolatey** | `Winget` | No | **Sí** | Comandos | Habilitación de `allowGlobalConfirmation` para instalación desatendida. |
 | `[x]` | **Scoop** | `Script` | **Sí** | **Sí** | Comandos | Instalación en unidad personalizada (`<TargetDrive>\Scoop`), buckets `main` y `extras` (DAG: depende de Git). |
 | `[x]` | **Git for Windows** | `Winget` | Sí | **Sí** | Archivos | Copia de `.gitconfig` global (alias, editor por defecto, autocrlf, rama principal `main`). |
@@ -121,8 +123,8 @@ Este documento sirve como inventario maestro y lista de control (checklist) de t
 
 | Estado | Aplicación | Tipo Empaquetado | Disco Alt. | Config. Directa | Modalidad Config. | Detalles de Configuración Directa |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| `[x]` | **Brave Browser** | `Winget` | Sí | No | N/A | Navegador con bloqueo de trackers y privacidad nativa. |
-| `[x]` | **Google Chrome** | `Winget` | Sí | No | N/A | Navegador web de Google. |
+| `[x]` | **Brave Browser** | `Winget` | Sí | No | N/A | Navegador con privacidad integrada y bloqueo nativo. |
+| `[x]` | **Google Chrome** | `Winget` | Sí | No | N/A | Navegador web Google Chrome. |
 
 ---
 
@@ -132,9 +134,10 @@ Este documento sirve como inventario maestro y lista de control (checklist) de t
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
 | `[x]` | **Windows 11 Tweaks & Optimizaciones** | `Script` | Sí | **Sí** | Comandos | Redirección de carpetas a `A:\Daniel`, plan de energía Ultimate Performance, Game Mode/HAGS y privacidad. |
 | `[x]` | **PowerToys** | `Winget` | Sí | **Sí** | Archivos | Importación de FancyZones, Keyboard Manager y PowerToys Run. |
+| `[x]` | **└─ Everything Plugin (PowerToys Run)** | `Choco` | No | **Sí** | Comandos | Extra modular: Búsqueda ultra-rápida en PTR instalada vía Chocolatey (`everythingpowertoys`). |
+| `[x]` | **└─ Process Killer Plugin (PowerToys Run)** | `PTR` | No | **Sí** | Comandos | Extra modular: Matar procesos por nombre (`kl`) instalado vía `ptr add ProcessKiller`. |
 | `[x]` | **KeePass** | `Winget` | Sí | No | N/A | Gestor de contraseñas de código abierto clásico (`DominikReichl.KeePass`). |
 | `[x]` | **Everything (Voidtools)** | `Winget` | Sí | **Sí** | Archivos + Comandos | Configuración como servicio de indexación rápida e integración con `Get-NativeDir` en PowerShell. |
-| `[x]` | **Everything Plugin for PowerToys Run** | `Winget` | No | **Sí** | Comandos | Plugin de búsqueda instantánea para PowerToys Run (`lin-ycv.EverythingPowerToys`). Requiere PowerToys y Everything. |
 | `[x]` | **Royal Kludge RK-S98 Utility** | `Winget` | Sí | No | N/A | Software oficial de gestión para teclado mecánico RK-S98. |
 | `[x]` | **Radmin VPN** | `Winget` | Sí | No | N/A | Software de red privada virtual VPN. |
 | `[x]` | **Thunderbird** | `Winget` | Sí | No | N/A | Cliente de correo electrónico y calendario Mozilla Thunderbird. |

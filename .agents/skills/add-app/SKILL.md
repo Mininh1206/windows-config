@@ -26,10 +26,18 @@ Cada aplicación debe ubicarse en `apps/<categoria>/<app_id>/` con la siguiente 
 apps/<categoria>/<app_id>/
 ├── manifest.json       # (Obligatorio) Metadatos, instalación, dependencias y reglas de config.
 ├── configure.ps1       # (Opcional) Script hook post-instalación para comandos o módulos.
-└── files/              # (Obligatorio si has_direct_config=true y hay archivos declarados)
-    ├── config_file_1   # Dotfiles, perfiles, temas, JSONs de configuración.
-    └── ...
+├── files/              # (Obligatorio si has_direct_config=true y hay archivos declarados)
+│   ├── config_file_1   # Dotfiles, perfiles, temas, JSONs de configuración.
+│   └── ...
+└── extras/             # (Opcional) Submódulos o plugins modulares
+    └── <extra_id>/     # Estructura idéntica a una app (NO permite anidar extras/)
+        ├── manifest.json
+        ├── configure.ps1
+        └── files/
 ```
+
+> [!NOTE]
+> **Regla de Extras:** Un extra dentro de `apps/<categoria>/<app_id>/extras/<extra_id>/` **NO puede contener carpetas `extras/` anidadas** (profundidad máxima: 1 nivel). Los plugins pesados o complementos deben descargarse bajo demanda en su `configure.ps1` para mantener el repositorio ligero.
 
 ### Categorías Válidas:
 - `ux_ui`: Shells, terminales, temas, personalizaciones visuales.
@@ -54,14 +62,15 @@ apps/<categoria>/<app_id>/
   "priority": 0,
   "depends_on": ["prerequisito_1_id", "prerequisito_2_id"],
   "install": {
-    "type": "winget | exe | msi | zip | portable | script",
-    "winget_id": "ID.Oficial.Winget (o null)",
-    "local_installer": "nombre_archivo.exe en /instaladores (o null)",
-    "silent_args": "/VERYSILENT /quiet /qn (o null)",
+    "type": "winget | choco | scoop | cargo | ptr | exe | msi | zip | portable | script | none",
+    "package_id": "Identificador.Oficial (Winget ID, paquete Choco/Scoop/Cargo, plugin PTR o archivo local)",
+    "args": "/VERYSILENT /quiet /qn (o argumentos personalizados)",
     "check_command": "nombre_binario_en_path (o null)",
+    "check_paths": [
+      "$env:LOCALAPPDATA/Ruta/Al/Ejecutable.exe"
+    ],
     "target_drive_supported": true,
-    "refresh_env_after": true,
-    "zip_extract_subpath": null
+    "refresh_env_after": false
   },
   "requirements": {
     "MinRAM_GB": 4.0,
@@ -70,6 +79,10 @@ apps/<categoria>/<app_id>/
   },
   "config": {
     "has_direct_config": true,
+    "restart_process": [
+      "ProcessName"
+    ],
+    "launch_executable": "$env:LOCALAPPDATA/App/App.exe",
     "files": [
       {
         "source": "nombre_archivo_en_files",
@@ -88,14 +101,16 @@ apps/<categoria>/<app_id>/
 ```
 
 ### Guía de Tipos de Instalación:
-1. **`winget`**: Paquetes del repositorio oficial de Microsoft. Requiere `winget_id`.
-2. **`exe`**: Instaladores binarios `.exe` en `instaladores/`. Requiere `local_installer` y `silent_args`.
-3. **`msi`**: Paquetes MSI en `instaladores/`. Se ejecutan automáticamente con `msiexec /i ... /qb /norestart`.
-4. **`zip`**: Archivos comprimidos portables. Se extraen automáticamente en `<TargetDrive>:\Apps\<app_id>`.
-5. **`portable`**: Binarios portables unitarios que se copian y agregan a `PATH`.
-6. **`choco`**: Paquetes de Chocolatey (`install.choco_id`).
-7. **`scoop`**: Paquetes de Scoop (`install.scoop_id`).
-8. **`script`**: Lógica de instalación personalizada vía `configure.ps1` o `configure.py`. No requiere instalador binario ni Winget ID.
+1. **`winget`**: Paquetes del repositorio oficial de Microsoft Winget (`package_id: "Publisher.Package"`).
+2. **`choco`**: Paquetes de Chocolatey (`package_id: "package_name"`). Auto-resuelve dependencia de `chocolatey`.
+3. **`scoop`**: Paquetes de Scoop (`package_id: "app_name"`). Auto-resuelve dependencia de `scoop`.
+4. **`cargo`**: Binarios de Rust vía Cargo Binstall (`package_id: "crate_name"`). Auto-resuelve dependencia de `cargo_binstall`.
+5. **`ptr`**: Plugins de PowerToys Run vía PTR (`package_id: "PluginName"`, `args: "user/repo --force"`). Auto-resuelve dependencia de `ptr`.
+6. **`exe`**: Instaladores binarios `.exe` en `instaladores/` (`package_id: "setup.exe"`).
+7. **`msi`**: Paquetes MSI en `instaladores/` (`package_id: "setup.msi"`).
+8. **`zip`**: Archivos comprimidos portables. Se extraen automáticamente en `<TargetDrive>:\Apps\<app_id>`.
+9. **`script` / `none`**: Lógica personalizada gestionada mediante scripts `configure.ps1` o `configure.py`.
+
 
 > [!IMPORTANT]
 > **Regla sobre `configure.ps1` y `commands`:** Si una aplicación cuenta con `configure.ps1`, el motor `configurer.py` lo ejecutará automáticamente. **NUNCA** debes incluir `powershell.exe -File "$PSScriptRoot/configure.ps1"` dentro del array `config.commands`. El array `commands` se reserva exclusivamente para comandos adicionales o cmdlets específicos.

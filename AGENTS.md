@@ -70,13 +70,13 @@ Cada aplicación reside en `apps/<categoria>/<app_id>/`:
   "disabled": false,
   "disabled_reason": null,
   "install": {
-    "type": "winget | choco | scoop | exe | msi | zip | script | none",
-    "winget_id": "Publisher.Package",
-    "choco_id": null,
-    "scoop_id": null,
-    "local_installer": null,
-    "silent_args": "/S",
+    "type": "winget | choco | scoop | cargo | ptr | exe | msi | zip | portable | script | none",
+    "package_id": "Identificador.Oficial",
+    "args": "/S /VERYSILENT",
     "check_command": "ejecutable",
+    "check_paths": [
+      "$env:ProgramFiles/App/app.exe"
+    ],
     "target_drive_supported": true,
     "refresh_env_after": false
   },
@@ -131,12 +131,21 @@ python -m unittest discover -s tests
 
 ## 🛠️ 6. Skills Integradas en `.agents/skills/`
 
-- **`add-app`**: Flujo para crear y validar nuevas aplicaciones en el catálogo.
-- **`windows-config`**: Gestión y orquestación integral del configurador, manifiestos y DAG.
-- **`publish-release`**: Publicación dual automatizada (compilación PyInstaller, SHA256, manifiestos Winget v1.12.0, GitHub Releases y PR a Winget).
-- **`winget-publish`**: Empaquetado y validación de manifiestos Winget v1.12.0.
-- **`tdd` / `python-testing-patterns`**: Flujo TDD y pruebas unitarias en Python.
-- **`gh-cli`**: Flujos autenticados con GitHub CLI (`gh`).
+- **`add-app`**: Protocolo estricto para registrar, configurar y validar aplicaciones modulares en `apps/` con pruebas TDD seguras y soporte para manifiestos universales.
+- **`windows-config`**: Gestión y orquestación integral del configurador (wrappers PowerShell, selectores TUI, resolución DAG, recarga en caliente de entorno y Keep-Awake).
+- **`publish-release`**: Publicación dual automatizada (compilación PyInstaller, cálculo SHA-256, manifiestos Winget v1.12.0, GitHub Releases y envío de PR oficial a Microsoft Winget).
+- **`winget-publish`**: Empaquetado, validación con `winget validate` y resolución de incidencias en el repositorio oficial de Microsoft Winget (`microsoft/winget-pkgs`).
+- **`tdd`**: Metodología Test-Driven Development (Red-Green-Refactor) con desarrollo guiado por pruebas unitarias en Python.
+- **`python-testing-patterns`**: Patrones avanzados de pruebas unitarias, fixtures, mocks seguros y aislamiento en Python sin tocar el entorno real del usuario.
+- **`gh-cli`**: Flujos autenticados con GitHub CLI (`gh`) para gestión de issues, PRs y releases.
+- **`improve-codebase-architecture`**: Análisis, refactorización y mejora continua de la arquitectura del código, eliminación de deuda técnica y aplicación de principios SOLID.
+- **`planning-with-files`**: Planificación persistente basada en archivos (`task_plan.md`, `findings.md`, `progress.md`) para mantener contexto en proyectos complejos.
+- **`skill-creator`**: Creación, edición, evaluación comparativa y optimización de skills para agentes de desarrollo.
+- **`create-agentsmd`**: Generación y estructuración de archivos de memoria `AGENTS.md` para repositorios.
+- **`find-skills`**: Descubrimiento e instalación bajo demanda de skills para ampliar capacidades de desarrollo.
+- **`git-commits`**: Estándar de commits atómicos, concisos y estructurados siguiendo la especificación Conventional Commits.
+
+
 
 ---
 
@@ -182,13 +191,16 @@ python -m unittest discover -s tests
 - **Runner Central con Responsabilidad Única (SRP):** `src/core/configurer.py` prepara la sesión de PowerShell con codificación UTF-8 e inyección de variables (`$DRIVE_APPS`, `$DRIVE_GAMES`, `$DRIVE_DATA`, `$TARGET_DRIVE`), liberando a los scripts individuales `configure.ps1` de código boilerplate redundante.
 - **Ejecución Incondicional de Configuración:** Toda aplicación seleccionada con dotfiles, scripts, comandos o variables ejecuta siempre su configuración, reflejando `[ OK (CONFIGURADA) ]` si ya estaba instalada en el sistema.
 - **Gestor de Ciclo de Vida de Procesos (`restart_process`):** El motor detiene procesos activos antes de escribir archivos en disco (previniendo bloqueos de Windows) y los relanza automáticamente tras aplicar la configuración.
-- **Unificación de Plugins (PowerToys Run):** Plugins de archivos van en `apps/utilidades/powertoys/files/PowerToys Run/Plugins/<Plugin>` (ej. `ProcessKiller` `kl`), mientras que plugins empaquetados van como paquetes modulares de Winget (ej. `everything_powertoys` `lin-ycv.EverythingPowerToys`) con dependencias DAG.
-- **Tareas Asíncronas en Segundo Plano:** Tareas pesadas (descarga de modelos LLM, plugins de BBDD, motores) se ejecutan desasociadas con logging en `logs/bg_<app_id>.log`.
+- **Unificación de Plugins (PowerToys Run):** `apps/utilidades/powertoys` unifica e integra directamente tanto `Everything` (prefijo de búsqueda `<`) como `ProcessKiller` (prefijo `kl`), dependiendo directamente de `everything` (`depends_on: ["everything"]`). Se elimina el paquete redundante `everything_powertoys` para prevenir sobreescrituras y conflictos de configuración en PowerToys Run.
+- **Tareas Asíncronas en Segundo Plano:** Tareas pesadas (descarga de modelos LLM, plugins de BBDD, motores) se ejecutan desasociadas con logging en `logs/bg_<app_id>.log` verificando previamente que los daemons/servidores (como Ollama) estén listos y escuchando en el puerto TCP correspondiente.
 - **Refresco en Caliente:** `refresh_environment()` expande variables del Registro (`%SystemRoot%`, `%USERPROFILE%`) en caliente sin corromper `ComSpec` ni `PATH`.
 - **Orden por Prioridades & DAG:** Resolución topológica en 4 fases (Fase 0: Shell/Gestores -> Fase 1: Runtimes -> Fase 2: IDEs/Herramientas -> Fase 3: Utilidades/Juegos).
 
 ### 9.3 Configuraciones Específicas de Aplicaciones
-- `visual_studio_community`: Workloads por defecto: `.NET Desktop`, `Unity Game Development`, `Mobile Development (MAUI/Android)`.
+- `visual_studio_community`: Workloads por defecto: `.NET Desktop`, `Unity Game Development`, `Mobile Development (MAUI/Android)`, `Desktop development with C++ (NativeDesktop)`.
+- `flutter`: Configuración automática de `ANDROID_HOME`/`Android SDK` en `$env:LOCALAPPDATA\Android\Sdk`, desactivación de telemetría y `flutter precache`.
+- `windows_sandbox`: Detección nativa con cmdlets de PowerShell, tolerancia a ediciones sin soporte de hipervisor y salida limpia sin cuelgues ni errores de DISM.
+- `ohmyposh` & `powershell`: Silenciado de salida interactiva masiva en descarga de fuentes e inyección de `MesloLGM Nerd Font` en el perfil de PowerShell 7 de Windows Terminal.
 - `openrgb`: Perfil por defecto `Azul.orp`, perfil alternativo `Negro.orp` con cambio programado (22:00 a 09:00 Negro, resto Azul).
 - `autohotkey`: Script `.ahk` para cambio rápido de escritorios virtuales (`Win+1`, `Win+2`, etc.).
 - `rk_keyboard`: Modelo de hardware: **RK-S98** (Royal Kludge S98).
@@ -196,6 +208,31 @@ python -m unittest discover -s tests
 - `nilesoft_shell`: Menú contextual optimizado mediante `shell.nss`.
 - `windows_tweaks`: Plan de energía Ultimate/High Performance, Game Mode y HAGS protegidos contra errores de hipervisor.
 
-### 9.4 Flujo de Trabajo y Publicación
-- **Commit para Pruebas:** Los cambios se suben mediante commit/push a `main` para validación en entornos de prueba (VMs).
-- **Visto Bueno Obligatorio para Versión Estable:** Se requiere siempre la confirmación expresa del usuario antes de disparar la publicación formal de una nueva versión o release en GitHub y Winget.
+### 9.4 Flujo de Trabajo, Seguridad y Publicación
+- **Seguridad en Pruebas:** REGLA ESTRICTA: Las pruebas locales del agente SIEMPRE se ejecutan en sandbox seguro o mocks para proteger el sistema operativo del usuario (`os.startfile`, `launch_detached_process`, `subprocess.run`, `subprocess.Popen` y cmdlets deben estar totalmente aislados en `tests/`).
+- **Commit para Pruebas en VM:** Al finalizar los cambios, se presenta un informe detallado para que el usuario pueda verificar y probar en su entorno de pruebas / máquina virtual.
+- **Visto Bueno Obligatorio para Versión Estable:** Se requiere SIEMPRE la confirmación expresa del usuario tras probar en la VM antes de compilar y disparar la publicación formal en Winget y GitHub Releases.
+
+### 9.5 Arquitectura de Submódulos `extras/` y Reducción de Peso
+- **Estructura Declarativa de Extras:** Una aplicación puede contener submódulos opcionales en `apps/<categoria>/<app_id>/extras/<extra_id>/` con su propio `manifest.json`, `configure.ps1`/`.py` y `files/`.
+- **Prohibición de Anidación Recursiva:** Un extra **NO puede contener a su vez una carpeta `extras/`** (profundidad máxima de 1 nivel). El validador (`catalog_validator.py`) y el constructor (`builder.py`) rechazan cualquier anidación adicional.
+- **Resolución DAG y Jerarquía:** Al seleccionar un extra, el DAG (`dag.py`) auto-incluye y ordena la aplicación padre antes que el extra.
+- **Integración TUI y Responsive:** La interfaz TUI (`src/core/tui.py`) renderiza los extras con sangría en árbol (`└─ [x] [EXTRA] ...`), sincronizando el marcado padre-hijo y adaptando dinámicamente las columnas al ancho de consola.
+- **Constructor Interactivo:** `constructor.ps1` (`src/builder.py`) permite crear tanto apps independientes como extras para apps existentes.
+- **Repositorio Ultraligero:** Prohibido almacenar binarios/DLLs compilados pesados en `files/`. Los complementos (como plugins de PowerToys Run) se descargan e instalan bajo demanda mediante scripts de PowerShell en sus respectivos `extras/`.
+
+### 9.6 Desacoplamiento Arquitectónico Absoluto de `src/`
+- **Prohibición de Nombres de Apps en Core:** Ningún archivo de `src/` (motores de instalación, configurador, DAG, UI, etc.) debe contener nombres específicos, condicionales o diccionarios que hagan referencia a aplicaciones particulares.
+- **Esquema de Instalación Universal:** Toda aplicación se define declarativamente en su `manifest.json` mediante `"package_id"`, `"args"`, `"check_command"` y `"check_paths"`, soportando tipos como `"winget"`, `"choco"`, `"scoop"`, `"cargo"`, `"ptr"`, `"exe"`, `"msi"`, `"zip"`, `"script"` y `"none"`.
+- **Detección Genérica:** El motor `installer.py` comprueba de forma agnóstica ejecutables en `PATH`, rutas declaradas en `check_paths`, raíces estándar de Windows (`%ProgramFiles%`, `%ProgramFiles(x86)%`, `%LOCALAPPDATA%\Programs`, `%LOCALAPPDATA%`, `%APPDATA%`) y el Registro de desinstalación.
+
+### 9.7 Ciclo de Vida Padre-Extras & Gestores de Paquetes en DAG
+- **Dependencias Implícitas de Gestores:** Las aplicaciones que declaran `type: "choco"`, `"scoop"`, `"cargo"` o `"ptr"` resuelven automáticamente su gestor de paquetes correspondiente (`chocolatey`, `scoop`, `cargo_binstall`, `ptr`) sin requerir declararlo explícitamente en `depends_on`.
+- **Dependencia Implícita del Padre:** Los extras heredan automáticamente la dependencia de su aplicación padre (`parent_app_id` / `parent_app`).
+- **Configuración Diferida del Padre:** Cuando una aplicación padre tiene extras seleccionados, su binario se instala primero, se procesan e instalan todos sus extras, y finalmente se aplica la inyección de dotfiles/configuración del padre y su relanzamiento de procesos (`restart_process`), evitando que plugins o ejecutables en ejecución sobreescriban configuraciones compartidas.
+
+### 9.8 Política de Commits Atómicos y Claros (Conventional Commits)
+- **Commits Pequeños y Legibles:** Realizar siempre commits pequeños, atómicos, auto-contenidos y fáciles de leer/revisar, organizados y agrupados lógicamente por capas funcionales (`core`, `apps`, `tests`, `docs`, `catalog`).
+- **Formato Estándar:** Aplicar rigurosamente la convención de Conventional Commits (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`) conforme a la skill `git-commits`.
+
+
